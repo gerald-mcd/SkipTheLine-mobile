@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkipTheLine – Redesigned Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF5A1F;
+    --orange-glow: rgba(255,90,31,0.45);
+    --pink: #FF2D78;
+    --green: #00E676;
+    --green-dim: #00C853;
+    --yellow: #FFB300;
+    --red: #FF1744;
+    --blue: #2979FF;
+    --dark: #080B10;
+    --surface: rgba(14,18,27,0.95);
+    --glass: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.09);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255,255,255,0.55);
+    --text-dim: rgba(255,255,255,0.28);
+  }
+
+  body {
+    background: radial-gradient(ellipse at 40% 20%, #12091a 0%, #050810 60%, #000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 40px 24px 60px;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  /* ── PHONE SHELL ── */
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .phone-shell {
+    width: 375px;
+    height: 812px;
+    background: var(--dark);
+    border-radius: 54px;
+    box-shadow:
+      0 0 0 1.5px #1e2230,
+      0 0 0 5px #0e1018,
+      0 40px 100px rgba(0,0,0,0.95),
+      0 0 80px var(--orange-glow),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Dynamic island */
+  .dynamic-island {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 34px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .island-camera {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #1a1a2e;
+    border: 1.5px solid rgba(255,255,255,0.07);
+  }
+  .island-sensor {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #0d0d1a;
+    border: 1.5px solid rgba(255,255,255,0.05);
+  }
+
+  /* Side button */
+  .phone-shell::after {
+    content: '';
+    position: absolute;
+    right: -2.5px; top: 180px;
+    width: 2.5px; height: 72px;
+    background: #1e2230;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── SCREEN ── */
+  .screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 46px;
+    position: relative;
+    background: var(--dark);
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    height: 52px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 8px;
+    z-index: 50;
+    flex-shrink: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+  }
+  .status-time {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── MAP (full bleed, takes entire screen) ── */
+  .map-full {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .map-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 15% 85%, rgba(10,22,48,0.9) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 85% 15%, rgba(10,22,48,0.7) 0%, transparent 50%),
+      linear-gradient(160deg, #0d1829 0%, #111e30 40%, #0e1a28 100%);
+  }
+
+  /* Road grid */
+  .road-h {
+    position: absolute; left: 0; right: 0;
+    background: rgba(255,255,255,0.07);
+    border-radius: 1px;
+  }
+  .road-v {
+    position: absolute; top: 0; bottom: 0;
+    background: rgba(255,255,255,0.07);
+    border-radius: 1px;
+  }
+  .road-major { background: rgba(255,255,255,0.14); }
+  .road-arterial { background: rgba(255,255,255,0.1); }
+
+  .block {
+    position: absolute;
+    background: rgba(255,255,255,0.022);
+    border-radius: 3px;
+  }
+
+  .map-label {
+    position: absolute;
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.22);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* Heatmap blobs */
+  .heat-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(28px);
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  /* Wait-time pins — redesigned */
+  .pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .pin:hover { transform: translate(-50%, -58%) scale(1.12); }
+
+  .pin-bubble {
+    border-radius: 12px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.18);
+    letter-spacing: -0.2px;
+    position: relative;
+  }
+  .pin-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-width: 6px;
+    border-bottom: none;
+  }
+  .pin-icon {
+    font-size: 11px;
+    margin-top: 2px;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
+  }
+
+  .pin-green  .pin-bubble { background: linear-gradient(145deg, #00E676, #00B248); }
+  .pin-green  .pin-bubble::after { border-top-color: #00B248; }
+
+  .pin-yellow .pin-bubble { background: linear-gradient(145deg, #FFB300, #E65100); }
+  .pin-yellow .pin-bubble::after { border-top-color: #E65100; }
+
+  .pin-red    .pin-bubble { background: linear-gradient(145deg, #FF4444, #C50000); }
+  .pin-red    .pin-bubble::after { border-top-color: #C50000; }
+
+  /* Pulse rings */
+  .pin-pulse .pin-bubble::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 20px;
+    border: 2px solid var(--yellow);
+    opacity: 0;
+    animation: bubble-pulse 2.2s ease-out infinite;
+  }
+  @keyframes bubble-pulse {
+    0%   { inset: -4px; opacity: 0.9; }
+    100% { inset: -18px; opacity: 0; border-radius: 24px; }
+  }
+
+  /* You-are-here */
+  .you-here {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 22;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .you-here-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 4px rgba(41,121,255,0.3), 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 2;
+    position: relative;
+  }
+  .you-here-ring {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: rgba(41,121,255,0.1);
+    animation: you-pulse 2.8s ease-out infinite;
+  }
+  @keyframes you-pulse {
+    0%   { inset: -6px; opacity: 0.7; }
+    100% { inset: -24px; opacity: 0; }
+  }
+
+  /* Activity blips */
+  .blip {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    box-shadow: 0 0 8px var(--orange-glow);
+    animation: blip-travel var(--dur,7s) ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes blip-travel {
+    0%   { transform: translate(0,0); opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { transform: translate(var(--dx,40px),var(--dy,-20px)); opacity: 0; }
+  }
+
+  /* ── TOP OVERLAY: Header ── */
+  .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 40;
+    padding: 52px 16px 12px;
+    background: linear-gradient(to bottom, rgba(8,11,16,0.92) 0%, rgba(8,11,16,0.6) 70%, transparent 100%);
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .logo-skip { font-size: 21px; font-weight: 900; color: #fff; letter-spacing: -0.8px; }
+  .logo-the {
+    font-size: 10px; font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 3px;
+    padding: 2px 4px;
+    background: rgba(255,90,31,0.12);
+    border-radius: 4px;
+    border: 1px solid rgba(255,90,31,0.25);
+    align-self: center;
+  }
+  .logo-line { font-size: 21px; font-weight: 900; color: #fff; letter-spacing: -0.8px; }
+
+  .location-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 6px 12px 6px 8px;
+    cursor: pointer;
+  }
+  .loc-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--orange);
+    box-shadow: 0 0 6px var(--orange-glow);
+    flex-shrink: 0;
+    animation: dot-blink 2s ease-in-out infinite;
+  }
+  @keyframes dot-blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .loc-text { font-size: 12px; font-weight: 600; color: #fff; }
+  .loc-arrow {
+    width: 0; height: 0;
+    border: 4px solid transparent;
+    border-top: 5px solid rgba(255,255,255,0.4);
+    margin-top: 3px;
+  }
+
+  .avatar-btn {
+    position: relative;
+    cursor: pointer;
+  }
+  .avatar-ring {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    padding: 2px;
+    box-shadow: 0 0 14px rgba(255,90,31,0.4);
+  }
+  .avatar-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: #1a1e2a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: #fff;
+  }
+  .avatar-badge {
+    position: absolute;
+    top: -2px; right: -2px;
+    width: 14px; height: 14px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 2px solid var(--dark);
+    font-size: 7px; font-weight: 800; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14,18,27,0.82);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 10px 14px;
+    cursor: text;
+  }
+  .search-icon { flex-shrink: 0; opacity: 0.45; }
+  .search-text { font-size: 13px; color: rgba(255,255,255,0.38); font-weight: 500; flex: 1; }
+  .search-filter {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(255,90,31,0.14);
+    border: 1px solid rgba(255,90,31,0.25);
+    border-radius: 8px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+  .search-filter-text { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 0.3px; }
+
+  /* ── CATEGORY CHIPS ── */
+  .chips-row {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+    overflow-x: hidden;
+  }
+  .chip {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 5px 11px;
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75);
+    white-space: nowrap; cursor: pointer; flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .chip.active {
+    background: rgba(255,90,31,0.15);
+    border-color: rgba(255,90,31,0.4);
+    color: var(--orange);
+  }
+
+  /* ── LIVE REPORTERS BADGE ── */
+  .reporters-badge {
+    position: absolute;
+    top: 210px; left: 14px;
+    z-index: 30;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(8,11,16,0.78);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,230,118,0.2);
+    border-radius: 20px;
+    padding: 5px 11px;
+  }
+  .rep-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(0,230,118,0.7);
+    animation: dot-blink 1.8s ease-in-out infinite;
+  }
+  .rep-text { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+  /* ── MAP CONTROLS ── */
+  .map-controls {
+    position: absolute;
+    right: 14px;
+    top: 220px;
+    z-index: 30;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .map-ctrl {
+    width: 32px; height: 32px;
+    background: rgba(8,11,16,0.78);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    font-weight: 300;
+  }
+
+  /* ── REPORT FAB ── */
+  .report-fab {
+    position: absolute;
+    bottom: 220px;
+    right: 18px;
+    z-index: 45;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer;
+  }
+  .fab-glow {
+    position: absolute;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: var(--orange-glow);
+    filter: blur(16px);
+    top: -4px; left: -4px;
+    animation: fab-breathe 2.5s ease-in-out infinite;
+  }
+  @keyframes fab-breathe {
+    0%,100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  .fab-circle {
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #FF6020, #FF1A5C);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow:
+      0 6px 24px rgba(255,90,31,0.6),
+      0 2px 6px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .report-fab:hover .fab-circle { transform: scale(1.08); }
+  .fab-label {
+    font-size: 10px; font-weight: 800;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+    position: relative;
+  }
+
+  /* ── BOTTOM SHEET ── */
+  .bottom-sheet {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 40;
+    background: rgba(11,14,22,0.96);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sheet-handle-row {
+    padding: 10px 0 4px;
+    display: flex; justify-content: center;
+    flex-shrink: 0;
+    cursor: grab;
+  }
+  .sheet-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+  }
+
+  .sheet-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px 10px;
+    flex-shrink: 0;
+  }
+  .sheet-title {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 16px; font-weight: 800; color: #fff;
+  }
+  .trending-flame {
+    width: 26px; height: 26px;
+    background: linear-gradient(145deg, #FF6020, #FF1A5C);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(255,90,31,0.4);
+  }
+  .sheet-viewall {
+    font-size: 11px; font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  /* Venue cards */
+  .venue-list {
+    overflow-y: auto;
+    padding: 0 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .venue-card {
+    display: flex; align-items: center; gap: 11px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 11px 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .venue-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+  .venue-card.v-green::before  { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
+  .venue-card.v-yellow::before { background: var(--yellow); box-shadow: 0 0 8px rgba(255,179,0,0.5); }
+  .venue-card.v-red::before    { background: var(--red); box-shadow: 0 0 8px rgba(255,23,68,0.5); }
+  .venue-card:hover { background: rgba(255,255,255,0.07); }
+
+  .venue-emoji {
+    width: 42px; height: 42px;
+    border-radius: 13px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .venue-body { flex: 1; min-width: 0; }
+  .venue-name {
+    font-size: 13px; font-weight: 700; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .venue-meta {
+    display: flex; align-items: center; gap: 5px;
+    margin-top: 3px;
+  }
+  .meta-dist  { font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 500; }
+  .meta-sep   { width: 2px; height: 2px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+  .meta-rpts  { font-size: 10px; color: rgba(255,255,255,0.35); }
+  .meta-fresh { font-size: 10px; font-weight: 600; color: var(--green); }
+
+  /* Event badge */
+  .event-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: rgba(255,90,31,0.12);
+    border: 1px solid rgba(255,90,31,0.25);
+    border-radius: 5px;
+    padding: 1px 5px;
+    margin-top: 3px;
+    font-size: 9px; font-weight: 700; color: var(--orange);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  .wait-pill {
+    flex-shrink: 0;
+    border-radius: 12px;
+    padding: 6px 10px;
+    font-size: 13px; font-weight: 900;
+    color: #fff;
+    text-align: center;
+    min-width: 52px;
+    letter-spacing: -0.3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .w-green  { background: linear-gradient(145deg, #00C853, #007E33); }
+  .w-yellow { background: linear-gradient(145deg, #FFB300, #E65100); }
+  .w-red    { background: linear-gradient(145deg, #FF4444, #B71C1C); }
+
+  /* ── LIVE TICKER ── */
+  .ticker-wrap {
+    height: 30px;
+    background: rgba(8,11,16,0.9);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 210px;
+    z-index: 38;
+    backdrop-filter: blur(10px);
+  }
+  .ticker-live {
+    flex-shrink: 0;
+    background: var(--red);
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin: 0 8px;
+    text-transform: uppercase;
+    animation: live-blink 2s ease-in-out infinite;
+  }
+  @keyframes live-blink { 0%,100%{opacity:1} 50%{opacity:0.55} }
+
+  .ticker-track {
+    display: flex; align-items: center;
+    white-space: nowrap;
+    animation: ticker-scroll 26s linear infinite;
+    gap: 0;
+  }
+  .ticker-item {
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    padding-right: 28px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .ticker-sep { color: rgba(255,255,255,0.15); padding-right: 28px; font-size: 11px; }
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 78px;
+    z-index: 50;
+    background: rgba(9,12,20,0.96);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding: 10px 8px 0;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    cursor: pointer; flex: 1;
+  }
+  .nav-icon-wrap {
+    width: 40px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    transition: background 0.15s;
+  }
+  .nav-item.active .nav-icon-wrap { background: rgba(255,90,31,0.12); }
+  .nav-label {
+    font-size: 9.5px; font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.2px;
+  }
+  .nav-item.active .nav-label { color: var(--orange); }
+
+  /* Points badge on nav */
+  .points-badge {
+    display: flex; align-items: center; gap: 3px;
+    background: rgba(255,179,0,0.12);
+    border: 1px solid rgba(255,179,0,0.25);
+    border-radius: 6px;
+    padding: 1px 5px;
+    margin-top: 1px;
+  }
+  .pts-text { font-size: 8px; font-weight: 800; color: var(--yellow); }
+
+  /* ── PAGE LABEL ── */
+  .page-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* ── SECOND SCREEN: REPORT FLOW ── */
+  .report-screen .screen {
+    background: var(--dark);
+  }
+
+  /* Full-screen gradient bg for report view */
+  .report-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,90,31,0.12) 0%, transparent 60%),
+                var(--dark);
+  }
+
+  .report-header {
+    position: absolute; top: 0; left: 0; right: 0;
+    z-index: 40;
+    padding: 54px 18px 0;
+  }
+  .back-btn {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .report-title-block {
+    margin-top: 16px;
+  }
+  .report-pretitle {
+    font-size: 11px; font-weight: 700;
+    color: var(--orange); letter-spacing: 1px; text-transform: uppercase;
+  }
+  .report-title {
+    font-size: 22px; font-weight: 900; color: #fff;
+    letter-spacing: -0.5px; margin-top: 2px;
+    line-height: 1.1;
+  }
+  .report-subtitle {
+    font-size: 12px; color: rgba(255,255,255,0.45);
+    margin-top: 5px; font-weight: 500;
+  }
+
+  /* Venue confirm row */
+  .venue-confirm {
+    position: absolute;
+    top: 190px; left: 18px; right: 18px;
+    z-index: 35;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 13px 14px;
+    display: flex; align-items: center; gap: 11px;
+  }
+  .vc-emoji { font-size: 24px; }
+  .vc-info { flex: 1; min-width: 0; }
+  .vc-name { font-size: 14px; font-weight: 800; color: #fff; }
+  .vc-addr { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .vc-change {
+    font-size: 11px; font-weight: 700; color: var(--orange);
+    cursor: pointer;
+  }
+
+  /* Wait time selector */
+  .wait-selector {
+    position: absolute;
+    top: 290px; left: 18px; right: 18px;
+    z-index: 35;
+  }
+  .ws-label {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;
+  }
+  .ws-options {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
+  }
+  .ws-opt {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.09);
+    border-radius: 13px;
+    padding: 12px 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .ws-opt.selected {
+    background: rgba(255,90,31,0.14);
+    border-color: var(--orange);
+    box-shadow: 0 0 16px rgba(255,90,31,0.2);
+  }
+  .ws-time {
+    font-size: 16px; font-weight: 900; color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .ws-opt.selected .ws-time { color: var(--orange); }
+  .ws-tag { font-size: 8.5px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.3px; }
+
+  /* Wait type selector */
+  .wait-type-row {
+    position: absolute;
+    top: 440px; left: 18px; right: 18px;
+    z-index: 35;
+  }
+  .wt-label {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+  }
+  .wt-options {
+    display: flex; gap: 8px;
+  }
+  .wt-opt {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.09);
+    border-radius: 11px;
+    padding: 9px 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    cursor: pointer; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6);
+    text-align: center;
+  }
+  .wt-opt.selected {
+    background: rgba(255,90,31,0.1);
+    border-color: rgba(255,90,31,0.45);
+    color: var(--orange);
+  }
+  .wt-icon { font-size: 16px; }
+
+  /* XP reward row */
+  .xp-reward {
+    position: absolute;
+    top: 542px; left: 18px; right: 18px;
+    z-index: 35;
+    background: rgba(255,179,0,0.07);
+    border: 1px solid rgba(255,179,0,0.18);
+    border-radius: 13px;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .xp-icon { font-size: 20px; }
+  .xp-text { flex: 1; }
+  .xp-headline { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.9); }
+  .xp-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .xp-pts {
+    font-size: 18px; font-weight: 900;
+    background: linear-gradient(135deg, #FFB300, #FF6D00);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    position: absolute;
+    bottom: 96px; left: 18px; right: 18px;
+    z-index: 35;
+    background: linear-gradient(145deg, #FF6020, #FF1A5C);
+    border-radius: 18px;
+    padding: 17px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(255,90,31,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+    font-size: 15px; font-weight: 800; color: #fff;
+    letter-spacing: -0.2px;
+  }
+
+  .watermark {
+    position: absolute;
+    bottom: 82px; left: 50%; transform: translateX(-50%);
+    font-size: 8px; font-weight: 600;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 0.8px; text-transform: uppercase;
+    z-index: 55; pointer-events: none; white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — HOME / MAP VIEW
+══════════════════════════════════════ -->
+<div class="phone-wrap">
+  <div class="phone-shell">
+    <div class="screen">
+
+      <!-- Dynamic Island -->
+      <div class="dynamic-island">
+        <div class="island-camera"></div>
+        <div class="island-sensor"></div>
+      </div>
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="white">
+            <rect x="0" y="8" width="3" height="4" rx="0.5"/>
+            <rect x="4.5" y="5.5" width="3" height="6.5" rx="0.5"/>
+            <rect x="9" y="3" width="3" height="9" rx="0.5"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="0.5" fill-opacity="0.3"/>
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <path d="M8 9.5A0.5 0.5 0 1 1 8.001 9.5Z" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+            <path d="M5.1 7.1Q8 4.5 10.9 7.1" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M2.5 4.7Q8 -0.3 13.5 4.7" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <svg width="25" height="12" viewBox="0 0 25 12">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+            <rect x="2" y="2" width="15" height="8" rx="2" fill="#fff"/>
+            <path d="M21.5 4Q23.5 4 23.5 6Q23.5 8 21.5 8Z" fill="rgba(255,255,255,0.45)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Full-bleed map -->
+      <div class="map-full">
+        <div class="map-bg"></div>
+
+        <!-- Heatmap blobs -->
+        <div class="heat-blob" style="width:130px;height:90px;background:rgba(255,23,68,0.18);top:38%;left:32%;"></div>
+        <div class="heat-blob" style="width:100px;height:80px;background:rgba(255,179,0,0.14);top:20%;left:55%;"></div>
+        <div class="heat-blob" style="width:80px;height:70px;background:rgba(0,230,118,0.12);top:60%;left:65%;"></div>
+        <div class="heat-blob" style="width:110px;height:75px;background:rgba(255,23,68,0.12);top:22%;left:8%;"></div>
+
+        <!-- Roads -->
+        <div class="road-h road-major" style="top:26%;height:4px;"></div>
+        <div class="road-h road-arterial" style="top:13%;height:2.5px;"></div>
+        <div class="road-h road-arterial" style="top:41%;height:2.5px;"></div>
+        <div class="road-h road-major" style="top:57%;height:4px;"></div>
+        <div class="road-h" style="top:71%;height:2px;"></div>
+        <div class="road-h" style="top:83%;height:2px;"></div>
+        <div class="road-v road-major" style="left:20%;width:4px;"></div>
+        <div class="road-v road-arterial" style="left:8%;width:2.5px;"></div>
+        <div class="road-v road-major" style="left:44%;width:4px;"></div>
+        <div class="road-v road-arterial" style="left:60%;width:2.5px;"></div>
+        <div class="road-v road-major" style="left:74%;width:4px;"></div>
+        <div class="road-v" style="left:86%;width:2px;"></div>
+
+        <!-- City blocks -->
+        <div class="block" style="top:15%;left:9%;width:9%;height:9%;"></div>
+        <div class="block" style="top:15%;left:21%;width:21%;height:9%;"></div>
+        <div class="block" style="top:15%;left:45%;width:13%;height:9%;"></div>
+        <div class="block" style="top:15%;left:61%;width:11%;height:9%;"></div>
+        <div class="block" style="top:28%;left:9%;width:9%;height:11%;"></div>
+        <div class="block" style="top:28%;left:21%;width:21%;height:11%;"></div>
+        <div class="block" style="top:28%;left:45%;width:13%;height:11%;"></div>
+        <div class="block" style="top:28%;left:61%;width:11%;height:11%;"></div>
+        <div class="block" style="top:28%;left:75%;width:10%;height:11%;"></div>
+        <div class="block" style="top:43%;left:9%;width:9%;height:12%;"></div>
+        <div class="block" style="top:43%;left:21%;width:21%;height:12%;"></div>
+        <div class="block" style="top:43%;left:45%;width:13%;height:12%;"></div>
+        <div class="block" style="top:59%;left:9%;width:9%;height:10%;"></div>
+        <div class="block" style="top:59%;left:21%;width:21%;height:10%;"></div>
+        <div class="block" style="top:59%;left:45%;width:13%;height:10%;"></div>
+        <div class="block" style="top:59%;left:61%;width:11%;height:10%;"></div>
+
+        <div class="map-label" style="top:22%;left:21%;">Ocean Dr</div>
+        <div class="map-label" style="top:53%;left:45%;">Collins Ave</div>
+        <div class="map-label" style="top:8%;left:44%;transform:rotate(90deg);transform-origin:left center;">Washington Ave</div>
+
+        <!-- Activity blips -->
+        <div class="blip" style="top:47%;left:13%;--dur:7.5s;--dx:60px;--dy:-14px;animation-delay:0s;"></div>
+        <div class="blip" style="top:62%;left:54%;--dur:9.5s;--dx:-42px;--dy:18px;animation-delay:1.8s;"></div>
+        <div class="blip" style="top:30%;left:68%;--dur:6.5s;--dx:26px;--dy:22px;animation-delay:0.9s;"></div>
+        <div class="blip" style="top:75%;left:31%;--dur:8.5s;--dx:48px;--dy:-10px;animation-delay:3.2s;"></div>
+        <div class="blip" style="top:19%;left:40%;--dur:11s;--dx:-28px;--dy:28px;animation-delay:0.5s;"></div>
+
+        <!-- Wait pins -->
+        <div class="pin pin-green" style="top:20%;left:29%;">
+          <div class="pin-bubble">5 min</div>
+          <div class="pin-icon">🍽️</div>
+        </div>
+        <div class="pin pin-green" style="top:67%;left:73%;">
+          <div class="pin-bubble">8 min</div>
+          <div class="pin-icon">✂️</div>
+        </div>
+        <div class="pin pin-yellow pin-pulse" style="top:34%;left:58%;">
+          <div class="pin-bubble">14 min</div>
+          <div class="pin-icon">🍸</div>
+        </div>
+        <div class="pin pin-yellow" style="top:17%;left:75%;">
+          <div class="pin-bubble">17 min</div>
+          <div class="pin-icon">🍽️</div>
+        </div>
+        <div class="pin pin-red" style="top:50%;left:41%;">
+          <div class="pin-bubble">34 min</div>
+          <div class="pin-icon">🏛️</div>
+        </div>
+        <div class="pin pin-red" style="top:29%;left:13%;">
+          <div class="pin-bubble">45 min</div>
+          <div class="pin-icon">🏥</div>
+        </div>
+
+        <!-- You here -->
+        <div class="you-here" style="top:55%;left:62%;">
+          <div class="you-here-ring"></div>
+          <div class="you-here-dot"></div>
+        </div>
+      </div>
+
+      <!-- Header overlay -->
+      <div class="header">
+        <div class="header-row">
+          <div class="logo">
+            <span class="logo-skip">Skip</span>
+            <span class="logo-the">the</span>
+            <span class="logo-line">Line</span>
+          </div>
+          <div class="location-pill">
+            <div class="loc-dot"></div>
+            <span class="loc-text">Miami Beach</span>
+            <div class="loc-arrow"></div>
+          </div>
+          <div class="avatar-btn">
+            <div class="avatar-ring">
+              <div class="avatar-inner">MR</div>
+            </div>
+            <div class="avatar-badge">3</div>
+          </div>
+        </div>
+        <div class="search-bar">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <circle cx="6.5" cy="6.5" r="5" stroke="rgba(255,255,255,0.6)" stroke-width="1.6"/>
+            <path d="M10.5 10.5l3 3" stroke="rgba(255,255,255,0.6)" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span class="search-text">Search restaurants, bars, DMV…</span>
+          <div class="search-filter">
+            <span class="search-filter-text">▼ Nearby</span>
+          </div>
+        </div>
+        <div class="chips-row">
+          <div class="chip active">🗺 All</div>
+          <div class="chip">🍽️ Food</div>
+          <div class="chip">🍸 Nightlife</div>
+          <div class="chip">✂️ Barbers</div>
+          <div class="chip">🏛️ Gov</div>
+        </div>
+      </div>
+
+      <!-- Reporters badge -->
+      <div class="reporters-badge">
+        <div class="rep-dot"></div>
+        <span class="rep-text">14 reporting nearby</span>
+      </div>
+
+      <!-- Map controls -->
+      <div class="map-controls">
+        <div class="map-ctrl">+</div>
+        <div class="map-ctrl" style="font-size:19px;">−</div>
+      </div>
+
+      <!-- Report FAB -->
+      <div class="report-fab">
+        <div class="fab-glow"></div>
+        <div class="fab-circle">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path d="M13 5v16M5 13h16" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="fab-label">Report</span>
+      </div>
+
+      <!-- Live ticker -->
+      <div class="ticker-wrap">
+        <span class="ticker-live">Live</span>
+        <div style="overflow:hidden;flex:1;display:flex;align-items:center;">
+          <div class="ticker-track">
+            <span class="ticker-item">🔴 <strong style="color:rgba(255,255,255,0.85)">Sarah</strong>&nbsp;· 8 min at Joe's Crab · <em style="color:rgba(255,255,255,0.3)">2m ago</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🟢 <strong style="color:rgba(255,255,255,0.85)">Marcus</strong>&nbsp;· just arrived at LA Barber · <em style="color:rgba(255,255,255,0.3)">now</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🟡 <strong style="color:rgba(255,255,255,0.85)">Jess</strong>&nbsp;· updated DMV to 45 min · <em style="color:rgba(255,255,255,0.3)">4m ago</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🔴 <strong style="color:rgba(255,255,255,0.85)">Carlos</strong>&nbsp;· 30+ min at Versailles · <em style="color:rgba(255,255,255,0.3)">6m ago</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🔴 <strong style="color:rgba(255,255,255,0.85)">Sarah</strong>&nbsp;· 8 min at Joe's Crab · <em style="color:rgba(255,255,255,0.3)">2m ago</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🟢 <strong style="color:rgba(255,255,255,0.85)">Marcus</strong>&nbsp;· just arrived at LA Barber · <em style="color:rgba(255,255,255,0.3)">now</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🟡 <strong style="color:rgba(255,255,255,0.85)">Jess</strong>&nbsp;· updated DMV to 45 min · <em style="color:rgba(255,255,255,0.3)">4m ago</em></span>
+            <span class="ticker-sep">·</span>
+            <span class="ticker-item">🔴 <strong style="color:rgba(255,255,255,0.85)">Carlos</strong>&nbsp;· 30+ min at Versailles · <em style="color:rgba(255,255,255,0.3)">6m ago</em></span>
+            <span class="ticker-sep">·</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom sheet -->
+      <div class="bottom-sheet" style="height:244px;">
+        <div class="sheet-handle-row"><div class="sheet-handle"></div></div>
+        <div class="sheet-header">
+          <div class="sheet-title">
+            <div class="trending-flame">🔥</div>
+            Trending Near You
+          </div>
+          <span class="sheet-viewall">View All</span>
+        </div>
+        <div class="venue-list">
+
+          <!-- Versailles - red, event badge -->
+          <div class="venue-card v-red">
+            <div class="venue-emoji">🍽️</div>
+            <div class="venue-body">
+              <div class="venue-name">Versailles Restaurant</div>
+              <div class="venue-meta">
+                <span class="meta-dist">0.3 mi</span>
+                <span class="meta-sep"></span>
+                <span class="meta-rpts">12 reports</span>
+                <span class="meta-sep"></span>
+                <span class="meta-fresh">just now</span>
+              </div>
+              <div class="event-badge">⚡ Art Basel Week</div>
+            </div>
+            <div class="wait-pill w-red">34 min</div>
+          </div>
+
+          <!-- LA Barber - green -->
+          <div class="venue-card v-green">
+            <div class="venue-emoji">✂️</div>
+            <div class="venue-body">
+              <div class="venue-name">LA Barber Shop</div>
+              <div class="venue-meta">
+                <span class="meta-dist">0.5 mi</span>
+                <span class="meta-sep"></span>
+                <span class="meta-rpts">3 reports</span>
+                <span class="meta-sep"></span>
+                <span class="meta-rpts">4 min ago</span>
+              </div>
+            </div>
+            <div class="wait-pill w-green">5 min</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom nav -->
+      <div class="bottom-nav">
+        <div class="nav-item active">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <polygon points="1,4 8,1 14,4 21,1 21,18 14,21 8,18 1,21" stroke="#FF5A1F" stroke-width="1.6" stroke-linejoin="round" fill="rgba(255,90,31,0.14)"/>
+              <circle cx="11" cy="11" r="2.2" fill="#FF5A1F"/>
+            </svg>
+          </div>
+          <span class="nav-label">Map</span>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="2" y="4" width="18" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="2" y="10" width="18" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="2" y="16" width="12" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
+            </svg>
+          </div>
+          <span class="nav-label">List</span>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 18s-8-5.2-8-10a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 4.8-8 10-8 10z" stroke="rgba(255,255,255,0.35)" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="nav-label">Saved</span>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="8" r="3.5" stroke="rgba(255,255,255,0.35)" stroke-width="1.6"/>
+              <path d="M3 19c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(255,255,255,0.35)" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="points-badge">
+            <span class="pts-text">⚡ 840 pts</span>
+          </div>
+          <span class="nav-label">Me</span>
+        </div>
+      </div>
+
+      <div class="watermark">Mockup · Not final UI</div>
+
+    </div>
+  </div>
+  <div class="page-label">SkipTheLine · Home Map · v2 Redesign</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — REPORT WAIT TIME
+══════════════════════════════════════ -->
+<div class="phone-wrap report-screen">
+  <div class="phone-shell">
+    <div class="screen">
+
+      <!-- Dynamic Island -->
+      <div class="dynamic-island">
+        <div class="island-camera"></div>
+        <div class="island-sensor"></div>
+      </div>
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="white">
+            <rect x="0" y="8" width="3" height="4" rx="0.5"/>
+            <rect x="4.5" y="5.5" width="3" height="6.5" rx="0.5"/>
+            <rect x="9" y="3" width="3" height="9" rx="0.5"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="0.5" fill-opacity="0.3"/>
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <path d="M8 9.5A0.5 0.5 0 1 1 8.001 9.5Z" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+            <path d="M5.1 7.1Q8 4.5 10.9 7.1" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M2.5 4.7Q8 -0.3 13.5 4.7" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <svg width="25" height="12" viewBox="0 0 25 12">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+            <rect x="2" y="2" width="15" height="8" rx="2" fill="#fff"/>
+            <path d="M21.5 4Q23.5 4 23.5 6Q23.5 8 21.5 8Z" fill="rgba(255,255,255,0.45)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- BG gradient -->
+      <div class="report-bg"></div>
+
+      <!-- Report header -->
+      <div class="report-header">
+        <div class="back-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M11 4L6 9l5 5" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="report-title-block">
+          <div class="report-pretitle">Report</div>
+          <div class="report-title">How long's<br>the wait?</div>
+          <div class="report-subtitle">Your report helps everyone skip the line</div>
+        </div>
+      </div>
+
+      <!-- Venue confirm -->
+      <div class="venue-confirm">
+        <div class="vc-emoji">🍽️</div>
+        <div class="vc-info">
+          <div class="vc-name">Versailles Restaurant</div>
+          <div class="vc-addr">3555 SW 8th St · Miami Beach</div>
+        </div>
+        <div class="vc-change">Change</div>
+      </div>
+
+      <!-- Wait time selector -->
+      <div class="wait-selector">
+        <div class="ws-label">Current wait time</div>
+        <div class="ws-options">
+          <div class="ws-opt">
+            <span class="ws-time">&lt;5m</span>
+            <span class="ws-tag">Short</span>
+          </div>
+          <div class="ws-opt">
+            <span class="ws-time">10m</span>
+            <span class="ws-tag"></span>
+          </div>
+          <div class="ws-opt selected">
+            <span class="ws-time">20m</span>
+            <span class="ws-tag">Selected</span>
+          </div>
+          <div class="ws-opt">
+            <span class="ws-time">30m</span>
+            <span class="ws-tag"></span>
+          </div>
+          <div class="ws-opt">
+            <span class="ws-time">45m</span>
+            <span class="ws-tag"></span>
+          </div>
+          <div class="ws-opt">
+            <span class="ws-time">60m</span>
+            <span class="ws-tag"></span>
+          </div>
+          <div class="ws-opt">
+            <span class="ws-time">90m</span>
+            <span class="ws-tag"></span>
+          </div>
+          <div class="ws-opt">
+            <span class="ws-time">2h+</span>
+            <span class="ws-tag">Long</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wait type -->
+      <div class="wait-type-row">
+        <div class="wt-label">What kind of wait?</div>
+        <div class="wt-options">
+          <div class="wt-opt selected">
+            <div class="wt-icon">🚶</div>
+            Walk-in
+          </div>
+          <div class="wt-opt">
+            <div class="wt-icon">📋</div>
+            Reservation
+          </div>
+          <div class="wt-opt">
+            <div class="wt-icon">⭐</div>
+            VIP / List
+          </div>
+        </div>
+      </div>
+
+      <!-- XP reward -->
+      <div class="xp-reward">
+        <div class="xp-icon">⚡</div>
+        <div class="xp-text">
+          <div class="xp-headline">Earn SkipPoints for this report</div>
+          <div class="xp-sub">Verified reports earn bonus points</div>
+        </div>
+        <div class="xp-pts">+25</div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-btn">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2v16M2 10l8-8 8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Submit Report
+      </div>
+
+      <!-- Bottom nav -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <polygon points="1,4 8,1 14,4 21,1 21,18 14,21 8,18 1,21" stroke="rgba(255,255,255,0.3)" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+              <circle cx="11" cy="11" r="2.2" fill="rgba(255,255,255,0.3)"/>
+            </svg>
+          </div>
+          <span class="nav-label">Map</span>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="2" y="4" width="18" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="2" y="10" width="18" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="2" y="16" width="12" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
+            </svg>
+          </div>
+          <span class="nav-label">List</span>
+        </div>
+        <div class="nav-item active">
+          <div class="nav-icon-wrap" style="background:rgba(255,90,31,0.12);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#FF5A1F" stroke-width="1.6"/>
+              <path d="M12 7v10M7 12h10" stroke="#FF5A1F" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="nav-label" style="color:var(--orange)">Report</span>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 18s-8-5.2-8-10a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 4.8-8 10-8 10z" stroke="rgba(255,255,255,0.35)" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="nav-label">Saved</span>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="8" r="3.5" stroke="rgba(255,255,255,0.35)" stroke-width="1.6"/>
+              <path d="M3 19c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(255,255,255,0.35)" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="points-badge"><span class="pts-text">⚡ 840 pts</span></div>
+          <span class="nav-label">Me</span>
+        </div>
+      </div>
+
+      <div class="watermark">Mockup · Not final UI</div>
+
+    </div>
+  </div>
+  <div class="page-label">SkipTheLine · Report Flow · v2 Redesign</div>
+</div>
+
+<script>
+  // Randomize blip animation start offsets for organic feel
+  document.querySelectorAll('.blip').forEach(b => {
+    b.style.animationDelay = (Math.random() * 8).toFixed(2) + 's';
+  });
+
+  // Draggable bottom sheet
+  const sheet = document.querySelector('.bottom-sheet');
+  const handle = document.querySelector('.sheet-handle-row');
+  if (sheet && handle) {
+    let drag = false, startY = 0, startH = 0;
+    handle.addEventListener('mousedown', e => {
+      drag = true; startY = e.clientY; startH = sheet.offsetHeight;
+      document.body.style.userSelect = 'none';
+    });
+    document.addEventListener('mousemove', e => {
+      if (!drag) return;
+      const h = Math.min(Math.max(startH + (startY - e.clientY), 100), 420);
+      sheet.style.height = h + 'px';
+    });
+    document.addEventListener('mouseup', () => { drag = false; document.body.style.userSelect = ''; });
+  }
+
+  // Chip toggle
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Wait time option select
+  document.querySelectorAll('.ws-opt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      document.querySelectorAll('.ws-opt').forEach(o => {
+        o.classList.remove('selected');
+        o.querySelector('.ws-tag').textContent = '';
+      });
+      this.classList.add('selected');
+      this.querySelector('.ws-tag').textContent = 'Selected';
+    });
+  });
+
+  // Wait type select
+  document.querySelectorAll('.wt-opt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      document.querySelectorAll('.wt-opt').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+</script>
+</body>
+</html>
