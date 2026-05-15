@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "SkipTheLine",
+    "slug": "skiptheline",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0a0f"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.skiptheline.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "SkipTheLine uses your location to show wait times at nearby venues.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "SkipTheLine uses your location to automatically detect when you arrive at a venue and notify you of wait time drops nearby.",
+        "NSMotionUsageDescription": "SkipTheLine uses motion data to detect when you are waiting in line."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0a0f"
+      },
+      "package": "com.skiptheline.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-location",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#6c47ff"
+        }
+      ]
+    ],
+    "scheme": "skiptheline"
+  }
+}
