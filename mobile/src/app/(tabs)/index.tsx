@@ -1,0 +1,548 @@
+import React, { useState, useRef, useEffect, useMemo } from 'react'
+import {
+  View, Text, StyleSheet, ScrollView, Pressable, Dimensions, Image, TextInput,
+} from 'react-native'
+import { useRouter } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import BottomSheet from '@gorhom/bottom-sheet'
+import { Moon, Sun, Settings, Search, Heart, SlidersHorizontal, X } from 'lucide-react-native'
+import { spacing, fontFamily } from '@/constants/theme'
+import { venues, categories, profile, type Category, getSeverity, getWaitColor } from '@/lib/mock-data'
+import { OnboardingTour } from '@/components/OnboardingTour'
+import { VenueSheet } from '@/components/VenueSheet'
+import { useThemeStore, useColors } from '@/lib/theme-store'
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const CARD_WIDTH = SCREEN_WIDTH - spacing.md * 2
+
+const FIRST_REPORT_VENUES = new Set(['v4', 'v8'])
+
+const featuredExperiences = [
+  {
+    id: 'fe0',
+    title: 'Miami Bayside Walkway',
+    type: 'Experience',
+    distance: '1.1 mi',
+    price: 'Free',
+    image: 'https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=800&q=80',
+    sponsored: false,
+  },
+  {
+    id: 'fe1',
+    title: 'Brickell Key Sunset Loop',
+    type: 'Landmark',
+    distance: '0.7 mi',
+    price: 'Free',
+    image: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80',
+    sponsored: true,
+  },
+  {
+    id: 'fe2',
+    title: 'Wynwood Art Walk',
+    type: 'Art',
+    distance: '2.3 mi',
+    price: '$10',
+    image: 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=800&q=80',
+    sponsored: true,
+  },
+]
+
+// ─── Wait pill ────────────────────────────────────────────────────────────────
+function WaitPill({ minutes }: { minutes: number }) {
+  const severity = getSeverity(minutes)
+  const bgColor = getWaitColor(severity)
+  return (
+    <View style={{ backgroundColor: bgColor, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999 }}>
+      <Text style={{ color: '#fff', fontSize: 10, fontWeight: '700' }}>
+        {minutes} min
+      </Text>
+    </View>
+  )
+}
+
+// ─── Featured carousel ────────────────────────────────────────────────────────
+function FeaturedCarousel({ onViewPress }: { onViewPress?: () => void }) {
+  const c = useColors()
+  const [activeIndex, setActiveIndex] = useState(1)
+  const scrollRef = useRef<ScrollView>(null)
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      scrollRef.current?.scrollTo({ x: activeIndex * CARD_WIDTH, animated: false })
+    }, 80)
+    return () => clearTimeout(t)
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex(prev => {
+        const next = (prev + 1) % featuredExperiences.length
+        scrollRef.current?.scrollTo({ x: next * CARD_WIDTH, animated: true })
+        return next
+      })
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <View style={featStyles.container}>
+      <ScrollView
+        ref={scrollRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={(e) => {
+          const idx = Math.round(e.nativeEvent.contentOffset.x / CARD_WIDTH)
+          setActiveIndex(idx)
+        }}
+        style={{ width: CARD_WIDTH, marginHorizontal: spacing.md }}
+      >
+        {featuredExperiences.map((item) => (
+          <View key={item.id} style={[featStyles.card, { width: CARD_WIDTH, backgroundColor: c.card, borderColor: c.border }]}>
+            <View style={featStyles.imageWrapper}>
+              <Image source={{ uri: item.image }} style={featStyles.image} resizeMode="cover" />
+              {item.sponsored ? (
+                <View style={featStyles.badgeLeft}>
+                  <Text style={featStyles.badgeText}>SPONSORED</Text>
+                </View>
+              ) : null}
+              <View style={featStyles.badgeRight}>
+                <Text style={featStyles.badgeText}>FEATURED EXPERIENCE</Text>
+              </View>
+            </View>
+            <View style={[featStyles.info, { backgroundColor: c.card }]}>
+              <View style={{ flex: 1 }}>
+                <Text style={[featStyles.title, { color: c.foreground }]}>{item.title}</Text>
+                <Text style={[featStyles.subtitle, { color: c.mutedForeground }]}>{item.type} · {item.distance} · {item.price}</Text>
+              </View>
+              <Pressable style={featStyles.viewBtn} onPress={onViewPress}>
+                <Text style={featStyles.viewBtnText}>View</Text>
+              </Pressable>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+      <View style={featStyles.dots}>
+        {featuredExperiences.map((_, i) => (
+          <View
+            key={i}
+            style={[featStyles.dot, i === activeIndex ? featStyles.dotActive : featStyles.dotInactive]}
+          />
+        ))}
+      </View>
+    </View>
+  )
+}
+
+const featStyles = StyleSheet.create({
+  container: { marginBottom: 20 },
+  card: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+  imageWrapper: { position: 'relative', height: 200 },
+  image: { width: '100%', height: 200 },
+  badgeLeft: {
+    position: 'absolute', top: 12, left: 12,
+    backgroundColor: 'rgba(25,20,15,0.78)',
+    paddingHorizontal: 10, paddingVertical: 5,
+    borderRadius: 999,
+  },
+  badgeRight: {
+    position: 'absolute', top: 12, right: 12,
+    backgroundColor: 'rgba(25,20,15,0.78)',
+    paddingHorizontal: 10, paddingVertical: 5,
+    borderRadius: 999,
+  },
+  badgeText: { color: '#FFFFFF', fontSize: 10, fontWeight: '700', letterSpacing: 0.4, fontFamily: fontFamily.accent },
+  info: {
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 16, paddingVertical: 14, gap: 12,
+  },
+  title: { fontSize: 16, fontWeight: '700', fontFamily: fontFamily.display },
+  subtitle: { fontSize: 12, marginTop: 2, fontFamily: fontFamily.body },
+  viewBtn: {
+    borderWidth: 1.5, borderColor: '#E07A3B',
+    paddingHorizontal: 16, paddingVertical: 8, borderRadius: 999,
+    backgroundColor: 'rgba(224,122,59,0.08)',
+  },
+  viewBtnText: { color: '#E07A3B', fontSize: 13, fontWeight: '600', fontFamily: fontFamily.bodySemiBold },
+  dots: {
+    flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+    gap: 6, marginTop: 12,
+  },
+  dot: { height: 6, borderRadius: 3 },
+  dotActive: { width: 18, backgroundColor: '#E07A3B' },
+  dotInactive: { width: 6, backgroundColor: '#C5BDB4' },
+})
+
+// ─── Category chips ───────────────────────────────────────────────────────────
+function CategoryChips({
+  active,
+  onChange,
+}: {
+  active: Category | 'all'
+  onChange: (c: Category | 'all') => void
+}) {
+  const c = useColors()
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={chipStyles.row}
+      style={{ flexGrow: 0 }}
+    >
+      {categories.map((cat) => {
+        const on = cat.id === active
+        return (
+          <Pressable
+            key={cat.id}
+            onPress={() => onChange(cat.id)}
+            style={[
+              chipStyles.chip,
+              { backgroundColor: on ? c.primary : c.card, borderColor: c.primary },
+            ]}
+          >
+            <Text style={[chipStyles.label, { color: on ? c.primaryForeground : c.primary }]}>{cat.label}</Text>
+          </Pressable>
+        )
+      })}
+    </ScrollView>
+  )
+}
+
+const chipStyles = StyleSheet.create({
+  row: { paddingHorizontal: spacing.md, gap: 8, paddingBottom: 4 },
+  chip: {
+    paddingHorizontal: 16, paddingVertical: 8,
+    borderRadius: 9999, borderWidth: 1.5,
+  },
+  label: { fontSize: 13, fontWeight: '600' },
+})
+
+// ─── Venue card ───────────────────────────────────────────────────────────────
+function VenueCard({
+  venue,
+  liked,
+  onToggleLike,
+  onPress,
+}: {
+  venue: (typeof venues)[0]
+  liked: boolean
+  onToggleLike: () => void
+  onPress: () => void
+}) {
+  const c = useColors()
+  const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - spacing.sm) / 2
+  const showFirstReport = FIRST_REPORT_VENUES.has(venue.id)
+
+  return (
+    <Pressable
+      style={[cardStyles.card, { width: venueCardWidth, backgroundColor: c.card, borderColor: c.border }]}
+      onPress={onPress}
+      testID={`venue-card-${venue.id}`}
+    >
+      <View style={cardStyles.imageWrapper}>
+        <Image source={{ uri: venue.image }} style={cardStyles.image} resizeMode="cover" />
+        <Pressable style={cardStyles.heart} onPress={onToggleLike} testID={`heart-${venue.id}`}>
+          <Heart
+            size={13}
+            color={liked ? c.primary : '#555'}
+            fill={liked ? c.primary : 'transparent'}
+            strokeWidth={2}
+          />
+        </Pressable>
+        {showFirstReport ? (
+          <View style={[cardStyles.firstReportBanner, { backgroundColor: c.primary }]}>
+            <Text style={cardStyles.firstReportText}>⟫ First report · +15 pts</Text>
+          </View>
+        ) : null}
+      </View>
+      <View style={cardStyles.body}>
+        <Text style={[cardStyles.name, { color: c.foreground }]} numberOfLines={1}>{venue.name}</Text>
+        <View style={cardStyles.metaRow}>
+          <Text style={[cardStyles.meta, { color: c.mutedForeground }]} numberOfLines={1}>
+            {venue.liveReporters} reporting · {venue.distance}
+          </Text>
+          <WaitPill minutes={venue.waitMinutes} />
+        </View>
+      </View>
+    </Pressable>
+  )
+}
+
+const cardStyles = StyleSheet.create({
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  imageWrapper: { position: 'relative', height: 130 },
+  image: { width: '100%', height: 130 },
+  heart: {
+    position: 'absolute', top: 8, right: 8,
+    width: 30, height: 30, borderRadius: 15,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  firstReportBanner: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    paddingVertical: 5, paddingHorizontal: 8,
+    alignItems: 'center',
+  },
+  firstReportText: { color: '#fff', fontSize: 10, fontWeight: '700', letterSpacing: 0.2 },
+  body: { padding: 10 },
+  name: { fontSize: 13, fontWeight: '700', marginBottom: 5, fontFamily: fontFamily.display },
+  metaRow: {
+    flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'space-between', gap: 4,
+  },
+  meta: { fontSize: 10, flex: 1, fontFamily: fontFamily.body },
+})
+
+// ─── Main screen ──────────────────────────────────────────────────────────────
+export default function HomeScreen() {
+  const router = useRouter()
+  const c = useColors()
+  const isDark = useThemeStore(s => s.isDark)
+  const toggleTheme = useThemeStore(s => s.toggle)
+  const hydrateTheme = useThemeStore(s => s.hydrate)
+
+  const [cat, setCat] = useState<Category | 'all'>('all')
+  const [liked, setLiked] = useState<Set<string>>(new Set())
+  const [tourVisible, setTourVisible] = useState(true)
+  const [selectedVenueId, setSelectedVenueId] = useState<string | null>(null)
+  const sheetRef = useRef<BottomSheet>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showShortWaitsOnly, setShowShortWaitsOnly] = useState(false)
+
+  useEffect(() => {
+    hydrateTheme()
+  }, [])
+
+  function toggleLike(id: string) {
+    setLiked((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const filtered = useMemo(() => {
+    let list = venues.filter((v) => cat === 'all' || v.category === cat)
+    if (showShortWaitsOnly) list = list.filter(v => v.waitMinutes <= 15)
+    const sorted = list.sort((a, b) => b.liveReporters - a.liveReporters)
+    if (!searchQuery.trim()) return sorted
+    const q = searchQuery.toLowerCase()
+    return sorted.filter(v => v.name.toLowerCase().includes(q) || v.categoryLabel.toLowerCase().includes(q))
+  }, [cat, searchQuery, showShortWaitsOnly])
+
+  const rankTrend: string = (profile as any).rankTrend ?? 'flat'
+  const rankDelta: number = (profile as any).rankDelta ?? 0
+  const rankColor =
+    rankTrend === 'up'
+      ? c.success
+      : rankTrend === 'down'
+        ? c.destructive
+        : c.mutedForeground
+
+  return (
+    <View style={{ flex: 1, backgroundColor: c.background }}>
+    <SafeAreaView edges={['top']} style={[styles.safe, { backgroundColor: c.background }]} testID="home-screen">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{profile.avatar ?? profile.name.charAt(0)}</Text>
+            </View>
+            <Text style={[styles.greeting, { color: c.foreground }]}>Hi, {profile.name.split(' ')[0]}!</Text>
+            <View style={[styles.rankBadge, { backgroundColor: `${rankColor}22` }]}>
+              <Text style={[styles.rankText, { color: rankColor }]}>#{profile.rank}</Text>
+              {rankDelta > 0 && rankTrend === 'up' && (
+                <Text style={[styles.rankDelta, { color: rankColor }]}> ↗{rankDelta}</Text>
+              )}
+              {rankDelta > 0 && rankTrend === 'down' && (
+                <Text style={[styles.rankDelta, { color: rankColor }]}> ↘{rankDelta}</Text>
+              )}
+            </View>
+          </View>
+          <View style={styles.headerRight}>
+            <Pressable
+              style={[styles.iconBtn, { backgroundColor: c.card, borderColor: c.border }]}
+              onPress={toggleTheme}
+              testID="dark-mode-toggle"
+            >
+              {isDark ? (
+                <Sun size={16} color={c.primary} />
+              ) : (
+                <Moon size={16} color={c.foreground} />
+              )}
+            </Pressable>
+            <Pressable
+              style={[styles.iconBtn, { backgroundColor: c.card, borderColor: c.border }]}
+              onPress={() => router.push('/(tabs)/profile')}
+            >
+              <Settings size={16} color={c.foreground} />
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Featured carousel */}
+        <FeaturedCarousel onViewPress={() => router.push('/(tabs)/discover')} />
+
+        {/* Search */}
+        <View style={styles.searchRow}>
+          <View style={[styles.searchBar, { backgroundColor: c.card, borderColor: c.border }]}>
+            <Search size={16} color={c.mutedForeground} />
+            <TextInput
+              style={[styles.searchInput, { color: c.foreground }]}
+              placeholder="Search venues, food, vibes..."
+              placeholderTextColor={c.mutedForeground}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              testID="home-search-input"
+            />
+            {searchQuery ? (
+              <Pressable onPress={() => setSearchQuery('')}>
+                <X size={14} color={c.mutedForeground} />
+              </Pressable>
+            ) : null}
+          </View>
+          <Pressable
+            style={[styles.filterBtn, showShortWaitsOnly && { backgroundColor: c.foreground }]}
+            onPress={() => setShowShortWaitsOnly(prev => !prev)}
+          >
+            <SlidersHorizontal size={16} color="#fff" />
+          </Pressable>
+        </View>
+
+        {/* Categories */}
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: c.foreground }]}>Categories</Text>
+          <Pressable onPress={() => router.push('/(tabs)/discover')}>
+            <Text style={[styles.seeAll, { color: c.primary }]}>See all</Text>
+          </Pressable>
+        </View>
+        <CategoryChips active={cat} onChange={setCat} />
+
+        {/* Around you */}
+        <View style={[styles.sectionHeader, { marginTop: 24 }]}>
+          <View>
+            <Text style={[styles.sectionTitle, { color: c.foreground }]}>Around you</Text>
+            <Text style={[styles.sortHint, { color: c.mutedForeground }]}>
+              {'Sorted by '}
+              <Text style={[styles.sortHintBold, { color: c.foreground }]}>trending</Text>
+            </Text>
+          </View>
+        </View>
+
+        {/* 2-col venue grid */}
+        <View style={styles.grid}>
+          {filtered.map((v) => (
+            <VenueCard
+              key={v.id}
+              venue={v}
+              liked={liked.has(v.id)}
+              onToggleLike={() => toggleLike(v.id)}
+              onPress={() => {
+                setSelectedVenueId(v.id)
+                sheetRef.current?.snapToIndex(0)
+              }}
+            />
+          ))}
+        </View>
+
+        <View style={{ height: 32 }} />
+      </ScrollView>
+
+      <OnboardingTour
+        visible={tourVisible}
+        onDismiss={() => setTourVisible(false)}
+      />
+
+    </SafeAreaView>
+
+    <VenueSheet
+      ref={sheetRef}
+      venueId={selectedVenueId}
+      onClose={() => setSelectedVenueId(null)}
+    />
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1 },
+  content: { paddingBottom: 20 },
+
+  header: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: spacing.md, paddingTop: 12, paddingBottom: 16,
+  },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  avatar: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: '#E07A3B', alignItems: 'center', justifyContent: 'center',
+  },
+  avatarText: { color: '#fff', fontSize: 16, fontWeight: '700', fontFamily: fontFamily.displayBold },
+  greeting: { fontSize: 15, fontWeight: '700', fontFamily: fontFamily.display },
+  rankBadge: {
+    flexDirection: 'row', alignItems: 'center',
+    borderRadius: 9999, paddingHorizontal: 8, paddingVertical: 4,
+  },
+  rankText: { fontSize: 12, fontWeight: '700' },
+  rankDelta: { fontSize: 12, fontWeight: '700' },
+  headerRight: { flexDirection: 'row', gap: 8 },
+  iconBtn: {
+    width: 40, height: 40, borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04, shadowRadius: 3, elevation: 1,
+  },
+
+  searchRow: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    paddingHorizontal: spacing.md, marginBottom: 20,
+  },
+  searchBar: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8,
+    borderRadius: 9999,
+    paddingHorizontal: 16, paddingVertical: 12,
+    borderWidth: 1,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04, shadowRadius: 3, elevation: 1,
+  },
+  searchInput: { flex: 1, fontSize: 14, padding: 0 },
+  filterBtn: {
+    width: 44, height: 44, borderRadius: 22,
+    backgroundColor: '#E07A3B', alignItems: 'center', justifyContent: 'center',
+  },
+
+  sectionHeader: {
+    flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between',
+    paddingHorizontal: spacing.md, marginBottom: 12,
+  },
+  sectionTitle: { fontSize: 18, fontWeight: '700', letterSpacing: -0.3, fontFamily: fontFamily.display },
+  seeAll: { fontSize: 13, fontWeight: '600' },
+  sortHint: { fontSize: 12, marginTop: 2 },
+  sortHintBold: { fontWeight: '700' },
+
+  grid: {
+    flexDirection: 'row', flexWrap: 'wrap',
+    paddingHorizontal: spacing.md, gap: spacing.sm,
+  },
+})
