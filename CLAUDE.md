@@ -365,3 +365,134 @@ User opens app near venue (While Using active)
 - Bolt.new was used for initial prototype
 - GitHub repo: JMiz0517/SkipTheLine2026 (private, under original owner)
 - No code exported locally yet — working from screenshots + copy/paste from Bolt
+
+---
+
+## Mobile App — React Native / Expo (Active Build)
+
+### Status
+A React Native Expo app has been built locally at `mobile/` and is runnable in **Expo Go** (no dev build required). Committed to `master` branch.
+
+### Tech Stack
+- **Framework:** React Native + Expo (Expo Router file-based routing)
+- **Language:** TypeScript
+- **Styling:** NativeWind (Tailwind v3) + StyleSheet
+- **State:** Zustand (theme store), React Query (data fetching)
+- **Navigation:** Expo Router — tabs + stack
+- **Fonts:** Inter (body), Plus Jakarta Sans (display/headings), Space Grotesk (accent/eyebrow)
+- **Icons:** lucide-react-native
+- **Gradients:** expo-linear-gradient
+
+### Expo Go Compatibility — Critical Rules
+These native modules **crash Expo Go** and must NOT be used until a dev build is created via EAS:
+- `react-native-reanimated` (JSI HostFunction crash)
+- `react-native-keyboard-controller`
+- `@gorhom/bottom-sheet` (depends on reanimated)
+- `react-native-maps` (RNMapsAirModule not found)
+- `react-native-worklets`
+
+**Replacements used:**
+- Bottom sheet → custom `PanResponder` + `Animated.Value` (3 snap points: PEEK/HALF/FULL)
+- Animations → RN's built-in `Animated` API (`Animated.spring`, `Animated.timing`)
+- Maps → decorative gradient + grid lines + SVG pins (placeholder until dev build)
+
+### Running the App
+```
+cd mobile
+npx expo start
+```
+Scan QR with Expo Go. Keep the Metro session alive — no need to restart unless terminal closes.
+
+### App Structure
+```
+mobile/src/app/
+  _layout.tsx          — root layout, fonts, QueryClient, GestureHandler
+  welcome.tsx          — onboarding/welcome screen
+  (tabs)/
+    _layout.tsx        — tab bar with custom Report FAB (center button)
+    index.tsx          — Home screen
+    discover.tsx       — Map screen (OpenTable-style bottom sheet)
+    report.tsx         — Report wait time screen
+    explore.tsx        — Explore screen
+    profile.tsx        — Profile, rewards, badges, friends
+  venue/[id].tsx       — Venue detail screen
+mobile/src/components/
+  OnboardingTour.tsx   — 4-step guided tour modal
+  VenueSheet.tsx       — (legacy, not in active use)
+mobile/src/lib/
+  mock-data.ts         — all venue/profile/category data
+  theme-store.ts       — Zustand dark/light mode store
+mobile/src/constants/
+  theme.ts             — fontFamily tokens, colors, spacing, shadows
+```
+
+### Key Design Decisions Made
+
+**Colors — Primary Orange:**
+- Primary: `#F8682B` (matching `oklch(0.69 0.19 41)`)
+- Gradient: `['#F2934D', '#F8682B']` diagonal (start: `{x:0,y:0}` end: `{x:1,y:1}`)
+- Shimmer overlay: `['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']` as `absoluteFillObject`
+- Applied to: all primary CTAs, filter buttons, FAB, submit buttons, active chips
+
+**Glossy Button Pattern (use everywhere orange appears as a solid fill):**
+```tsx
+<View style={{ borderRadius: 999, overflow: 'hidden' }}>
+  <LinearGradient colors={['#F2934D', '#F8682B']} start={{x:0,y:0}} end={{x:1,y:1}} style={...}>
+    <LinearGradient
+      colors={['rgba(255,255,255,0.35)','rgba(255,255,255,0)','rgba(255,255,255,0.10)']}
+      start={{x:0,y:0}} end={{x:1,y:1}}
+      style={StyleSheet.absoluteFillObject}
+    />
+    {/* content */}
+  </LinearGradient>
+</View>
+```
+Note: parent needs `overflow: 'hidden'` for shimmer to clip correctly on Android.
+
+**Map Screen (discover.tsx) — Bottom Sheet:**
+- Snap points: `SNAP_PEEK=100`, `SNAP_HALF=SCREEN_H*0.6` (default), `SNAP_FULL=SCREEN_H*0.92`
+- Drag via `PanResponder` on handle area only
+- Sheet is `position: absolute`, driven by `Animated.Value` translateY
+- Venue list is a `ScrollView` inside the sheet
+- Map is decorative (gradient + grid lines + road overlays + colored wait pins with tails)
+- Floating search bar + glossy filter button on top of map
+
+**Report FAB (tab bar center button):**
+- Custom `PeopleSkipGlyph` SVG: two people silhouettes + double-chevron arrows
+- Wrapped in `LinearGradient` with orange glow shadow
+- Navigates to `/(tabs)/report` on press
+
+**Onboarding Tour:**
+- 4-step modal with `Animated.spring` slide-in
+- No step transition animation (instant `setStep`) — bouncy transition was removed by design
+- Fonts: Space Grotesk eyebrow, Plus Jakarta Sans title/CTA, Inter body
+- Arrow diamond points at tab bar icon for steps 2–4
+
+**Venue Detail (venue/[id].tsx):**
+- Navigated to via `router.push('/venue/${v.id}')` — not a bottom sheet
+- Uses `venue.reviews`, `venue.recentReports`, `venue.averageRating`, `venue.photos` from mock-data
+- `COLORS` constant must stay at module level (outside component) — StyleSheet.create is module-scoped
+
+### StyleSheet Rules
+- `StyleSheet.create({})` runs at module load time — any constants it references must be at module scope, not inside a component function
+- `overflow: 'hidden'` required on gradient button wrappers for shimmer to clip on Android
+
+### Maps Strategy Decision
+- Deep-link handoff to OS-default maps app for directions (no in-app navigation at pre-seed)
+- iOS: `maps:` URI → Apple Maps. Android: `geo:` URI → Google Maps
+- This is the OS-installed default, NOT whatever third-party app user installed
+- Consistent, predictable experience. Add "Open in..." picker later if users request it
+- Do NOT lock to Google Maps deep link on iOS — Apple Maps is the correct iOS default
+
+### Security Rules (permanent)
+- Supabase service role key — never in frontend code
+- Supabase management API token — never committed
+- API keys go in `.env` only, `.env` in `.gitignore`
+- `EXPO_PUBLIC_SUPABASE_ANON_KEY` is the only Supabase key allowed in client code
+
+### What's Next (Mobile)
+- Wire Supabase real data replacing mock-data
+- Google Cloud project setup + Miami business seeding script
+- Build Arrival Nudge (proximity detection + one-tap report UI)
+- EAS dev build (unlocks react-native-maps, reanimated, real bottom sheet)
+- SMB dashboard (B2B primary revenue product)
