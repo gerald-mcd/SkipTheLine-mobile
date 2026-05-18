@@ -2,14 +2,13 @@ import React, { useState, useRef, useEffect, useMemo } from 'react'
 import {
   View, Text, StyleSheet, ScrollView, Pressable, Dimensions, Image, TextInput,
 } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import BottomSheet from '@gorhom/bottom-sheet'
 import { Moon, Sun, Settings, Search, Heart, SlidersHorizontal, X } from 'lucide-react-native'
 import { spacing, fontFamily } from '@/constants/theme'
 import { venues, categories, profile, type Category, getSeverity, getWaitColor } from '@/lib/mock-data'
 import { OnboardingTour } from '@/components/OnboardingTour'
-import { VenueSheet } from '@/components/VenueSheet'
 import { useThemeStore, useColors } from '@/lib/theme-store'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
@@ -322,8 +321,6 @@ export default function HomeScreen() {
   const [cat, setCat] = useState<Category | 'all'>('all')
   const [liked, setLiked] = useState<Set<string>>(new Set())
   const [tourVisible, setTourVisible] = useState(true)
-  const [selectedVenueId, setSelectedVenueId] = useState<string | null>(null)
-  const sheetRef = useRef<BottomSheet>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showShortWaitsOnly, setShowShortWaitsOnly] = useState(false)
 
@@ -421,11 +418,19 @@ export default function HomeScreen() {
               </Pressable>
             ) : null}
           </View>
-          <Pressable
-            style={[styles.filterBtn, showShortWaitsOnly && { backgroundColor: c.foreground }]}
-            onPress={() => setShowShortWaitsOnly(prev => !prev)}
-          >
-            <SlidersHorizontal size={16} color="#fff" />
+          <Pressable style={styles.filterBtn} onPress={() => setShowShortWaitsOnly(prev => !prev)}>
+            <LinearGradient
+              colors={showShortWaitsOnly ? [c.foreground, c.foreground] : ['#F2934D', '#F8682B']}
+              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+              style={styles.filterGradient}
+            >
+              <LinearGradient
+                colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                style={StyleSheet.absoluteFillObject}
+              />
+              <SlidersHorizontal size={16} color="#fff" />
+            </LinearGradient>
           </Pressable>
         </View>
 
@@ -457,10 +462,7 @@ export default function HomeScreen() {
               venue={v}
               liked={liked.has(v.id)}
               onToggleLike={() => toggleLike(v.id)}
-              onPress={() => {
-                setSelectedVenueId(v.id)
-                sheetRef.current?.snapToIndex(0)
-              }}
+              onPress={() => router.push(`/venue/${v.id}`)}
             />
           ))}
         </View>
@@ -474,12 +476,6 @@ export default function HomeScreen() {
       />
 
     </SafeAreaView>
-
-    <VenueSheet
-      ref={sheetRef}
-      venueId={selectedVenueId}
-      onClose={() => setSelectedVenueId(null)}
-    />
     </View>
   )
 }
@@ -528,8 +524,10 @@ const styles = StyleSheet.create({
   },
   searchInput: { flex: 1, fontSize: 14, padding: 0 },
   filterBtn: {
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#E07A3B', alignItems: 'center', justifyContent: 'center',
+    width: 44, height: 44, borderRadius: 22, overflow: 'hidden',
+  },
+  filterGradient: {
+    flex: 1, borderRadius: 22, alignItems: 'center', justifyContent: 'center',
   },
 
   sectionHeader: {

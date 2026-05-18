@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -6,17 +6,12 @@ import {
   Pressable,
   Dimensions,
   Modal,
+  Animated,
 } from 'react-native'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  runOnJS,
-} from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MapPin, Map, Users, Trophy, X } from 'lucide-react-native'
-import { shadows } from '@/constants/theme'
+import { shadows, fontFamily } from '@/constants/theme'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -77,7 +72,7 @@ interface OnboardingTourProps {
 export function OnboardingTour({ visible, onDismiss }: OnboardingTourProps) {
   const insets = useSafeAreaInsets()
   const [step, setStep] = useState<number>(0)
-  const translateY = useSharedValue(200)
+  const translateY = useRef(new Animated.Value(200)).current
 
   const CARD_HORIZONTAL_PAD = 20
   const CARD_WIDTH = SCREEN_WIDTH - CARD_HORIZONTAL_PAD * 2
@@ -85,32 +80,20 @@ export function OnboardingTour({ visible, onDismiss }: OnboardingTourProps) {
   useEffect(() => {
     if (visible) {
       setStep(0)
-      translateY.value = 200
-      translateY.value = withSpring(0, {
-        damping: 18,
-        stiffness: 160,
-        mass: 1,
-      })
+      translateY.setValue(200)
+      Animated.spring(translateY, { toValue: 0, damping: 18, stiffness: 160, mass: 1, useNativeDriver: true }).start()
     }
   }, [visible])
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }))
+  const animatedStyle = { transform: [{ translateY }] }
 
   function dismiss() {
-    translateY.value = withSpring(280, { damping: 20, stiffness: 200 }, () => {
-      runOnJS(onDismiss)()
-    })
+    Animated.timing(translateY, { toValue: 280, duration: 200, useNativeDriver: true }).start(() => onDismiss())
   }
 
   function advance() {
     if (step < STEPS.length - 1) {
-      translateY.value = withSpring(60, { damping: 18, stiffness: 200 }, () => {
-        runOnJS(setStep)(step + 1)
-        translateY.value = 200
-        translateY.value = withSpring(0, { damping: 18, stiffness: 160 })
-      })
+      setStep(s => s + 1)
     } else {
       dismiss()
     }
@@ -269,6 +252,7 @@ const styles = StyleSheet.create({
     color: MUTED,
     letterSpacing: 1.2,
     textTransform: 'uppercase',
+    fontFamily: fontFamily.accent,
   },
   closeBtn: {
     width: 32,
@@ -293,12 +277,14 @@ const styles = StyleSheet.create({
     color: FG,
     marginBottom: 6,
     letterSpacing: -0.2,
+    fontFamily: fontFamily.display,
   },
   body: {
     fontSize: 14,
     color: MUTED,
     lineHeight: 20,
     marginBottom: 16,
+    fontFamily: fontFamily.body,
   },
   dotsRow: {
     flexDirection: 'row',
@@ -334,6 +320,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: MUTED,
+    fontFamily: fontFamily.bodySemiBold,
   },
   btnNext: {
     flex: 2,
@@ -346,6 +333,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#FFFFFF',
+    fontFamily: fontFamily.display,
   },
   arrow: {
     width: 12,

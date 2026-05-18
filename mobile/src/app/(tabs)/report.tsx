@@ -247,11 +247,16 @@ export default function ReportScreen() {
             onPress={handleSubmit}
           >
             <LinearGradient
-              colors={['#E07A3B', '#F2934D']}
+              colors={['#F2934D', '#F8682B']}
               start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
+              end={{ x: 1, y: 1 }}
               style={styles.submitGradient}
             >
+              <LinearGradient
+                colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                style={StyleSheet.absoluteFillObject}
+              />
               <Zap size={16} color="#FFFFFF" strokeWidth={2.5} fill="#FFFFFF" />
               <Text style={styles.submitText}>Submit report  ·  +15 pts</Text>
             </LinearGradient>

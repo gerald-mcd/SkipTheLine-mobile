@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, ScrollView, Pressable, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { Image } from 'expo-image'
+import { Image } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
@@ -21,13 +21,13 @@ import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
 import { venues, severityColor } from '@/lib/mock-data'
 import { fontFamily } from '@/constants/theme'
+import { useColors } from '@/lib/theme-store'
 import { openDirections } from '@/lib/actions'
 import { ReviewModal } from '@/components/ReviewModal'
 
 const COLORS = {
   background: '#FBFBFC',
   primary: '#E07A3B',
-  primaryGlow: '#F2934D',
   card: '#FFFFFF',
   border: '#EDE6DD',
   foreground: '#33384A',
@@ -35,37 +35,6 @@ const COLORS = {
   peachBadgeBg: '#FFF0E8',
   peachBadgeText: '#E07A3B',
 }
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
-
-// Sparkline data — 8 points, height values 0–80
-const CHART_BARS = [
-  { height: 22, severity: 'short' as const },
-  { height: 35, severity: 'short' as const },
-  { height: 55, severity: 'moderate' as const },
-  { height: 70, severity: 'long' as const },
-  { height: 78, severity: 'long' as const },
-  { height: 60, severity: 'moderate' as const },
-  { height: 42, severity: 'moderate' as const },
-  { height: 28, severity: 'short' as const },
-]
-
-// Reviews mock data
-const MOCK_REVIEWS = [
-  { id: 'rev1', name: 'Jasmine K.', source: 'GOOGLE', stars: 5, text: '"Vibes are unreal. Worth the wait every time."', ago: '2d ago' },
-  { id: 'rev2', name: 'Rico M.', source: 'GOOGLE', stars: 4, text: '"Great spot. Hit the bar — line moves twice as fast."', ago: '5d ago' },
-  { id: 'rev3', name: 'Priya S.', source: 'GOOGLE', stars: 5, text: '"Friendly staff and the patio is a gem."', ago: '1w ago' },
-]
-const AVERAGE_RATING = 4.7
-const REVIEWS_COUNT = 3
-
-// Recent reports mock data
-const RECENT_REPORTS_NEW = [
-  { id: 'rr1', initial: 'M', name: 'Marcus', isFriend: true, type: 'walk-in', agoText: 'now', waitMinutes: 8 },
-  { id: 'rr2', initial: 'S', name: 'Sofía', isFriend: true, type: 'walk-in', agoText: '1m', waitMinutes: 42 },
-  { id: 'rr3', initial: null, name: 'Someone nearby', isFriend: false, type: 'walk-in', agoText: '1m', waitMinutes: 65 },
-  { id: 'rr4', initial: null, name: 'Someone nearby', isFriend: false, type: 'walk-in', agoText: '3m', waitMinutes: 25 },
-]
 
 const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#E07A3B', '#857565', '#33384A']
 
@@ -121,9 +90,11 @@ function Sparkline({ color }: { color: string }) {
 export default function VenueDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
+  const c = useColors()
   const venue = venues.find(x => x.id === id) ?? venues[0]
   const [isFavorited, setIsFavorited] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
+
 
   async function handleAddPhoto() {
     await ImagePicker.launchImageLibraryAsync({
@@ -132,12 +103,10 @@ export default function VenueDetailScreen() {
     })
   }
 
-  const photos = [
-    venue.image,
-    'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80',
-    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
-    'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80',
-  ]
+  const photos = venue.photos?.length ? venue.photos : [venue.image]
+  const reviews = venue.reviews ?? []
+  const recentReports = venue.recentReports ?? []
+  const averageRating = venue.averageRating ?? 0
   const [photoIdx, setPhotoIdx] = useState<number>(0)
 
   const liveColor = severityColor(venue.severity)
@@ -162,7 +131,7 @@ export default function VenueDetailScreen() {
                 styles.heroImage,
                 { opacity: i === photoIdx ? 1 : 0, position: i === 0 ? 'relative' : 'absolute' },
               ]}
-              contentFit="cover"
+              resizeMode="cover"
             />
           ))}
 
@@ -247,8 +216,19 @@ export default function VenueDetailScreen() {
             style={styles.actionPillPrimary}
             onPress={() => router.push({ pathname: '/(tabs)/report', params: { venueId: venue.id } })}
           >
-            <Clock size={15} color="#FFFFFF" strokeWidth={2} />
-            <Text style={styles.actionPillPrimaryText}>Report wait</Text>
+            <LinearGradient
+              colors={['#F2934D', '#F8682B']}
+              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+              style={styles.actionPillGradient}
+            >
+              <LinearGradient
+                colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                style={StyleSheet.absoluteFillObject}
+              />
+              <Clock size={15} color="#FFFFFF" strokeWidth={2} />
+              <Text style={styles.actionPillPrimaryText}>Report wait</Text>
+            </LinearGradient>
           </Pressable>
         </View>
 
@@ -326,7 +306,7 @@ export default function VenueDetailScreen() {
             <View style={styles.reviewsHeaderRight}>
               <Star size={13} color="#F59E0B" fill="#F59E0B" strokeWidth={1.5} />
               <Text style={styles.reviewsRatingText}>
-                {`${AVERAGE_RATING} · ${REVIEWS_COUNT}`}
+                {`${averageRating} · ${reviews.length}`}
               </Text>
             </View>
           </View>
@@ -346,7 +326,7 @@ export default function VenueDetailScreen() {
 
           {/* Review cards */}
           <View style={styles.reviewsList}>
-            {MOCK_REVIEWS.map(review => (
+            {reviews.map(review => (
               <View key={review.id} style={styles.reviewCard}>
                 <View style={styles.reviewCardTop}>
                   <Text style={styles.reviewerName}>{review.name}</Text>
@@ -372,7 +352,7 @@ export default function VenueDetailScreen() {
           </View>
 
           <View style={styles.reportsList}>
-            {RECENT_REPORTS_NEW.map((report, index) => {
+            {recentReports.map((report, index) => {
               const waitColor = report.waitMinutes > 45
                 ? '#D9462E'
                 : report.waitMinutes > 15
@@ -431,7 +411,7 @@ export default function VenueDetailScreen() {
 
         {/* ── Vibe tags ── */}
         <View style={[styles.section, styles.vibeSection]}>
-          {venue.vibe.split(' · ').map((tag, i) => (
+          {(venue.vibe ?? '').split(' · ').filter(Boolean).map((tag, i) => (
             <View key={i} style={styles.vibeTag}>
               <Text style={styles.vibeTagText}>{tag}</Text>
             </View>
@@ -595,16 +575,20 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 52,
     borderRadius: 9999,
-    backgroundColor: COLORS.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
+    overflow: 'hidden',
     shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 12,
     elevation: 6,
+  },
+  actionPillGradient: {
+    flex: 1,
+    borderRadius: 9999,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
   },
   actionPillPrimaryText: {
     fontSize: 13,
@@ -646,17 +630,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     textTransform: 'uppercase',
     fontFamily: fontFamily.accent,
-  },
-  sparkline: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 2,
-    height: 28,
-  },
-  sparkBar: {
-    width: 3,
-    borderRadius: 2,
-    opacity: 0.85,
   },
   liveWaitNumRow: {
     flexDirection: 'row',

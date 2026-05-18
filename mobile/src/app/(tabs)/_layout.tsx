@@ -3,42 +3,20 @@ import { Tabs, useRouter } from 'expo-router'
 import { View, StyleSheet, Pressable, Text } from 'react-native'
 import { Home, Map, Compass, Trophy } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import Svg, { Path, Circle, Line } from 'react-native-svg'
+import Svg, { Path, Circle } from 'react-native-svg'
 
-// PeopleSkipGlyph: two stick figures with a curved skip arrow
 function PeopleSkipGlyph({ size = 24, color = '#FFFFFF' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      {/* Person 1 (left) */}
-      <Circle cx={6} cy={4.5} r={2} stroke={color} strokeWidth={1.8} />
-      <Line x1={6} y1={6.5} x2={6} y2={13} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={6} y1={9} x2={3.5} y2={12} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={6} y1={9} x2={8.5} y2={12} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={6} y1={13} x2={4} y2={18} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={6} y1={13} x2={8} y2={18} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      {/* Person 2 (right) */}
-      <Circle cx={16} cy={4.5} r={2} stroke={color} strokeWidth={1.8} />
-      <Line x1={16} y1={6.5} x2={16} y2={13} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={16} y1={9} x2={13.5} y2={12} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={16} y1={9} x2={18.5} y2={12} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={16} y1={13} x2={14} y2={18} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      <Line x1={16} y1={13} x2={18} y2={18} stroke={color} strokeWidth={1.8} strokeLinecap="round" />
-      {/* Skip arrow over the top */}
-      <Path
-        d="M 9 2 Q 11 -1 13 2"
-        stroke={color}
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <Path
-        d="M 11.5 0.5 L 13 2 L 11 3"
-        stroke={color}
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
+      {/* Back person */}
+      <Circle cx={4} cy={8} r={2} stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M1.5 17c0-2.5 1.5-4 3.5-4" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      {/* Front person */}
+      <Circle cx={9} cy={7} r={2.2} stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M5.5 17c0-3 1.8-5 4-5s3.5 1.5 3.5 3.5V17" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      {/* Double-chevron skip */}
+      <Path d="M14 8l4 4-4 4" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M19 8l4 4-4 4" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   )
 }

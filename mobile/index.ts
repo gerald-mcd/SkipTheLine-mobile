@@ -1,5 +1,4 @@
 import "react-native-get-random-values";
-import "react-native-reanimated";
 import { LogBox } from "react-native";
 import "./global.css";
 import "expo-router/entry";

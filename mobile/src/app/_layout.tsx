@@ -2,7 +2,6 @@ import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { colors } from '@/constants/theme'
 import React, { useEffect } from 'react'
 import {
@@ -42,14 +41,9 @@ function RootLayoutNav() {
         <Stack.Screen name="welcome" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="venue/[id]" options={{
-          presentation: 'formSheet',
-          sheetAllowedDetents: [0.6, 1.0] as any,
-          sheetInitialDetentIndex: 0,
-          sheetGrabberVisible: true,
-          sheetCornerRadius: 24,
           headerShown: false,
           contentStyle: { backgroundColor: '#FBFBFC' },
-        } as any} />
+        }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </>
@@ -81,9 +75,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <KeyboardProvider>
           <RootLayoutNav />
-        </KeyboardProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   )

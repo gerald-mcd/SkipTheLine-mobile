@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native'
 import BottomSheet, { BottomSheetScrollView, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
-import { Image } from 'expo-image'
+import { Image } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Svg, { Polyline, Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg'
 import {
@@ -224,7 +224,7 @@ export const VenueSheet = forwardRef<BottomSheet, {
           <Image
             source={{ uri: photos[photoIdx] }}
             style={styles.heroImage}
-            contentFit="cover"
+            resizeMode="cover"
           />
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.78)']}
