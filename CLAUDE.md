@@ -496,3 +496,100 @@ Note: parent needs `overflow: 'hidden'` for shimmer to clip correctly on Android
 - Build Arrival Nudge (proximity detection + one-tap report UI)
 - EAS dev build (unlocks react-native-maps, reanimated, real bottom sheet)
 - SMB dashboard (B2B primary revenue product)
+
+---
+
+## Voice AI Agent — Research & Roadmap
+
+### What It Is
+A **Voice AI Agent** (also called Conversational Voice Interface) — the same experience as ChatGPT voice mode, embedded directly in the app. User taps a mic button, speaks naturally, assistant thinks and speaks back. Not Siri-style one-shot commands — full back-and-forth conversation.
+
+**Example interaction:**
+> "What's the wait at LIV tonight?"
+> "LIV is sitting at about 40 minutes, reported 8 minutes ago. Want me to alert you when it drops?"
+> "Yeah, under 20 minutes"
+> Done — alert set, no tapping required.
+
+### The Stack (Three Layers)
+
+```
+Your App (SkipTheLine)
+    ↓
+Voice AI Platform  ← "the orchestration layer"
+(Vapi, Bland, ElevenLabs)
+    ↓          ↓            ↓
+   STT        LLM          TTS
+(Whisper)  (the brain)  (the voice)
+           ↓
+     Model Provider
+   OpenAI → GPT-4o
+   Anthropic → Claude Sonnet
+   Google → Gemini
+```
+
+- **Voice AI Platform** (Vapi, Bland, ElevenLabs) — orchestrates the conversation. Handles mic, turn-taking, interruptions, function calling. Called: **Voice AI Orchestration Platform** or **Voice AI Infrastructure.**
+- **Model Provider** (OpenAI, Anthropic, Google) — the company that makes the LLM brain.
+- **Model** (GPT-4o, Claude Sonnet, Gemini) — the actual intelligence layer.
+
+### Recommended Stack
+- **Orchestration:** Vapi (fastest to integrate, React Native SDK available)
+- **Model:** Claude Sonnet via Anthropic API (better contextual reasoning for domain-specific data)
+- **Voice output:** ElevenLabs (most natural TTS)
+- **Fallback:** OpenAI Realtime API (more mature RN SDK, lower latency at ~300ms)
+
+### What It Can Do at Launch
+- Check wait times hands-free
+- Log a wait report by voice (+SkipPoints awarded automatically)
+- Set wait drop alerts ("tell me when LIV drops under 20 minutes")
+- Add venue visit to calendar (Expo Calendar API — iOS + Android)
+- Recommend venues based on live wait data + user history
+
+### Implementation (How It Plugs In)
+```bash
+npm install @vapi-ai/react-native
+```
+```tsx
+const vapi = new Vapi(VAPI_API_KEY)
+vapi.start({
+  assistant: {
+    model: { provider: 'anthropic', model: 'claude-sonnet-4-6' },
+    voice: { provider: 'elevenlabs', voiceId: '...' },
+    functions: [
+      { name: 'getWaitTime' },
+      { name: 'reportWait' },
+      { name: 'addToCalendar' },
+    ]
+  }
+})
+```
+API keys go in `.env` — never committed. All model calls are cloud-based, no on-device inference.
+
+### Cost
+| Service | Cost |
+|---------|------|
+| Vapi | ~$0.05–0.10/min of conversation |
+| Claude Sonnet | ~$0.003/1K tokens |
+| ElevenLabs | ~$0.30/1K characters spoken |
+
+~$0.15–0.25 per 2-minute voice interaction end-to-end. All have free dev tiers.
+
+### Priority
+**Phase 2** — build after core data loop is live in Miami. Prototype early as an investor demo moment. A 60-second video of someone saying "35 minute wait at Komodo" and watching it hit the live map is a fundraising asset.
+
+---
+
+## Legal Questions — Tech & Architecture (For Lawyer)
+
+Identified for business partners' lawyer meeting. High-level, one per category:
+
+**Data & Privacy**
+- What consent and disclosure is legally required before we collect real-time location data from users?
+- How long can we retain user location history and behavioral data — and do we need a deletion policy at launch?
+- What's our liability exposure if crowdsourced wait time data we display turns out to be inaccurate?
+
+**AI & Voice Assistant**
+- If the app records voice to process commands, what disclosures are required — and does that change state by state?
+- Who legally owns the data generated from an AI assistant interaction inside our app — us, the user, or the AI provider?
+
+**Third-Party APIs & IP**
+- Google Places API seeds our entire business database — are there commercial licensing restrictions on how we use and store that data?
