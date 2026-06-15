@@ -27,14 +27,54 @@ Built in Bolt.new. Tech stack:
 - **Real-time:** Simulated, not actual
 
 ## Critical Gaps (What Needs to Be Built)
-1. Real backend — connect Supabase or Firebase, pick one and consolidate
-2. Real auth — Firebase Google Sign-In needs actual config
+1. Real backend — Supabase (database, auth, real-time, storage, edge functions)
+2. Real auth — Supabase Auth with Google + Apple Sign-In
 3. Real wait time data engine with time-decay weighting + fraud detection
-4. Native mobile app — React Native / Expo or commit to PWA strategy
-5. SMB business dashboard (B2B product = 80% of early revenue)
-6. Payment processing — Stripe integration
-7. Gamification system — SkipPoints, leaderboards, badges (critical for cold-start)
-8. Cold-start data strategy — how to seed wait times before users exist
+4. Anomaly detection + bad actor system — detect and isolate intentionally false wait time reports (see section below)
+5. Native mobile app — React Native / Expo (built, running in Expo Go — EAS dev build next)
+6. SMB business dashboard (B2B product = 80% of early revenue)
+7. Payment processing — Stripe integration (B2C $3.99/mo + B2B $29-199/mo)
+8. Gamification system — SkipPoints, leaderboards, badges (critical for cold-start)
+9. Cold-start data strategy — seed Miami via Google Places API before launch
+10. Push notifications — Expo Notifications (arrival nudge, wait drop alerts)
+
+## Anomaly Detection & Bad Actor System
+
+### Why It Matters
+The entire product's credibility rests on wait time accuracy. A single bad actor repeatedly reporting false times at a venue can destroy user trust. This needs to be a first-class system, not an afterthought.
+
+### Detection Signals (flag these as suspicious)
+- **Statistical outlier** — a report that deviates >2x from the median of recent reports at the same venue
+- **Velocity abuse** — same user submitting multiple reports at the same venue within a short window (e.g. 3+ reports in 30 min)
+- **Location mismatch** — user reports a wait but GPS coordinates don't place them near the venue
+- **New account spam** — account <24 hours old submitting high-volume reports
+- **Pattern anomaly** — user always reports extreme values (always 0 min or always 90+ min) across many venues
+- **Coordinated attack** — multiple accounts from same IP or device fingerprint reporting the same outlier value
+
+### Response Tiers
+- **Tier 1 (soft flag):** Down-weight the report in the wait time calculation — don't display it at full weight, don't remove it
+- **Tier 2 (hard flag):** Exclude report entirely from calculation, freeze SkipPoints award for that submission
+- **Tier 3 (ban):** Suspend account from reporting, flag for manual review
+
+### Implementation Approach
+- Runs as a Supabase Edge Function triggered on every new report insert
+- Scores each report 0–100 (0 = clean, 100 = likely fraudulent)
+- Score stored on the report row — wait time engine filters by score threshold
+- Repeat offenders accumulate a `trust_score` on their user profile (starts at 100, degrades with bad reports)
+- Reports from low trust_score users are auto down-weighted before anomaly check even runs
+
+### Data Model Addition
+```sql
+reports table additions:
+  anomaly_score     int       -- 0-100, higher = more suspicious
+  location_verified boolean   -- did GPS confirm user was near venue?
+  flagged           boolean   -- excluded from wait time calculation
+
+users table additions:
+  trust_score       int       -- 0-100, starts at 100, degrades with bad reports
+  report_count      int       -- total lifetime reports
+  flagged_count     int       -- total flagged reports
+```
 
 ## Business / Location Data Layer (How It Works)
 
