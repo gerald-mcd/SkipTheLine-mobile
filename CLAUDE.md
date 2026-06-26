@@ -690,6 +690,9 @@ Supabase handles the entire backend at pre-seed — no separate server needed:
 | Service | Our Estimate | Actual | Notes |
 |---------|-------------|--------|-------|
 | Google Cloud free credit | $200/mo ongoing | **$300 one-time (90 days)** | One-time trial credit, not monthly. After 90 days switches to pay-as-you-go. No automatic charges until you manually upgrade. |
+| Expo EAS | $14/mo (Production) | **$0 — Free tier sufficient** | 30 builds/mo, 1,000 MAU, 100 GiB bandwidth. Upgrade to Production ($14/mo) only when exceeding 1,000 MAU at launch. |
+| Apple Developer Account | $99/yr | **$99/yr — confirmed** | Individual account for now. Upgrade to Organization ($99/yr same price) once legal entity formed. Approval takes 24–48hrs. Required for EAS iOS build, TestFlight, App Store. |
+| Google Play Developer | $25 one-time | **$25 one-time — confirmed** | Individual account for now. Upgrade to Organization (same price) once legal entity formed. Approved same day. Required for Play Store only — Android dev builds don't need it. |
 
 ### Team Sync Backlog (priority order)
 1. Google Cloud setup — create project, enable Maps SDK + Places API, get API key
