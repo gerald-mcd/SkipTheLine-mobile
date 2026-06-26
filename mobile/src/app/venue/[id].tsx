@@ -14,6 +14,7 @@ import {
   Camera,
   MessageSquare,
   User,
+  Globe,
 } from 'lucide-react-native'
 import Svg, { Polyline, Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg'
 import * as ImagePicker from 'expo-image-picker'
@@ -21,6 +22,7 @@ import { useState, useEffect } from 'react'
 import { severityColor } from '@/lib/mock-data'
 import { fontFamily } from '@/constants/theme'
 import { openDirections } from '@/lib/actions'
+import { Linking } from 'react-native'
 import { ReviewModal } from '@/components/ReviewModal'
 import { getVenueById, getVenueReports, getVenueReviews, getVenuePhotos, toggleFavorite, getFavoriteIds, type Venue, type Report, type VenueReview } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
@@ -255,12 +257,22 @@ export default function VenueDetailScreen() {
           </View>
         </View>
 
-        {/* ── Action row: Directions + Report wait ── */}
+        {/* ── Action row: Directions + Website + Report wait ── */}
         <View style={styles.actionRow}>
           <Pressable testID="directions-button" style={styles.actionPillSecondary} onPress={() => openDirections(venue.lat, venue.lng, venue.name)}>
             <Navigation size={15} color={COLORS.foreground} strokeWidth={2} />
             <Text style={styles.actionPillSecondaryText}>Directions</Text>
           </Pressable>
+          {venue.website ? (
+            <Pressable
+              testID="website-button"
+              style={styles.actionPillSecondary}
+              onPress={() => venue.website && Linking.openURL(venue.website)}
+            >
+              <Globe size={15} color={COLORS.foreground} strokeWidth={2} />
+              <Text style={styles.actionPillSecondaryText}>Website</Text>
+            </Pressable>
+          ) : null}
           <Pressable
             testID="report-wait-action-button"
             style={styles.actionPillPrimary}

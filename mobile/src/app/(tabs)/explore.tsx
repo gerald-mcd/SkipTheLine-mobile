@@ -56,10 +56,18 @@ function PulsingDot() {
   )
 }
 
-function FeedCard({ item, venuesMap }: { item: FeedItem; venuesMap: Map<string, Venue> }) {
+function FeedCard({ item, venuesMap, venuesList, cardIndex }: {
+  item: FeedItem
+  venuesMap: Map<string, Venue>
+  venuesList: Venue[]
+  cardIndex: number
+}) {
   const router = useRouter()
-  // Look up venue from real Supabase data; fall back gracefully if not found
-  const venue = item.kind !== 'system' ? venuesMap.get((item as any).venueId) : undefined
+  // Try real DB lookup first; if not found (mock ID), pick a real venue by position
+  const realVenue = item.kind !== 'system' ? venuesMap.get((item as any).venueId) : undefined
+  const venue = realVenue ?? (item.kind !== 'system' && venuesList.length > 0
+    ? venuesList[cardIndex % venuesList.length]
+    : undefined)
 
   if (item.kind === 'drop') {
     return (
@@ -219,10 +227,11 @@ const cardStyles = StyleSheet.create({
 export default function ExploreScreen() {
   const [filter, setFilter] = useState<Filter>('all')
   const [realVenuesById, setRealVenuesById] = useState<Map<string, Venue>>(new Map())
+  const [realVenuesList, setRealVenuesList] = useState<Venue[]>([])
 
   useEffect(() => {
     getLaunchedVenues().then(venues => {
-      // Build lookup map by ID for feed card use
+      setRealVenuesList(venues)
       const map = new Map(venues.map(v => [v.id, v]))
       setRealVenuesById(map)
     })
@@ -267,8 +276,14 @@ export default function ExploreScreen() {
         </ScrollView>
 
         <View style={styles.feed}>
-          {items.map(item => (
-            <FeedCard key={item.id} item={item} venuesMap={realVenuesById} />
+          {items.map((item, idx) => (
+            <FeedCard
+              key={item.id}
+              item={item}
+              venuesMap={realVenuesById}
+              venuesList={realVenuesList}
+              cardIndex={idx}
+            />
           ))}
         </View>
 

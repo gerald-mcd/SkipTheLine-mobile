@@ -137,8 +137,8 @@ async function nearbySearch(lat, lng, radius, includedType, pageToken) {
     ...(pageToken ? { pageToken } : {}),
   }
 
-  // Fields to return — only request what we need to minimize billing
-  const fieldMask = 'places.id,places.displayName,places.formattedAddress,places.location,places.types,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.regularOpeningHours,places.nationalPhoneNumber,places.websiteUri'
+  // Fields to return — includes reviews and opening hours
+  const fieldMask = 'places.id,places.displayName,places.formattedAddress,places.location,places.types,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.regularOpeningHours,places.nationalPhoneNumber,places.websiteUri,places.reviews'
 
   const res = await fetch(`${PLACES_BASE}/places:searchNearby`, {
     method:  'POST',
@@ -202,6 +202,51 @@ function transformVenue(place, neighborhood, isLaunched) {
   }
 }
 
+// ─── Save Google reviews to venue_reviews table ───────────────────────────────
+
+async function saveReviews(venueId, reviews) {
+  if (!reviews || reviews.length === 0) return
+  for (const review of reviews) {
+    if (!review.text?.text) continue
+    await sb.from('venue_reviews').upsert({
+      venue_id:    venueId,
+      source:      'google',
+      stars:       review.rating ?? 0,
+      text:        review.text.text,
+      author_name: review.authorAttribution?.displayName ?? 'Anonymous',
+      created_at:  review.publishTime ?? new Date().toISOString(),
+    }, { onConflict: 'venue_id,source,author_name' })
+  }
+}
+
+// ─── Parse and save structured hours to venue_hours table ─────────────────────
+
+const DAY_MAP = { 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6, 'Sunday': 0 }
+
+async function saveHours(venueId, regularOpeningHours) {
+  if (!regularOpeningHours?.periods) return
+
+  for (const period of regularOpeningHours.periods) {
+    const open  = period.open
+    const close = period.close
+    if (!open) continue
+
+    const dayOfWeek = open.day // 0=Sun, 1=Mon...
+    const openTime  = open.hour  != null ? `${String(open.hour).padStart(2,'0')}:${String(open.minute ?? 0).padStart(2,'0')}` : null
+    const closeTime = close?.hour != null ? `${String(close.hour).padStart(2,'0')}:${String(close.minute ?? 0).padStart(2,'0')}` : null
+    const is24h     = openTime === '00:00' && closeTime === '00:00'
+
+    await sb.from('venue_hours').upsert({
+      venue_id:    venueId,
+      day_of_week: dayOfWeek,
+      open_time:   is24h ? null : openTime,
+      close_time:  is24h ? null : closeTime,
+      is_closed:   false,
+      is_24h:      is24h,
+    }, { onConflict: 'venue_id,day_of_week' })
+  }
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -237,15 +282,20 @@ async function main() {
 
             const venue = transformVenue(place, section.name, section.is_launched)
 
-            const { error } = await sb.from('venues').upsert(venue, {
+            const { data: upserted, error } = await sb.from('venues').upsert(venue, {
               onConflict: 'google_place_id',
-            })
+            }).select('id').single()
 
             if (error) {
               errors++
               console.error(`\n   ❌ ${venue.name}: ${error.message}`)
             } else {
               inserted++
+              // Save Google reviews and structured hours
+              if (upserted?.id) {
+                await saveReviews(upserted.id, place.reviews)
+                await saveHours(upserted.id, place.regularOpeningHours)
+              }
             }
 
             await sleep(30) // gentle rate limiting
