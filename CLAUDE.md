@@ -685,6 +685,12 @@ Supabase handles the entire backend at pre-seed — no separate server needed:
 
 **18-month total: ~$15,000–16,000 — less than 2% of the $1MM raise**
 
+### Actual vs Estimated Costs — Running Log
+
+| Service | Our Estimate | Actual | Notes |
+|---------|-------------|--------|-------|
+| Google Cloud free credit | $200/mo ongoing | **$300 one-time (90 days)** | One-time trial credit, not monthly. After 90 days switches to pay-as-you-go. No automatic charges until you manually upgrade. |
+
 ### Team Sync Backlog (priority order)
 1. Google Cloud setup — create project, enable Maps SDK + Places API, get API key
 2. Supabase schema design — venues, reports, users, points, badges tables
