@@ -26,8 +26,8 @@ import { openDirections } from '@/lib/actions'
 import { ReviewModal } from '@/components/ReviewModal'
 
 const COLORS = {
-  background: '#FBFBFC',
-  primary: '#E07A3B',
+  background: '#FCFBF9',
+  primary: '#F8682B',
   card: '#FFFFFF',
   border: '#EDE6DD',
   foreground: '#33384A',
@@ -216,19 +216,8 @@ export default function VenueDetailScreen() {
             style={styles.actionPillPrimary}
             onPress={() => router.push({ pathname: '/(tabs)/report', params: { venueId: venue.id } })}
           >
-            <LinearGradient
-              colors={['#F2934D', '#F8682B']}
-              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-              style={styles.actionPillGradient}
-            >
-              <LinearGradient
-                colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-                style={StyleSheet.absoluteFillObject}
-              />
-              <Clock size={15} color="#FFFFFF" strokeWidth={2} />
-              <Text style={styles.actionPillPrimaryText}>Report wait</Text>
-            </LinearGradient>
+            <Clock size={15} color="#FFFFFF" strokeWidth={2} />
+            <Text style={styles.actionPillPrimaryText}>Report wait</Text>
           </Pressable>
         </View>
 
@@ -575,20 +564,16 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 52,
     borderRadius: 9999,
-    overflow: 'hidden',
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  actionPillGradient: {
-    flex: 1,
-    borderRadius: 9999,
+    backgroundColor: '#F8682B',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
+    shadowColor: 'rgba(99,102,241,1)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    elevation: 6,
   },
   actionPillPrimaryText: {
     fontSize: 13,

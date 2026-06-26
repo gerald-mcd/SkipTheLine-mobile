@@ -512,7 +512,7 @@ export const profile = {
   reportsCount: 134,
   reportsThisWeek: 23,
   avatar: 'A',
-  avatarGradient: ['#E07A3B', '#F2934D'] as [string, string],
+  avatarGradient: ['#F8682B', '#F2934D'] as [string, string],
   nextTierPoints: 3000,
   badges: [
     { id: 'b1', name: 'First Drop',   icon: '🎯', emoji: '🎯', unlocked: true,  earned: true,  description: 'Submit your first report' },

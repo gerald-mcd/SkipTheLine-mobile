@@ -15,12 +15,12 @@ import {
 import { fontFamily } from '@/constants/theme'
 
 const COLORS = {
-  background: '#FBFBFC',
+  background: '#FCFBF9',
   foreground: '#33384A',
   mutedForeground: '#857565',
   card: '#FFFFFF',
   border: '#EDE6DD',
-  primary: '#E07A3B',
+  primary: '#F8682B',
   primaryGlow: '#F2934D',
   primaryForeground: '#FFFCF7',
   success: '#5DB18A',
@@ -75,7 +75,7 @@ export default function ProfileScreen() {
 
         {/* Hero gamification card */}
         <LinearGradient
-          colors={['#E07A3B', '#F2934D', '#F0A870']}
+          colors={['#F8682B', '#F2934D', '#F0A870']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.heroCard}
@@ -197,11 +197,8 @@ export default function ProfileScreen() {
               <Text style={styles.sectionMeta}>{allFriends.length}</Text>
             </Text>
             <Pressable style={styles.findFriendsBtn} onPress={() => setFindOpen(true)}>
-              <LinearGradient colors={['#F2934D', '#F8682B']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.findFriendsBtnGradient}>
-                <LinearGradient colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFillObject} />
-                <UserPlus size={13} color="#fff" />
-                <Text style={styles.findFriendsBtnText}>Find friends</Text>
-              </LinearGradient>
+              <UserPlus size={13} color="#fff" />
+              <Text style={styles.findFriendsBtnText}>Find friends</Text>
             </Pressable>
           </View>
           <Text style={styles.friendsNote}>Friends' names appear on their reports. Strangers stay anonymous.</Text>
@@ -438,11 +435,8 @@ function FindFriendsModal({ existingIds, onClose, onAdd }: {
                       onAdd(p)
                     }, 1200)
                   }}>
-                    <LinearGradient colors={['#F2934D', '#F8682B']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={modalStyles.addBtnGradient}>
-                      <LinearGradient colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFillObject} />
                       <UserPlus size={12} color="#fff" />
                       <Text style={modalStyles.addBtnText}>Add</Text>
-                    </LinearGradient>
                   </Pressable>
                 )}
               </View>
@@ -470,8 +464,7 @@ const modalStyles = StyleSheet.create({
   personName: { fontSize: 13, fontWeight: '600', color: COLORS.foreground },
   personHandle: { fontWeight: '400', color: COLORS.mutedForeground },
   personMeta: { fontSize: 10, color: COLORS.mutedForeground, marginTop: 1 },
-  addBtn: { borderRadius: 9999, overflow: 'hidden' },
-  addBtnGradient: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6 },
+  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#F8682B' },
   addBtnText: { fontSize: 11, fontWeight: '600', color: '#fff' },
   friendsBadge: { flexDirection: 'row', alignItems: 'center', gap: 3, backgroundColor: COLORS.accent, borderRadius: 9999, paddingHorizontal: 8, paddingVertical: 4 },
   friendsBadgeText: { fontSize: 10, fontWeight: '700', color: COLORS.primary, textTransform: 'uppercase', letterSpacing: 0.3 },
@@ -531,7 +524,6 @@ const styles = StyleSheet.create({
   friendHandle: { fontSize: 11, color: COLORS.mutedForeground, marginTop: 1 },
   friendTag: { fontSize: 11, fontWeight: '600', color: COLORS.mutedForeground },
   friendsNote: { fontSize: 11, color: COLORS.mutedForeground, marginBottom: 10 },
-  findFriendsBtn: { borderRadius: 9999, overflow: 'hidden' },
-  findFriendsBtnGradient: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6 },
+  findFriendsBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#F8682B' },
   findFriendsBtnText: { fontSize: 12, fontWeight: '600', color: '#fff' },
 })

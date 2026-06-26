@@ -31,7 +31,7 @@ function ReportTabButton(_props: object) {
     >
       <View style={styles.fabBorder}>
         <LinearGradient
-          colors={['#F2934D', '#E07A3B']}
+          colors={['#F2934D', '#F8682B']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.fab}
@@ -51,7 +51,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: styles.tabBar,
         tabBarShowLabel: true,
-        tabBarActiveTintColor: '#E07A3B',
+        tabBarActiveTintColor: '#F8682B',
         tabBarInactiveTintColor: '#857565',
         tabBarLabelStyle: styles.tabLabel,
       }}
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     backgroundColor: '#FFFFFF',
     padding: 3,
-    shadowColor: '#E07A3B',
+    shadowColor: '#F8682B',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.40,
     shadowRadius: 20,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   fabLabel: {
     fontSize: 10,
     fontWeight: '500',
-    color: '#E07A3B',
+    color: '#F8682B',
     marginTop: 4,
   },
 })

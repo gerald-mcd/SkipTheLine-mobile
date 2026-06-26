@@ -6,12 +6,12 @@ import { X, Star, Send } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
 
 const C = {
-  bg: '#FBFBFC',
+  bg: '#FCFBF9',
   card: '#FFFFFF',
   border: '#EDE6DD',
   foreground: '#33384A',
   muted: '#857565',
-  primary: '#E07A3B',
+  primary: '#F8682B',
   star: '#F59E0B',
 }
 

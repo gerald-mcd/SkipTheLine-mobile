@@ -1,23 +1,56 @@
 {
   "expo": {
-    "name": "vibecode",
-    "slug": "vibecode",
-    "scheme": "vibecode",
+    "name": "SkipTheLine",
+    "slug": "skiptheline",
+    "scheme": "skiptheline",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.skiptheline.app",
+      "config": {
+        "googleMapsApiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.skiptheline.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
+        }
+      }
     },
     "plugins": [
-      ["expo-router", { "root": "./src/app" }]
+      [
+        "expo-router",
+        {
+          "root": "./src/app"
+        }
+      ],
+      [
+        "react-native-maps",
+        {
+          "googleMapsApiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "root": "./src/app"
+      },
+      "eas": {
+        "projectId": "1348ee2b-01d9-42ae-b2fb-01d2440cd46a"
+      }
+    },
+    "owner": "gerald_mcd"
   }
 }

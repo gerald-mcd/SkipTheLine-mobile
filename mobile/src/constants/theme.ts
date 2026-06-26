@@ -1,12 +1,12 @@
 // Light theme tokens (spec §3.1)
 export const lightColors = {
-  background:        '#FBFBFC',
+  background:        '#FCFBF9',
   foreground:        '#33384A',
   surface:           '#FFFFFF',
   surfaceElevated:   '#F8F8FA',
   card:              '#FFFFFF',
   cardForeground:    '#33384A',
-  primary:           '#E07A3B',
+  primary:           '#F8682B',
   primaryForeground: '#FFFCF7',
   primaryGlow:       '#F2934D',
   secondary:         '#F7F2EC',

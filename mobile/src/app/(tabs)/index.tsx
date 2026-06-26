@@ -51,10 +51,16 @@ function WaitPill({ minutes }: { minutes: number }) {
   const severity = getSeverity(minutes)
   const bgColor = getWaitColor(severity)
   return (
-    <View style={{ backgroundColor: bgColor, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999 }}>
-      <Text style={{ color: '#fff', fontSize: 10, fontWeight: '700' }}>
-        {minutes} min
-      </Text>
+    <View style={{ borderRadius: 999, overflow: 'hidden' }}>
+      <LinearGradient
+        colors={[bgColor, bgColor]}
+        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+        style={{ paddingHorizontal: 9, paddingVertical: 4, borderRadius: 999 }}
+      >
+        <Text style={{ color: '#fff', fontSize: 10, fontWeight: '800', letterSpacing: 0.2 }}>
+          {minutes} min
+        </Text>
+      </LinearGradient>
     </View>
   )
 }
@@ -167,17 +173,17 @@ const featStyles = StyleSheet.create({
   title: { fontSize: 16, fontWeight: '700', fontFamily: fontFamily.display },
   subtitle: { fontSize: 12, marginTop: 2, fontFamily: fontFamily.body },
   viewBtn: {
-    borderWidth: 1.5, borderColor: '#E07A3B',
+    borderWidth: 1.5, borderColor: '#F8682B',
     paddingHorizontal: 16, paddingVertical: 8, borderRadius: 999,
     backgroundColor: 'rgba(224,122,59,0.08)',
   },
-  viewBtnText: { color: '#E07A3B', fontSize: 13, fontWeight: '600', fontFamily: fontFamily.bodySemiBold },
+  viewBtnText: { color: '#F8682B', fontSize: 13, fontWeight: '600', fontFamily: fontFamily.bodySemiBold },
   dots: {
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
     gap: 6, marginTop: 12,
   },
   dot: { height: 6, borderRadius: 3 },
-  dotActive: { width: 18, backgroundColor: '#E07A3B' },
+  dotActive: { width: 18, backgroundColor: '#F8682B' },
   dotInactive: { width: 6, backgroundColor: '#C5BDB4' },
 })
 
@@ -203,12 +209,11 @@ function CategoryChips({
           <Pressable
             key={cat.id}
             onPress={() => onChange(cat.id)}
-            style={[
-              chipStyles.chip,
-              { backgroundColor: on ? c.primary : c.card, borderColor: c.primary },
-            ]}
+            style={[chipStyles.chip, { backgroundColor: on ? '#F8682B' : c.card, borderColor: '#F8682B' }]}
           >
-            <Text style={[chipStyles.label, { color: on ? c.primaryForeground : c.primary }]}>{cat.label}</Text>
+            <View style={chipStyles.chipInner}>
+              <Text style={[chipStyles.label, { color: on ? '#fff' : '#F8682B' }]}>{cat.label}</Text>
+            </View>
           </Pressable>
         )
       })}
@@ -218,10 +223,9 @@ function CategoryChips({
 
 const chipStyles = StyleSheet.create({
   row: { paddingHorizontal: spacing.md, gap: 8, paddingBottom: 4 },
-  chip: {
-    paddingHorizontal: 16, paddingVertical: 8,
-    borderRadius: 9999, borderWidth: 1.5,
-  },
+  chip: { borderRadius: 9999, borderWidth: 1.5 },
+  chipGradient: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 9999 },
+  chipInner: { paddingHorizontal: 16, paddingVertical: 8 },
   label: { fontSize: 13, fontWeight: '600' },
 })
 
@@ -258,7 +262,7 @@ function VenueCard({
           />
         </Pressable>
         {showFirstReport ? (
-          <View style={[cardStyles.firstReportBanner, { backgroundColor: c.primary }]}>
+          <View style={cardStyles.firstReportBanner}>
             <Text style={cardStyles.firstReportText}>⟫ First report · +15 pts</Text>
           </View>
         ) : null}
@@ -297,8 +301,8 @@ const cardStyles = StyleSheet.create({
   },
   firstReportBanner: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
-    paddingVertical: 5, paddingHorizontal: 8,
-    alignItems: 'center',
+    backgroundColor: '#F8682B',
+    paddingVertical: 5, paddingHorizontal: 8, alignItems: 'center',
   },
   firstReportText: { color: '#fff', fontSize: 10, fontWeight: '700', letterSpacing: 0.2 },
   body: { padding: 10 },
@@ -362,7 +366,7 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <View style={styles.avatar}>
+            <View style={[styles.avatarWrap, styles.avatar]}>
               <Text style={styles.avatarText}>{profile.avatar ?? profile.name.charAt(0)}</Text>
             </View>
             <Text style={[styles.greeting, { color: c.foreground }]}>Hi, {profile.name.split(' ')[0]}!</Text>
@@ -418,19 +422,11 @@ export default function HomeScreen() {
               </Pressable>
             ) : null}
           </View>
-          <Pressable style={styles.filterBtn} onPress={() => setShowShortWaitsOnly(prev => !prev)}>
-            <LinearGradient
-              colors={showShortWaitsOnly ? [c.foreground, c.foreground] : ['#F2934D', '#F8682B']}
-              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-              style={styles.filterGradient}
-            >
-              <LinearGradient
-                colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-                style={StyleSheet.absoluteFillObject}
-              />
-              <SlidersHorizontal size={16} color="#fff" />
-            </LinearGradient>
+          <Pressable
+            style={[styles.filterBtn, { backgroundColor: showShortWaitsOnly ? c.foreground : '#F8682B' }]}
+            onPress={() => setShowShortWaitsOnly(prev => !prev)}
+          >
+            <SlidersHorizontal size={16} color="#fff" />
           </Pressable>
         </View>
 
@@ -489,10 +485,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md, paddingTop: 12, paddingBottom: 16,
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  avatar: {
+  avatarWrap: {
     width: 40, height: 40, borderRadius: 20,
-    backgroundColor: '#E07A3B', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#F8682B',
+    alignItems: 'center', justifyContent: 'center',
   },
+  avatar: {},
   avatarText: { color: '#fff', fontSize: 16, fontWeight: '700', fontFamily: fontFamily.displayBold },
   greeting: { fontSize: 15, fontWeight: '700', fontFamily: fontFamily.display },
   rankBadge: {
@@ -524,7 +522,10 @@ const styles = StyleSheet.create({
   },
   searchInput: { flex: 1, fontSize: 14, padding: 0 },
   filterBtn: {
-    width: 44, height: 44, borderRadius: 22, overflow: 'hidden',
+    width: 44, height: 44, borderRadius: 22,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: 'rgba(99,102,241,1)', shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.28, shadowRadius: 10, elevation: 5,
   },
   filterGradient: {
     flex: 1, borderRadius: 22, alignItems: 'center', justifyContent: 'center',

@@ -19,7 +19,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const CARD_BG = '#FFFFFF'
 const BORDER = '#EDE6DD'
-const PRIMARY = '#E07A3B'
+const PRIMARY = '#F8682B'
 const FG = '#33384A'
 const MUTED = '#857565'
 const TAB_BAR_HEIGHT = 84
@@ -161,12 +161,9 @@ export function OnboardingTour({ visible, onDismiss }: OnboardingTourProps) {
           </View>
 
           {/* Icon tile */}
-          <LinearGradient
-            colors={['#E07A3B', '#F2934D']}
-            style={styles.iconTile}
-          >
+          <View style={styles.iconTile}>
             {currentStep.iconComponent}
-          </LinearGradient>
+          </View>
 
           {/* Title */}
           <Text style={styles.title}>{currentStep.title}</Text>
@@ -267,6 +264,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 12,
+    backgroundColor: '#F8682B',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
@@ -296,7 +294,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 6,
     borderRadius: 3,
-    backgroundColor: PRIMARY,
+    backgroundColor: '#F8682B',
   },
   dotInactive: {
     width: 6,
@@ -325,9 +323,14 @@ const styles = StyleSheet.create({
   btnNext: {
     flex: 2,
     borderRadius: 999,
-    backgroundColor: PRIMARY,
+    backgroundColor: '#F8682B',
     paddingVertical: 12,
     alignItems: 'center',
+    shadowColor: 'rgba(99,102,241,1)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+    elevation: 5,
   },
   btnNextText: {
     fontSize: 14,

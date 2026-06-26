@@ -18,17 +18,17 @@ import { ReviewModal } from '@/components/ReviewModal'
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const C = {
-  bg: '#FBFBFC',
-  primary: '#E07A3B',
+  bg: '#FCFBF9',
+  primary: '#F8682B',
   foreground: '#33384A',
   muted: '#857565',
   border: '#EDE6DD',
   card: '#FFFFFF',
   peach: '#FFF0E8',
-  peachText: '#E07A3B',
+  peachText: '#F8682B',
 }
 
-const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#E07A3B', '#857565', '#33384A']
+const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#F8682B', '#857565', '#33384A']
 
 const SPARK_DATA = [22, 35, 55, 70, 78, 60, 42, 28]
 const SPARK_W = 80

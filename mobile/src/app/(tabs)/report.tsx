@@ -18,8 +18,8 @@ import { venues, getWaitColor, getSeverity } from '@/lib/mock-data'
 import { fontFamily } from '@/constants/theme'
 
 const COLORS = {
-  background: '#FBFBFC',
-  primary: '#E07A3B',
+  background: '#FCFBF9',
+  primary: '#F8682B',
   primaryGlow: '#F2934D',
   card: '#FFFFFF',
   border: '#EDE6DD',
@@ -246,20 +246,10 @@ export default function ReportScreen() {
             style={styles.submitPressable}
             onPress={handleSubmit}
           >
-            <LinearGradient
-              colors={['#F2934D', '#F8682B']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.submitGradient}
-            >
-              <LinearGradient
-                colors={['rgba(255,255,255,0.35)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.10)']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-                style={StyleSheet.absoluteFillObject}
-              />
+            <View style={styles.submitGradient}>
               <Zap size={16} color="#FFFFFF" strokeWidth={2.5} fill="#FFFFFF" />
               <Text style={styles.submitText}>Submit report  ·  +15 pts</Text>
-            </LinearGradient>
+            </View>
           </Pressable>
         </View>
 
@@ -568,10 +558,16 @@ const styles = StyleSheet.create({
   submitPressable: {
     borderRadius: 16,
     overflow: 'hidden',
+    shadowColor: 'rgba(99,102,241,1)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+    elevation: 5,
   },
   submitGradient: {
     height: 54,
     borderRadius: 16,
+    backgroundColor: '#F8682B',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
