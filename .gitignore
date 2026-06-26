@@ -1,0 +1,4 @@
+claude-thoughts/
+frontend/
+*.env
+.DS_Store
