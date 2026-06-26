@@ -6,7 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { ArrowDownRight } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { exploreFeed, venuesById, profile, type FeedItem } from '@/lib/mock-data'
+import { exploreFeed, type FeedItem } from '@/lib/mock-data'
+import { getLaunchedVenues, type Venue } from '@/lib/queries'
 import { fontFamily } from '@/constants/theme'
 import WaitBadge from '@/components/WaitBadge'
 
@@ -55,9 +56,10 @@ function PulsingDot() {
   )
 }
 
-function FeedCard({ item }: { item: FeedItem }) {
+function FeedCard({ item, venuesMap }: { item: FeedItem; venuesMap: Map<string, Venue> }) {
   const router = useRouter()
-  const venue = item.kind !== 'system' ? venuesById.get(item.venueId) : undefined
+  // Look up venue from real Supabase data; fall back gracefully if not found
+  const venue = item.kind !== 'system' ? venuesMap.get((item as any).venueId) : undefined
 
   if (item.kind === 'drop') {
     return (
@@ -80,9 +82,9 @@ function FeedCard({ item }: { item: FeedItem }) {
             <Text style={cardStyles.fromWait}>{item.from}m → {item.to}m</Text>
           </View>
         </View>
-        {venue?.image ? (
+        {venue?.primary_image_url ? (
           <View style={cardStyles.imageWrap}>
-            <Image source={{ uri: venue.image }} style={cardStyles.image} resizeMode="cover" />
+            <Image source={{ uri: venue.primary_image_url }} style={cardStyles.image} resizeMode="cover" />
           </View>
         ) : null}
       </Pressable>
@@ -90,7 +92,7 @@ function FeedCard({ item }: { item: FeedItem }) {
   }
 
   if (item.kind === 'report') {
-    const isFriend = (profile.friends ?? []).some((f: { name: string }) => f.name === item.user)
+    const isFriend = false // friends wired in Phase 2
     const displayName = isFriend ? item.user : 'Someone nearby'
     const waitColor = item.minutes <= 15 ? COLORS.success : item.minutes <= 45 ? '#D69A3F' : COLORS.destructive
     return (
@@ -130,18 +132,18 @@ function FeedCard({ item }: { item: FeedItem }) {
         onPress={() => router.push({ pathname: '/venue/[id]', params: { id: venue.id } })}
       >
         <View style={cardStyles.imageWrap}>
-          <Image source={{ uri: venue.image }} style={cardStyles.venueImage} resizeMode="cover" />
+          <Image source={{ uri: venue.primary_image_url ?? '' }} style={cardStyles.venueImage} resizeMode="cover" />
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.72)']}
             style={StyleSheet.absoluteFillObject}
           />
           <View style={cardStyles.venueOverlay}>
-            <Text style={cardStyles.venueCat}>{venue.categoryLabel} · {venue.vibe}</Text>
+            <Text style={cardStyles.venueCat}>{venue.category_label}{venue.vibe ? ` · ${venue.vibe}` : ''}</Text>
             <Text style={cardStyles.venueNameLg}>{venue.name}</Text>
-            <Text style={cardStyles.venueReporters}>{venue.liveReporters} live · {venue.distance}</Text>
+            <Text style={cardStyles.venueReporters}>{venue.live_reporters} live · {venue.neighborhood ?? venue.city}</Text>
           </View>
           <View style={cardStyles.venueBadge}>
-            <WaitBadge minutes={venue.waitMinutes} size="md" variant="solid" />
+            <WaitBadge minutes={venue.current_wait_minutes} size="md" variant="solid" />
           </View>
         </View>
         <Text style={cardStyles.venueAgo}>{item.ago}</Text>
@@ -216,6 +218,15 @@ const cardStyles = StyleSheet.create({
 
 export default function ExploreScreen() {
   const [filter, setFilter] = useState<Filter>('all')
+  const [realVenuesById, setRealVenuesById] = useState<Map<string, Venue>>(new Map())
+
+  useEffect(() => {
+    getLaunchedVenues().then(venues => {
+      // Build lookup map by ID for feed card use
+      const map = new Map(venues.map(v => [v.id, v]))
+      setRealVenuesById(map)
+    })
+  }, [])
 
   const items = useMemo(() => {
     if (filter === 'all') return exploreFeed
@@ -257,7 +268,7 @@ export default function ExploreScreen() {
 
         <View style={styles.feed}>
           {items.map(item => (
-            <FeedCard key={item.id} item={item} />
+            <FeedCard key={item.id} item={item} venuesMap={realVenuesById} />
           ))}
         </View>
 
