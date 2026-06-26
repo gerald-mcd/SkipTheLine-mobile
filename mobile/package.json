@@ -8,7 +8,10 @@
     "ios": "expo start --ios",
     "web": "DARK_MODE=class expo start --web",
     "lint": "expo lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seed": "npx ts-node --project tsconfig.json scripts/seed.ts",
+    "seed:wipe": "npx ts-node --project tsconfig.json scripts/seed.ts --wipe",
+    "seed:miami": "npx ts-node --project tsconfig.json scripts/seed-miami.ts"
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",

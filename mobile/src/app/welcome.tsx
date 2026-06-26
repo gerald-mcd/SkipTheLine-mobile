@@ -5,15 +5,16 @@ import {
   StyleSheet,
   Pressable,
   Dimensions,
-  Image,
   Animated,
+  Alert,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MapPin } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { signInAsTestUser, getSession } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
 
 const { width, height } = Dimensions.get('window')
 
@@ -114,10 +115,28 @@ export default function WelcomeScreen() {
     return () => clearInterval(interval)
   }, [slideIndex])
 
-  const handleContinue = async () => {
-    await AsyncStorage.setItem('stl:entered-app', '1')
-    await AsyncStorage.removeItem('stl:tour-seen')
-    router.replace('/(tabs)')
+  // Check if already logged in on mount
+  useEffect(() => {
+    getSession().then(session => {
+      if (session) router.replace('/(tabs)')
+    })
+  }, [])
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) router.replace('/(tabs)')
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleTestUser = async () => {
+    try {
+      await signInAsTestUser()
+      // onAuthStateChange handles redirect
+    } catch (e: any) {
+      Alert.alert('Error', e.message ?? 'Could not sign in as test user')
+    }
   }
 
   return (
@@ -209,7 +228,7 @@ export default function WelcomeScreen() {
           <Pressable
             testID="btn-continue-email"
             style={({ pressed }) => [styles.btnEmail, pressed && { opacity: 0.88 }]}
-            onPress={handleContinue}
+            onPress={handleTestUser}
           >
             <Text style={styles.btnEmailText}>Continue with email</Text>
           </Pressable>
@@ -218,7 +237,7 @@ export default function WelcomeScreen() {
           <Pressable
             testID="btn-continue-google"
             style={({ pressed }) => [styles.btnSocial, pressed && { opacity: 0.75 }]}
-            onPress={handleContinue}
+            onPress={handleTestUser}
           >
             <Text style={styles.btnSocialIcon}>G</Text>
             <Text style={styles.btnSocialText}>Continue with Google</Text>
@@ -228,10 +247,19 @@ export default function WelcomeScreen() {
           <Pressable
             testID="btn-continue-apple"
             style={({ pressed }) => [styles.btnSocial, pressed && { opacity: 0.75 }]}
-            onPress={handleContinue}
+            onPress={handleTestUser}
           >
             <Text style={styles.btnSocialIcon}></Text>
             <Text style={styles.btnSocialText}>Continue with Apple</Text>
+          </Pressable>
+
+          {/* Test User bypass — dev/demo only */}
+          <Pressable
+            testID="btn-test-user"
+            style={({ pressed }) => [styles.btnTestUser, pressed && { opacity: 0.7 }]}
+            onPress={handleTestUser}
+          >
+            <Text style={styles.btnTestUserText}>⚙ Test User</Text>
           </Pressable>
         </Animated.View>
 
@@ -415,5 +443,21 @@ const styles = StyleSheet.create({
   indicatorInactive: {
     width: 6,
     backgroundColor: 'rgba(255,255,255,0.35)',
+  },
+  btnTestUser: {
+    alignSelf: 'center',
+    marginTop: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.20)',
+  },
+  btnTestUserText: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.55)',
+    fontFamily: 'Inter_400Regular',
+    letterSpacing: 0.3,
   },
 })

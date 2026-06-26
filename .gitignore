@@ -1,5 +1,6 @@
 claude-thoughts/
 frontend/
 *.env
+*.env.local
 .DS_Store
 .mcp.json
