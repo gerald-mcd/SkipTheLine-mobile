@@ -766,7 +766,7 @@ This framework governs all "what's next" decisions. Every task gets evaluated ag
 | Security Penetration Test | ⬜ Pending | Can someone bypass auth or access other users' data? |
 | App Store Compliance Review | ⬜ Pending | Meets Apple + Google guidelines? |
 | Privacy Policy Audit | ⬜ Pending | Does what you collect match your privacy policy? |
-| Analytics Instrumentation Audit | ⬜ Pending | Tracking everything needed to make product decisions? |
+| Analytics Instrumentation Audit | ✅ Done | 115 events across all screens — see section below |
 
 ### PHASE 5 — Launch & Post-Launch
 *After real users exist*
@@ -826,6 +826,69 @@ PHASES 3–5 — Not started
 18. B2B dashboard (separate web app)
 19. Voice AI agent (Vapi + Claude + ElevenLabs)
 20. Arrival nudge (background location detection)
+
+### Analytics Instrumentation Audit — 115 Events
+
+Full audit completed across every screen. Events organized by priority:
+
+**CRITICAL (core product metrics — instrument first):**
+- `home_screen_viewed` — DAU/WAU, entry patterns
+- `venue_card_tapped` — venue interest, discovery
+- `report_submit_button_tapped` — core funnel step
+- `report_submitted_successfully` — core action, point attribution
+- `venue_detail_screen_viewed` — venue traffic + source (home|map|feed|report)
+- `review_submitted` — user-generated content
+- `user_session_started` / `user_session_ended` — session metrics
+- `user_points_awarded` — gamification effectiveness
+- `user_tier_changed` — progression milestones
+- `badge_unlocked` — achievement metrics
+- `quest_completed` — quest engagement
+
+**HIGH (engagement + conversion):**
+- `featured_carousel_swiped` / `featured_item_view_button_tapped`
+- `category_filter_selected` — category demand signals
+- `venue_like_toggled` — favorites intent
+- `bottom_sheet_snapped` — map sheet interaction patterns
+- `report_venue_selected` — venue reporting demand
+- `report_preset_wait_time_selected` vs `report_exact_wait_time_entered`
+- `venue_directions_button_tapped` — intent to visit (B2B signal)
+- `venue_report_wait_button_tapped` — report intent from detail view
+- `notification_sent` / `notification_opened` — push effectiveness
+- `wait_drop_item_tapped` — alert engagement
+- `friend_add_button_tapped` / `friend_request_sent`
+
+**MEDIUM (feature adoption + UX):**
+- `search_query_entered` (home + map + report + friend search)
+- `explore_filter_selected` — feed content preferences
+- `onboarding_tour_completed` vs `onboarding_tour_skipped`
+- `onboarding_step_viewed` — drop-off by step
+- `welcome_continue_with_email/google/apple_tapped` — auth method split
+- `location_permission_granted` / `location_permission_denied`
+- `theme_toggle_tapped`
+
+**LOW (supporting + debug):**
+- `venue_card_viewed` / `feed_item_viewed` — impressions
+- `api_response_latency` — performance monitoring
+- `crash_occurred` — stability
+- `photo_upload_completed` / `photo_upload_failed`
+- `review_modal_opened` vs `review_submitted` — review funnel
+
+**Backend/system events (server-side):**
+- `report_processed_backend` — processing latency
+- `report_error_occurred` — reliability
+- `user_session_started` with device_info — fraud signals
+
+**Analytics tool recommendation:** PostHog (open source, self-hostable, free tier) or Mixpanel ($0 up to 20M events/mo free). Wire via a single `track(event, properties)` wrapper so the tool can be swapped without touching every callsite.
+
+**Implementation approach:**
+```ts
+// src/lib/analytics.ts
+export function track(event: string, properties?: Record<string, any>) {
+  // PostHog.capture(event, properties)
+  // or Mixpanel.track(event, properties)
+}
+```
+Every event in the app calls this one function. Swap the provider by changing one file.
 
 ### Schema Gaps Filled (Data Flow Audit)
 New tables added beyond original 30:
