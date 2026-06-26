@@ -12,7 +12,8 @@
     "seed": "npx ts-node --project tsconfig.json scripts/seed.ts",
     "seed:wipe": "npx ts-node --project tsconfig.json scripts/seed.ts --wipe",
     "seed:miami": "node scripts/seed-miami.js",
-    "patch:reviews": "node scripts/patch-reviews-hours.js"
+    "patch:reviews": "node scripts/patch-reviews-hours.js",
+    "patch:reviews:test": "node scripts/patch-reviews-hours.js --test"
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",

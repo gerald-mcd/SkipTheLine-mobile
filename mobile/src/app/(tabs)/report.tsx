@@ -14,7 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MapPin, Search, X, ChevronRight, Zap, Star } from 'lucide-react-native'
-import { venues, getWaitColor, getSeverity } from '@/lib/mock-data'
+import { getWaitColor, getSeverity } from '@/lib/mock-data'
+import { getLaunchedVenues, type Venue } from '@/lib/queries'
 import { fontFamily } from '@/constants/theme'
 
 const COLORS = {
@@ -45,16 +46,25 @@ export default function ReportScreen() {
   const { venueId: paramVenueId } = useLocalSearchParams<{ venueId?: string }>()
   const [waitMinutes, setWaitMinutes] = useState<number>(15)
   const [comment, setComment] = useState<string>('')
-  const [selectedVenueId, setSelectedVenueId] = useState<string>(paramVenueId ?? 'v1')
+  const [selectedVenueId, setSelectedVenueId] = useState<string>(paramVenueId ?? '')
   const [showVenuePicker, setShowVenuePicker] = useState<boolean>(false)
   const [showToast, setShowToast] = useState<boolean>(false)
   const [exactInput, setExactInput] = useState<string>('15')
+  const [allVenues, setAllVenues] = useState<Venue[]>([])
+
+  useEffect(() => {
+    getLaunchedVenues().then(v => {
+      setAllVenues(v)
+      // Set first real venue as default if no param
+      if (!paramVenueId && v.length > 0) setSelectedVenueId(v[0].id)
+    })
+  }, [])
 
   useEffect(() => {
     if (paramVenueId) setSelectedVenueId(paramVenueId)
   }, [paramVenueId])
 
-  const selectedVenue = venues.find(v => v.id === selectedVenueId) ?? venues[0]
+  const selectedVenue = allVenues.find(v => v.id === selectedVenueId) ?? allVenues[0]
 
   // Toast animation
   const toastAnim = useRef(new Animated.Value(0)).current
@@ -272,6 +282,7 @@ export default function ReportScreen() {
       {showVenuePicker ? (
         <VenuePickerModal
           selectedId={selectedVenueId}
+          venues={allVenues}
           onSelect={(id) => {
             setSelectedVenueId(id)
             setShowVenuePicker(false)
@@ -609,6 +620,7 @@ function VenuePickerModal({
   onClose,
 }: {
   selectedId: string
+  venues: Venue[]
   onSelect: (id: string) => void
   onClose: () => void
 }) {
@@ -619,9 +631,9 @@ function VenuePickerModal({
     if (!term) return venues
     return venues.filter(v =>
       v.name.toLowerCase().includes(term) ||
-      v.categoryLabel.toLowerCase().includes(term)
+      (v.category_label ?? '').toLowerCase().includes(term)
     )
-  }, [q])
+  }, [q, venues])
 
   return (
     <Modal visible animationType="slide" transparent>
@@ -659,7 +671,7 @@ function VenuePickerModal({
           showsVerticalScrollIndicator={false}
         >
           {results.map(v => {
-            const waitColor = getWaitColor(getSeverity(v.waitMinutes))
+            const waitColor = getWaitColor(getSeverity(v.current_wait_minutes))
             const isSelected = v.id === selectedId
             return (
               <Pressable
@@ -673,12 +685,12 @@ function VenuePickerModal({
                   <View style={pickerStyles.venueMeta}>
                     <MapPin size={10} color={COLORS.mutedForeground} />
                     <Text style={pickerStyles.venueMetaText}>
-                      {v.categoryLabel} · {v.distance}
+                      {v.category_label} · {v.neighborhood ?? v.city}
                     </Text>
                   </View>
                 </View>
                 <View style={[pickerStyles.waitPill, { backgroundColor: waitColor }]}>
-                  <Text style={pickerStyles.waitPillText}>{v.waitMinutes}m</Text>
+                  <Text style={pickerStyles.waitPillText}>{v.current_wait_minutes}m</Text>
                 </View>
               </Pressable>
             )

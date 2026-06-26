@@ -117,12 +117,17 @@ async function saveHours(venueId, regularOpeningHours) {
 async function main() {
   console.log('\n🔍  Fetching venues from Supabase...')
 
-  // Get all venues that have a google_place_id
-  const { data: venues, error } = await sb
+  // Test mode: pass --test to only process 2 venues
+  const isTest = process.argv.includes('--test')
+  const query  = sb
     .from('venues')
     .select('id, name, google_place_id')
     .not('google_place_id', 'is', null)
     .order('name')
+
+  if (isTest) query.limit(2)
+
+  const { data: venues, error } = await query
 
   if (error) { console.error('❌ Supabase error:', error.message); process.exit(1) }
 
