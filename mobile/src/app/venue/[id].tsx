@@ -13,17 +13,17 @@ import {
   Star,
   Camera,
   MessageSquare,
-  Calendar,
   User,
 } from 'lucide-react-native'
 import Svg, { Polyline, Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg'
 import * as ImagePicker from 'expo-image-picker'
-import { useState } from 'react'
-import { venues, severityColor } from '@/lib/mock-data'
+import { useState, useEffect } from 'react'
+import { severityColor } from '@/lib/mock-data'
 import { fontFamily } from '@/constants/theme'
-import { useColors } from '@/lib/theme-store'
 import { openDirections } from '@/lib/actions'
 import { ReviewModal } from '@/components/ReviewModal'
+import { getVenueById, getVenueReports, getVenueReviews, getVenuePhotos, toggleFavorite, getFavoriteIds, type Venue, type Report, type VenueReview } from '@/lib/queries'
+import { supabase } from '@/lib/supabase'
 
 const COLORS = {
   background: '#FCFBF9',
@@ -90,11 +90,50 @@ function Sparkline({ color }: { color: string }) {
 export default function VenueDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
-  const c = useColors()
-  const venue = venues.find(x => x.id === id) ?? venues[0]
+
+  const [venue, setVenue] = useState<Venue | null>(null)
+  const [photos, setPhotos] = useState<string[]>([])
+  const [reviews, setReviews] = useState<VenueReview[]>([])
+  const [recentReports, setRecentReports] = useState<Report[]>([])
   const [isFavorited, setIsFavorited] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
+  const [photoIdx, setPhotoIdx] = useState(0)
+  const [userId, setUserId] = useState<string | null>(null)
 
+  useEffect(() => {
+    if (!id) return
+    loadVenueData()
+  }, [id])
+
+  async function loadVenueData() {
+    const [venueData, reportsData, reviewsData, photosData] = await Promise.all([
+      getVenueById(id as string),
+      getVenueReports(id as string, 8),
+      getVenueReviews(id as string, 5),
+      getVenuePhotos(id as string),
+    ])
+
+    setVenue(venueData)
+    setRecentReports(reportsData)
+    setReviews(reviewsData)
+
+    // Build photo list — DB photos first, then primary image as fallback
+    if (photosData.length > 0) {
+      setPhotos(photosData)
+    } else if (venueData?.primary_image_url) {
+      setPhotos([venueData.primary_image_url])
+    } else {
+      setPhotos([])
+    }
+
+    // Check if favorited
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      setUserId(user.id)
+      const favIds = await getFavoriteIds(user.id)
+      setIsFavorited(favIds.includes(id as string))
+    }
+  }
 
   async function handleAddPhoto() {
     await ImagePicker.launchImageLibraryAsync({
@@ -103,18 +142,29 @@ export default function VenueDetailScreen() {
     })
   }
 
-  const photos = venue.photos?.length ? venue.photos : [venue.image]
-  const reviews = venue.reviews ?? []
-  const recentReports = venue.recentReports ?? []
-  const averageRating = venue.averageRating ?? 0
-  const [photoIdx, setPhotoIdx] = useState<number>(0)
+  async function handleToggleFavorite() {
+    if (!userId || !id) return
+    setIsFavorited(prev => !prev)
+    await toggleFavorite(userId, id as string, isFavorited)
+  }
 
-  const liveColor = severityColor(venue.severity)
+  if (!venue) {
+    return (
+      <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+        <Text style={{ color: COLORS.mutedForeground }}>Loading...</Text>
+      </View>
+    )
+  }
+
+  const averageRating = venue.average_rating ?? 0
+  const liveColor = severityColor((venue.severity as any) ?? 'short')
   const liveLabelText = venue.severity === 'short'
     ? 'SHORT LINE'
     : venue.severity === 'moderate'
     ? 'MODERATE LINE'
-    : 'LONG LINE'
+    : venue.severity === 'long'
+    ? 'LONG LINE'
+    : 'NO DATA'
 
 
   return (
@@ -184,7 +234,7 @@ export default function VenueDetailScreen() {
             >
               <ChevronLeft size={22} color="#FFFFFF" strokeWidth={2.5} />
             </Pressable>
-            <Pressable testID="heart-button" style={styles.heroNavBtn} onPress={() => setIsFavorited(prev => !prev)}>
+            <Pressable testID="heart-button" style={styles.heroNavBtn} onPress={handleToggleFavorite}>
               <Heart size={20} color={isFavorited ? '#E07A3B' : '#FFFFFF'} fill={isFavorited ? '#E07A3B' : 'transparent'} strokeWidth={2} />
             </Pressable>
           </SafeAreaView>
@@ -193,7 +243,7 @@ export default function VenueDetailScreen() {
           <View style={styles.heroBottom}>
             {/* Vibe tags small-caps */}
             <Text style={styles.heroVibeTags}>
-              {`${venue.categoryLabel.toUpperCase()} · ${venue.vibe.toUpperCase()}`}
+              {`${(venue.category_label ?? venue.category).toUpperCase()}${venue.vibe ? ' · ' + venue.vibe.toUpperCase() : ''}`}
             </Text>
             {/* Venue name */}
             <Text style={styles.heroName}>{venue.name}</Text>
@@ -233,7 +283,7 @@ export default function VenueDetailScreen() {
             {/* Row 2: big number + "min" */}
             <View style={styles.liveWaitNumRow}>
               <Text style={[styles.liveWaitNumber, { color: liveColor }]}>
-                {venue.waitMinutes}
+                {venue.current_wait_minutes}
               </Text>
               <Text style={styles.liveWaitUnit}>min</Text>
             </View>
@@ -246,7 +296,7 @@ export default function VenueDetailScreen() {
               <View style={styles.liveWaitUpdatedRow}>
                 <Clock size={11} color={COLORS.mutedForeground} strokeWidth={2} />
                 <Text style={styles.liveWaitUpdated}>
-                  {`Updated ${venue.lastReportMinutes}m ago`}
+                  {venue.last_report_at ? `Updated recently` : 'No reports yet'}
                 </Text>
               </View>
             </View>
@@ -254,29 +304,20 @@ export default function VenueDetailScreen() {
         </View>
 
         {/* ── Driving the Crowd (event) ── */}
-        {venue.event ? (
-          <View style={styles.section}>
-            <View style={styles.eventCard}>
-              <View style={styles.eventRow}>
-                <Calendar size={14} color={COLORS.primary} strokeWidth={2} />
-                <Text style={styles.eventLabel}>DRIVING THE CROWD</Text>
-              </View>
-              <Text style={styles.eventName}>{venue.event}</Text>
-            </View>
-          </View>
-        ) : null}
+        {/* Event card — shown when active event exists for this venue */}
+        {null}
 
         {/* ── Stats row (3 equal boxes) ── */}
         <View style={styles.section}>
           <View style={styles.statsRow}>
             <View style={styles.statBox}>
               <Clock size={14} color={COLORS.primary} strokeWidth={2} />
-              <Text style={styles.statValue}>{`${venue.typicalWaitMinutes}m`}</Text>
+              <Text style={styles.statValue}>{`${venue.typical_wait_minutes}m`}</Text>
               <Text style={styles.statLabel}>AVG WAIT</Text>
             </View>
             <View style={[styles.statBox, styles.statBoxMiddle]}>
               <MessageSquare size={14} color={COLORS.primary} strokeWidth={2} />
-              <Text style={styles.statValue}>{venue.reportsCount}</Text>
+              <Text style={styles.statValue}>{venue.reports_count}</Text>
               <Text style={styles.statLabel}>REPORTS</Text>
             </View>
             <View style={styles.statBox}>
@@ -318,7 +359,7 @@ export default function VenueDetailScreen() {
             {reviews.map(review => (
               <View key={review.id} style={styles.reviewCard}>
                 <View style={styles.reviewCardTop}>
-                  <Text style={styles.reviewerName}>{review.name}</Text>
+                  <Text style={styles.reviewerName}>{review.author_name ?? review.users?.[0]?.name ?? 'Anonymous'}</Text>
                   <View style={styles.reviewSourceBadge}>
                     <Text style={styles.reviewSourceText}>{review.source}</Text>
                   </View>
@@ -327,7 +368,7 @@ export default function VenueDetailScreen() {
                   </View>
                 </View>
                 <Text style={styles.reviewText}>{review.text}</Text>
-                <Text style={styles.reviewAgo}>{review.ago}</Text>
+                <Text style={styles.reviewAgo}>{new Date(review.created_at).toLocaleDateString()}</Text>
               </View>
             ))}
           </View>
@@ -342,25 +383,29 @@ export default function VenueDetailScreen() {
 
           <View style={styles.reportsList}>
             {recentReports.map((report, index) => {
-              const waitColor = report.waitMinutes > 45
+              const waitColor = report.wait_minutes > 45
                 ? '#D9462E'
-                : report.waitMinutes > 15
+                : report.wait_minutes > 15
                 ? '#D69A3F'
                 : '#5DB18A'
+              const reporterName = report.users?.[0]?.name ?? 'Someone nearby'
+              const initial = reporterName.charAt(0).toUpperCase()
+              const minutesAgo = Math.round((Date.now() - new Date(report.created_at).getTime()) / 60000)
+              const agoText = minutesAgo < 60 ? `${minutesAgo}m` : `${Math.round(minutesAgo / 60)}h`
               return (
                 <View
                   key={report.id}
                   style={[styles.reportCard, index > 0 && { marginTop: 8 }]}
                 >
                   {/* Avatar */}
-                  {report.isFriend && report.initial ? (
+                  {report.users?.[0] ? (
                     <View
                       style={[
                         styles.reportAvatar,
                         { backgroundColor: AVATAR_COLORS[index % AVATAR_COLORS.length] },
                       ]}
                     >
-                      <Text style={styles.reportAvatarText}>{report.initial}</Text>
+                      <Text style={styles.reportAvatarText}>{initial}</Text>
                     </View>
                   ) : (
                     <View style={[styles.reportAvatar, { backgroundColor: '#EDE6DD' }]}>
@@ -373,24 +418,19 @@ export default function VenueDetailScreen() {
                     <View style={styles.reportNameRow}>
                       <Text style={[
                         styles.reportName,
-                        !report.isFriend && { fontWeight: '400', color: COLORS.mutedForeground },
+                        !report.users?.[0] && { fontWeight: '400', color: COLORS.mutedForeground },
                       ]}>
-                        {report.name}
+                        {reporterName}
                       </Text>
-                      {report.isFriend ? (
-                        <View style={styles.friendBadge}>
-                          <Text style={styles.friendBadgeText}>FRIEND</Text>
-                        </View>
-                      ) : null}
                     </View>
                     <Text style={styles.reportMeta}>
-                      {`${report.type} · ${report.agoText}`}
+                      {`${report.report_type ?? 'walk-in'} · ${agoText} ago`}
                     </Text>
                   </View>
 
                   {/* Wait time */}
                   <Text style={[styles.reportWaitTime, { color: waitColor }]}>
-                    {`${report.waitMinutes}m`}
+                    {`${report.wait_minutes}m`}
                   </Text>
                 </View>
               )
@@ -406,7 +446,7 @@ export default function VenueDetailScreen() {
             </View>
           ))}
           <View style={styles.vibeTag}>
-            <Text style={styles.vibeTagText}>{venue.categoryLabel}</Text>
+            <Text style={styles.vibeTagText}>{venue.category_label}</Text>
           </View>
         </View>
 

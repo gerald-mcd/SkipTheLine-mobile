@@ -1,5 +1,6 @@
 /**
- * SkipTheLine — Miami Venue Seeding Script (Plain JS)
+ * SkipTheLine — Miami Venue Seeding Script
+ * Uses Google Places API (New) — v1/places:searchNearby
  * Run: node scripts/seed-miami.js
  */
 
@@ -7,7 +8,7 @@ const fs   = require('fs')
 const path = require('path')
 const { createClient } = require('@supabase/supabase-js')
 
-// ─── Load env files ───────────────────────────────────────────────────────────
+// ─── Load env ─────────────────────────────────────────────────────────────────
 
 function loadEnv() {
   const env = {}
@@ -26,13 +27,13 @@ function loadEnv() {
   return env
 }
 
-const ENV         = loadEnv()
+const ENV          = loadEnv()
 const SUPABASE_URL = 'https://bcwlzzuevmtvlahxxdqb.supabase.co'
 const SERVICE_KEY  = ENV['SUPABASE_SERVICE_ROLE_KEY'] || ''
 const GOOGLE_KEY   = ENV['EXPO_PUBLIC_GOOGLE_MAPS_KEY'] || ''
 
-console.log('Google key loaded:', GOOGLE_KEY ? GOOGLE_KEY.slice(0,15)+'...' : 'MISSING')
-console.log('Supabase key loaded:', SERVICE_KEY ? SERVICE_KEY.slice(0,15)+'...' : 'MISSING')
+console.log('Google key:', GOOGLE_KEY ? GOOGLE_KEY.slice(0, 15) + '...' : 'MISSING')
+console.log('Supabase key:', SERVICE_KEY ? SERVICE_KEY.slice(0, 15) + '...' : 'MISSING')
 
 if (!SERVICE_KEY) { console.error('❌ Missing SUPABASE_SERVICE_ROLE_KEY'); process.exit(1) }
 if (!GOOGLE_KEY)  { console.error('❌ Missing EXPO_PUBLIC_GOOGLE_MAPS_KEY'); process.exit(1) }
@@ -40,6 +41,10 @@ if (!GOOGLE_KEY)  { console.error('❌ Missing EXPO_PUBLIC_GOOGLE_MAPS_KEY'); pr
 const sb = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
+
+// ─── Places API (New) base URL ────────────────────────────────────────────────
+
+const PLACES_BASE = 'https://places.googleapis.com/v1'
 
 // ─── Miami grid ───────────────────────────────────────────────────────────────
 
@@ -56,34 +61,49 @@ const MIAMI_GRID = [
   { name: 'Edgewater',       lat: 25.7980, lng: -80.1870, radius: 1000, is_launched: false },
 ]
 
-const CATEGORIES = [
-  { googleType: 'restaurant',              ourCategory: 'restaurants',   label: 'Restaurant' },
-  { googleType: 'cafe',                    ourCategory: 'restaurants',   label: 'Café' },
-  { googleType: 'bar',                     ourCategory: 'entertainment', label: 'Bar' },
-  { googleType: 'night_club',              ourCategory: 'entertainment', label: 'Nightclub' },
-  { googleType: 'hair_care',               ourCategory: 'barbershops',   label: 'Barbershop' },
-  { googleType: 'grocery_or_supermarket',  ourCategory: 'grocery',       label: 'Grocery' },
-  { googleType: 'local_government_office', ourCategory: 'government',    label: 'Government' },
-  { googleType: 'hospital',                ourCategory: 'healthcare',    label: 'Healthcare' },
-  { googleType: 'shopping_mall',           ourCategory: 'retail',        label: 'Mall' },
-  { googleType: 'tourist_attraction',      ourCategory: 'attractions',   label: 'Attraction' },
-  { googleType: 'museum',                  ourCategory: 'landmarks',     label: 'Museum' },
-  { googleType: 'park',                    ourCategory: 'landmarks',     label: 'Park' },
+// ─── Place types for Places API (New) ────────────────────────────────────────
+
+const SEARCH_TYPES = [
+  { type: 'restaurant',              category: 'restaurants',   label: 'Restaurant' },
+  { type: 'cafe',                    category: 'restaurants',   label: 'Café' },
+  { type: 'bar',                     category: 'entertainment', label: 'Bar' },
+  { type: 'night_club',              category: 'entertainment', label: 'Nightclub' },
+  { type: 'hair_salon',              category: 'barbershops',   label: 'Barbershop' },
+  { type: 'grocery_store',           category: 'grocery',       label: 'Grocery' },
+  { type: 'supermarket',             category: 'grocery',       label: 'Grocery' },
+  { type: 'city_hall',               category: 'government',    label: 'Government' },
+  { type: 'local_government_office', category: 'government',    label: 'Government' },
+  { type: 'hospital',                category: 'healthcare',    label: 'Healthcare' },
+  { type: 'pharmacy',                category: 'healthcare',    label: 'Pharmacy' },
+  { type: 'shopping_mall',           category: 'retail',        label: 'Mall' },
+  { type: 'tourist_attraction',      category: 'attractions',   label: 'Attraction' },
+  { type: 'museum',                  category: 'landmarks',     label: 'Museum' },
+  { type: 'park',                    category: 'landmarks',     label: 'Park' },
 ]
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Map Places API (New) types → our categories ──────────────────────────────
 
 function mapCategory(types = []) {
-  if (types.some(t => ['night_club', 'bar'].includes(t)))                         return { category: 'entertainment', label: 'Bar / Nightclub' }
-  if (types.some(t => ['restaurant', 'food', 'cafe', 'bakery'].includes(t)))      return { category: 'restaurants',   label: 'Restaurant' }
-  if (types.some(t => ['hair_care', 'beauty_salon'].includes(t)))                 return { category: 'barbershops',   label: 'Barbershop' }
-  if (types.some(t => ['grocery_or_supermarket', 'supermarket'].includes(t)))     return { category: 'grocery',       label: 'Grocery' }
-  if (types.some(t => ['local_government_office', 'city_hall'].includes(t)))      return { category: 'government',    label: 'Government Office' }
-  if (types.some(t => ['hospital', 'doctor', 'pharmacy'].includes(t)))            return { category: 'healthcare',    label: 'Healthcare' }
-  if (types.some(t => ['shopping_mall', 'store', 'clothing_store'].includes(t)))  return { category: 'retail',        label: 'Retail' }
-  if (types.some(t => ['museum', 'art_gallery', 'library'].includes(t)))          return { category: 'landmarks',     label: 'Landmark' }
-  if (types.some(t => ['amusement_park', 'zoo', 'aquarium'].includes(t)))         return { category: 'attractions',   label: 'Attraction' }
-  if (types.some(t => ['tourist_attraction', 'park'].includes(t)))                return { category: 'landmarks',     label: 'Landmark' }
+  if (types.some(t => ['night_club', 'bar', 'cocktail_bar', 'wine_bar'].includes(t)))
+    return { category: 'entertainment', label: 'Bar / Nightclub' }
+  if (types.some(t => ['restaurant', 'food', 'cafe', 'bakery', 'meal_takeaway', 'fast_food_restaurant', 'coffee_shop'].includes(t)))
+    return { category: 'restaurants', label: 'Restaurant' }
+  if (types.some(t => ['hair_salon', 'barber_shop', 'beauty_salon'].includes(t)))
+    return { category: 'barbershops', label: 'Barbershop' }
+  if (types.some(t => ['grocery_store', 'supermarket', 'convenience_store'].includes(t)))
+    return { category: 'grocery', label: 'Grocery' }
+  if (types.some(t => ['city_hall', 'local_government_office', 'courthouse', 'post_office'].includes(t)))
+    return { category: 'government', label: 'Government Office' }
+  if (types.some(t => ['hospital', 'doctor', 'pharmacy', 'medical_lab', 'health'].includes(t)))
+    return { category: 'healthcare', label: 'Healthcare' }
+  if (types.some(t => ['shopping_mall', 'clothing_store', 'shoe_store', 'department_store'].includes(t)))
+    return { category: 'retail', label: 'Retail' }
+  if (types.some(t => ['museum', 'art_gallery', 'library', 'cultural_landmark'].includes(t)))
+    return { category: 'landmarks', label: 'Landmark' }
+  if (types.some(t => ['amusement_park', 'zoo', 'aquarium', 'stadium', 'tourist_attraction'].includes(t)))
+    return { category: 'attractions', label: 'Attraction' }
+  if (types.some(t => ['park', 'national_park', 'campground', 'natural_feature'].includes(t)))
+    return { category: 'landmarks', label: 'Park' }
   return { category: 'restaurants', label: 'Venue' }
 }
 
@@ -91,37 +111,101 @@ function mapPriceRange(level) {
   return ['$', '$', '$$', '$$$', '$$$$'][level] || '$$'
 }
 
+// ─── Build photo URL using Places API (New) format ────────────────────────────
+
+function buildPhotoUrl(photoName) {
+  // photoName is like: places/ChIJ.../photos/AUjq9jk...
+  return `${PLACES_BASE}/${photoName}/media?maxWidthPx=800&key=${GOOGLE_KEY}`
+}
+
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms))
 }
 
-// ─── Google API calls ─────────────────────────────────────────────────────────
+// ─── Places API (New) — Nearby Search ────────────────────────────────────────
 
-async function nearbySearch(lat, lng, radius, type, pageToken) {
-  const params = new URLSearchParams({ location: `${lat},${lng}`, radius: String(radius), type, key: GOOGLE_KEY })
-  if (pageToken) params.set('pagetoken', pageToken)
-  const res  = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?${params}`)
+async function nearbySearch(lat, lng, radius, includedType, pageToken) {
+  const body = {
+    includedTypes: [includedType],
+    maxResultCount: 20,
+    locationRestriction: {
+      circle: {
+        center: { latitude: lat, longitude: lng },
+        radius: parseFloat(radius),
+      },
+    },
+    ...(pageToken ? { pageToken } : {}),
+  }
+
+  // Fields to return — only request what we need to minimize billing
+  const fieldMask = 'places.id,places.displayName,places.formattedAddress,places.location,places.types,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.regularOpeningHours,places.nationalPhoneNumber,places.websiteUri'
+
+  const res = await fetch(`${PLACES_BASE}/places:searchNearby`, {
+    method:  'POST',
+    headers: {
+      'Content-Type':    'application/json',
+      'X-Goog-Api-Key':  GOOGLE_KEY,
+      'X-Goog-FieldMask': fieldMask,
+    },
+    body: JSON.stringify(body),
+  })
+
   const data = await res.json()
-  if (data.status === 'REQUEST_DENIED') throw new Error(`Google denied: ${data.error_message}`)
-  return { places: data.results || [], nextPageToken: data.next_page_token }
+
+  if (data.error) {
+    throw new Error(`Google API error: ${data.error.message}`)
+  }
+
+  return {
+    places:        data.places || [],
+    nextPageToken: data.nextPageToken || null,
+  }
 }
 
-async function placeDetails(placeId) {
-  const params = new URLSearchParams({
-    place_id: placeId,
-    fields:   'place_id,name,formatted_address,geometry,types,opening_hours,formatted_phone_number,website,rating,user_ratings_total,price_level,photos',
-    key:      GOOGLE_KEY,
-  })
-  const res  = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?${params}`)
-  const data = await res.json()
-  if (data.status !== 'OK') return null
-  return data.result || null
+// ─── Transform Places API (New) result → our venue shape ─────────────────────
+
+function transformVenue(place, neighborhood, isLaunched) {
+  const types    = place.types || []
+  const { category, label } = mapCategory(types)
+  const photoName = place.photos?.[0]?.name || null
+  const hours     = place.regularOpeningHours?.weekdayDescriptions?.join(' | ') || null
+
+  return {
+    google_place_id:      place.id,
+    name:                 place.displayName?.text || place.displayName || '',
+    category,
+    category_label:       label,
+    lat:                  place.location?.latitude  || 0,
+    lng:                  place.location?.longitude || 0,
+    address:              place.formattedAddress || '',
+    city:                 'Miami',
+    neighborhood,
+    hours,
+    phone:                place.nationalPhoneNumber || null,
+    website:              place.websiteUri || null,
+    google_rating:        place.rating || null,
+    google_rating_count:  place.userRatingCount || null,
+    average_rating:       place.rating || 0,
+    price_range:          mapPriceRange(place.priceLevel),
+    google_photo_ref:     photoName,
+    primary_image_url:    photoName ? buildPhotoUrl(photoName) : null,
+    source:               'google',
+    is_active:            true,
+    is_launched:          isLaunched,
+    is_claimed:           false,
+    is_verified:          false,
+    current_wait_minutes: 0,
+    typical_wait_minutes: 0,
+    live_reporters:       0,
+    reports_count:        0,
+    trend:                'flat',
+  }
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('\n🌴  Starting Miami venue seeding...\n')
+  console.log('\n🌴  Starting Miami venue seeding (Places API New)...\n')
 
   const seen = new Set()
   let inserted = 0, skipped = 0, errors = 0
@@ -129,94 +213,63 @@ async function main() {
   for (const section of MIAMI_GRID) {
     console.log(`\n📍  ${section.name} (${section.is_launched ? 'LIVE' : 'seeded, not launched'})`)
 
-    for (const cat of CATEGORIES) {
+    for (const cat of SEARCH_TYPES) {
       process.stdout.write(`   ${cat.label}... `)
-      let pageToken
+      let pageToken = null
+      let pageCount = 0
 
       do {
         try {
-          if (pageToken) await sleep(2000)
-          const { places, nextPageToken } = await nearbySearch(section.lat, section.lng, section.radius, cat.googleType, pageToken)
-          pageToken = nextPageToken
+          if (pageToken) await sleep(500)
+
+          const { places, nextPageToken } = await nearbySearch(
+            section.lat, section.lng, section.radius, cat.type, pageToken
+          )
+          pageToken  = nextPageToken
+          pageCount++
 
           for (const place of places) {
-            if (seen.has(place.place_id)) { skipped++; continue }
-            seen.add(place.place_id)
+            if (!place.id) continue
+            if (seen.has(place.id)) { skipped++; continue }
+            seen.add(place.id)
 
-            await sleep(80)
-            const detail = await placeDetails(place.place_id)
+            if (!place.displayName?.text && !place.displayName) { errors++; continue }
 
-            // Use detail if available, else fall back to nearby data
-            const src = detail || {
-              place_id:               place.place_id,
-              name:                   place.name,
-              formatted_address:      place.vicinity || '',
-              geometry:               place.geometry,
-              types:                  place.types || [],
-              rating:                 place.rating || null,
-              user_ratings_total:     place.user_ratings_total || null,
-              price_level:            place.price_level || null,
-              photos:                 place.photos || [],
-              opening_hours:          null,
-              formatted_phone_number: null,
-              website:                null,
+            const venue = transformVenue(place, section.name, section.is_launched)
+
+            const { error } = await sb.from('venues').upsert(venue, {
+              onConflict: 'google_place_id',
+            })
+
+            if (error) {
+              errors++
+              console.error(`\n   ❌ ${venue.name}: ${error.message}`)
+            } else {
+              inserted++
             }
 
-            if (!src.name) { errors++; continue }
-
-            const { category, label } = mapCategory(src.types)
-            const photoRef = src.photos?.[0]?.photo_reference || null
-
-            const venue = {
-              google_place_id:      src.place_id,
-              name:                 src.name,
-              category,
-              category_label:       label,
-              lat:                  src.geometry?.location?.lat || 0,
-              lng:                  src.geometry?.location?.lng || 0,
-              address:              src.formatted_address || '',
-              city:                 'Miami',
-              neighborhood:         section.name,
-              hours:                src.opening_hours?.weekday_text?.join(' | ') || null,
-              phone:                src.formatted_phone_number || null,
-              website:              src.website || null,
-              google_rating:        src.rating || null,
-              google_rating_count:  src.user_ratings_total || null,
-              average_rating:       src.rating || 0,
-              price_range:          mapPriceRange(src.price_level),
-              google_photo_ref:     photoRef,
-              primary_image_url:    photoRef ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoRef}&key=${GOOGLE_KEY}` : null,
-              source:               'google',
-              is_active:            true,
-              is_launched:          section.is_launched,
-              is_claimed:           false,
-              is_verified:          false,
-              current_wait_minutes: 0,
-              typical_wait_minutes: 0,
-              live_reporters:       0,
-              reports_count:        0,
-              trend:                'flat',
-            }
-
-            const { error } = await sb.from('venues').upsert(venue, { onConflict: 'google_place_id' })
-            if (error) { errors++; console.error(`\n   ❌ ${src.name}: ${error.message}`) }
-            else inserted++
+            await sleep(30) // gentle rate limiting
           }
+
         } catch (err) {
-          console.error(`\n   ❌ API error: ${err.message}`)
+          console.error(`\n   ❌ ${err.message}`)
           errors++
           break
         }
-      } while (pageToken)
+
+      } while (pageToken && pageCount < 3) // max 3 pages per type per section
 
       console.log(`✅  (${inserted} total)`)
-      await sleep(200)
+      await sleep(100)
     }
   }
 
   console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log(`✅  Done — ${inserted} venues inserted, ${skipped} skipped, ${errors} errors`)
+  console.log(`✅  Done`)
+  console.log(`    Venues inserted: ${inserted}`)
+  console.log(`    Duplicates skipped: ${skipped}`)
+  console.log(`    Errors: ${errors}`)
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
 }
 
-main().catch(err => { console.error('❌ Fatal:', err); process.exit(1) })
+main().catch(err => { console.error('❌ Fatal:', err.message); process.exit(1) })

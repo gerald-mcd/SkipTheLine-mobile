@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import {
   View, Text, StyleSheet, ScrollView, Pressable, TextInput, Modal
 } from 'react-native'
@@ -9,10 +9,12 @@ import {
   Minus, Zap, Target, Gift, Sparkles, UserPlus, Search, X, Check, Clock, Users,
 } from 'lucide-react-native'
 import {
-  profile, tierFor, quests, rewards, communityImpact, peoplePool, incomingRequests,
+  tierFor, quests, rewards, communityImpact, peoplePool, incomingRequests,
   type Quest, type Reward, type Person,
 } from '@/lib/mock-data'
 import { fontFamily } from '@/constants/theme'
+import { getUserProfile, type UserProfile } from '@/lib/queries'
+import { supabase } from '@/lib/supabase'
 
 const COLORS = {
   background: '#FCFBF9',
@@ -31,20 +33,41 @@ const COLORS = {
 }
 
 export default function ProfileScreen() {
-  const { current: tier, next: nextTier, progress } = tierFor(profile.points)
-  const pointsToNext = nextTier ? Math.max(0, nextTier.min - profile.points) : 0
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [findOpen, setFindOpen] = useState(false)
-  const [extraFriends, setExtraFriends] = useState<typeof profile.friends>([])
-  const allFriends = useMemo(() => [...(profile.friends ?? []), ...extraFriends], [extraFriends])
-
+  const [extraFriends, setExtraFriends] = useState<any[]>([])
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [showAllRewards, setShowAllRewards] = useState(false)
   const [showAllBadges, setShowAllBadges] = useState(false)
 
-  const RankIcon = (profile as any).rankTrend === 'up' ? TrendingUp
-    : (profile as any).rankTrend === 'down' ? TrendingDown : Minus
-  const rankColor = (profile as any).rankTrend === 'up' ? COLORS.success
-    : (profile as any).rankTrend === 'down' ? COLORS.destructive : COLORS.mutedForeground
+  useEffect(() => {
+    loadProfile()
+  }, [])
+
+  async function loadProfile() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const p = await getUserProfile(user.id)
+    if (p) setUserProfile(p)
+  }
+
+  // Use real profile data or fallback defaults while loading
+  const points    = userProfile?.points ?? 0
+  const streak    = userProfile?.streak ?? 0
+  const rank      = userProfile?.rank ?? null
+  const rankTrend = userProfile?.rank_trend ?? 'flat'
+  const rankDelta = userProfile?.rank_delta ?? 0
+  const name      = userProfile?.name ?? 'Skipper'
+  const handle    = userProfile?.handle ?? '@you'
+
+  const { current: tier, next: nextTier, progress } = tierFor(points)
+  const pointsToNext = nextTier ? Math.max(0, nextTier.min - points) : 0
+  const allFriends = useMemo(() => [...extraFriends], [extraFriends])
+
+  const RankIcon = rankTrend === 'up' ? TrendingUp
+    : rankTrend === 'down' ? TrendingDown : Minus
+  const rankColor = rankTrend === 'up' ? COLORS.success
+    : rankTrend === 'down' ? COLORS.destructive : COLORS.mutedForeground
 
   return (
     <SafeAreaView edges={['top']} style={styles.safe} testID="profile-screen">
@@ -54,17 +77,13 @@ export default function ProfileScreen() {
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <View style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>{profile.name.charAt(0)}</Text>
+              <Text style={styles.avatarText}>{name.charAt(0)}</Text>
             </View>
             <View>
-              <Text style={styles.userName}>{profile.name}</Text>
-              <Text style={styles.userLocation}>{profile.neighborhood}, {profile.city}</Text>
+              <Text style={styles.userName}>{name}</Text>
+              <Text style={styles.userLocation}>{userProfile?.neighborhood ?? 'Miami'}, {userProfile?.city ?? 'FL'}</Text>
               <View style={styles.badgeRow}>
-                {profile.badges.filter(b => b.earned).slice(0, 6).map(b => (
-                  <View key={b.id} style={styles.badgePip}>
-                    <Text style={{ fontSize: 10 }}>{b.emoji}</Text>
-                  </View>
-                ))}
+                <View style={styles.badgePip}><Text style={{ fontSize: 10 }}>🎯</Text></View>
               </View>
             </View>
           </View>
@@ -97,7 +116,7 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.pointsRow}>
-            <Text style={styles.pointsNumber}>{profile.points.toLocaleString()}</Text>
+            <Text style={styles.pointsNumber}>{points.toLocaleString()}</Text>
             <Text style={styles.pointsLabel}>SkipPoints</Text>
           </View>
 
@@ -116,11 +135,11 @@ export default function ProfileScreen() {
 
         {/* Stats row */}
         <View style={styles.statsRow}>
-          <StatBox icon={<Flame size={14} color={COLORS.warning} />} value={`${profile.streak}d`} label="Streak" />
-          <StatBox icon={<Trophy size={14} color={COLORS.primary} />} value={`#${profile.rank}`} label="Rank" />
+          <StatBox icon={<Flame size={14} color={COLORS.warning} />} value={`${userProfile?.streak ?? 0}d`} label="Streak" />
+          <StatBox icon={<Trophy size={14} color={COLORS.primary} />} value={userProfile?.rank ? `#${userProfile.rank}` : '–'} label="Rank" />
           <StatBox
             icon={<RankIcon size={14} color={rankColor} />}
-            value={`${(profile as any).rankTrend === 'down' ? '−' : '+'}${(profile as any).rankDelta ?? 0}`}
+            value={`${rankTrend === 'down' ? '−' : '+'}${userProfile?.rank_delta ?? 0}`}
             label="Trend"
           />
           <StatBox
@@ -156,12 +175,12 @@ export default function ProfileScreen() {
           </View>
           {showAllRewards ? (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-              {rewards.map(r => <RewardCard key={r.id} reward={r} userPoints={profile.points} />)}
+              {rewards.map(r => <RewardCard key={r.id} reward={r} userPoints={points} />)}
             </View>
           ) : (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 10, paddingBottom: 4 }}>
-              {rewards.map(r => <RewardCard key={r.id} reward={r} userPoints={profile.points} />)}
+              {rewards.map(r => <RewardCard key={r.id} reward={r} userPoints={points} />)}
             </ScrollView>
           )}
         </View>
@@ -179,11 +198,11 @@ export default function ProfileScreen() {
             </Pressable>
           </View>
           <View style={styles.badgeGrid}>
-            {(showAllBadges ? profile.badges : profile.badges.slice(0, 6)).map(b => (
-              <View key={b.id} style={[styles.badgeGridItem, { opacity: b.earned ? 1 : 0.45 }]}>
-                <Text style={{ fontSize: 24 }}>{b.emoji}</Text>
-                <Text style={styles.badgeName}>{b.name}</Text>
-                {!b.earned && <Text style={styles.badgeLocked}>Locked</Text>}
+            {['🎯','🦉','🔥','🏆','🎪','💯','⚡','🗺️'].slice(0, showAllBadges ? 8 : 6).map((emoji, i) => (
+              <View key={i} style={[styles.badgeGridItem, { opacity: i < 2 ? 1 : 0.45 }]}>
+                <Text style={{ fontSize: 24 }}>{emoji}</Text>
+                <Text style={styles.badgeName}>{['First Drop','Night Owl','Streak x10','Local Hero','Event Scout','100 Club','Speed Run','City Expert'][i]}</Text>
+                {i >= 2 && <Text style={styles.badgeLocked}>Locked</Text>}
               </View>
             ))}
           </View>

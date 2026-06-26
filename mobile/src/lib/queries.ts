@@ -35,6 +35,7 @@ export interface Venue {
   severity:             string | null
   is_launched:          boolean
   google_place_id:      string | null
+  last_report_at:       string | null
 }
 
 export interface WaitCache {
@@ -52,7 +53,7 @@ export interface Report {
   report_type:  string | null
   note:         string | null
   created_at:   string
-  users:        { name: string; handle: string } | null
+  users:        { name: string; handle: string }[] | null
 }
 
 export interface VenueReview {
@@ -62,7 +63,7 @@ export interface VenueReview {
   source:      string
   author_name: string | null
   created_at:  string
-  users:        { name: string } | null
+  users:       { name: string }[] | null
 }
 
 export interface UserProfile {
@@ -216,7 +217,7 @@ export async function getVenueReports(venueId: string, limit = 10): Promise<Repo
     .limit(limit)
 
   if (error) { console.error('getVenueReports:', error.message); return [] }
-  return (data ?? []) as Report[]
+  return (data ?? []) as unknown as Report[]
 }
 
 /** Submit a wait time report */
@@ -255,7 +256,7 @@ export async function getVenueReviews(venueId: string, limit = 5): Promise<Venue
     .limit(limit)
 
   if (error) { console.error('getVenueReviews:', error.message); return [] }
-  return (data ?? []) as VenueReview[]
+  return (data ?? []) as unknown as VenueReview[]
 }
 
 // ─── VENUE PHOTOS ─────────────────────────────────────────────────────────────
