@@ -713,3 +713,130 @@ Supabase handles the entire backend at pre-seed — no separate server needed:
 - Shared group email (team@skiptheline.site) routes to all team members — set up via IONOS group email
 - Future: Google Workspace (~$6/mo per user) for company Google accounts
 - Google Cloud: create now with personal Gmail, transfer ownership to company account later
+
+---
+
+## Production Readiness Framework
+
+This framework governs all "what's next" decisions. Every task gets evaluated against where we are in this framework before execution. When asked "what's next" — reference this first, then drill into specifics.
+
+### PHASE 1 — Discovery & Assessment
+*What you do before writing production code*
+
+| Audit | Status | What it answers |
+|-------|--------|----------------|
+| Feature Inventory | ✅ Done | What does the app actually do? Every screen, feature, button |
+| Feature-to-Schema Gap Analysis | ✅ Done | Does the database support every feature? |
+| Data Flow Audit | ✅ Done | Where does data come from, where does it go, what's missing? |
+| Dependency Audit | ⬜ Pending | Which packages are production-ready? Which will crash? |
+| Security Audit | ⬜ Pending | API keys exposed? Auth missing? RLS correct? |
+| Compliance Audit | ⬜ Pending | GDPR, CCPA — what's legally required at launch? |
+
+### PHASE 2 — Architecture & Design
+*Decisions made before building*
+
+| Framework | Status | What it answers |
+|-----------|--------|----------------|
+| System Architecture Diagram | ⬜ Pending | How do all pieces connect? App → API → DB → Cache |
+| API Contract Design | ⬜ Pending | What endpoints exist, inputs, outputs? |
+| Data Model Design (Schema) | 🟡 In Progress | Final schema with relationships, indexes, RLS |
+| State Management Audit | ⬜ Pending | Local state vs server state vs cache? |
+| Error Handling Plan | ⬜ Pending | What happens when things fail? Fallbacks, retries |
+| Offline Strategy | ⬜ Pending | What works without internet? What degrades gracefully? |
+
+### PHASE 3 — Build Readiness
+*Before first production code*
+
+| Checklist | Status | What it answers |
+|-----------|--------|----------------|
+| Environment Setup | 🟡 Partial | Dev vs staging vs production environments |
+| Secret Management | 🟡 Partial | API keys in .env, .gitignore confirmed |
+| CI/CD Plan | ⬜ Pending | How does code get to production safely? |
+| Testing Strategy | ⬜ Pending | Unit, integration, E2E coverage needed |
+| Monitoring Plan | ⬜ Pending | How to know when something breaks (Sentry) |
+| Rollback Plan | ⬜ Pending | Recovery in <5 min if deploy breaks prod |
+
+### PHASE 4 — Pre-Launch
+*Before real users touch it*
+
+| Audit | Status | What it answers |
+|-------|--------|----------------|
+| Performance Audit | ⬜ Pending | Cold start time, query speed, bundle size |
+| Load Testing | ⬜ Pending | What breaks under 100 / 1,000 concurrent users? |
+| Security Penetration Test | ⬜ Pending | Can someone bypass auth or access other users' data? |
+| App Store Compliance Review | ⬜ Pending | Meets Apple + Google guidelines? |
+| Privacy Policy Audit | ⬜ Pending | Does what you collect match your privacy policy? |
+| Analytics Instrumentation Audit | ⬜ Pending | Tracking everything needed to make product decisions? |
+
+### PHASE 5 — Launch & Post-Launch
+*After real users exist*
+
+| Framework | Status | What it answers |
+|-----------|--------|----------------|
+| Incident Response Plan | ⬜ Pending | Who gets paged? What's the escalation path? |
+| Data Retention Audit | ⬜ Pending | Storing data longer than required? |
+| Cost Audit | ⬜ Pending | Infra spend tracking with user growth? |
+| Feature Flag Strategy | ⬜ Pending | Ship features to % of users before full rollout |
+| A/B Testing Framework | ⬜ Pending | Test whether changes improve the product |
+| User Feedback Loop | ⬜ Pending | How feedback gets back to the product roadmap |
+
+### Current Position
+```
+PHASE 1 — Discovery (70% done)
+  ✅ Feature Inventory
+  ✅ Feature-to-Schema Gap Analysis
+  ✅ Data Flow Audit
+  ⬜ Dependency Audit (next)
+  ⬜ Security Audit
+  ⬜ Compliance Audit
+
+PHASE 2 — Architecture (started)
+  🟡 Data Model Design — schema in progress
+  ⬜ Everything else
+
+PHASES 3–5 — Not started
+```
+
+### App-Side Gaps Identified (Feature-to-Schema Audit)
+
+**🔴 Critical — app won't work without these:**
+1. Auth flow — email + Google + Apple (zero auth exists, AsyncStorage bypass only)
+2. Supabase client setup — `src/lib/supabase.ts`, `auth.ts`, `queries.ts`
+3. Report submission → DB (currently toast only, nothing saved)
+4. Real-time venue data (all screens read mock data)
+
+**🟠 High — needed before TestFlight:**
+5. User profile from DB (profile screen reads mock `profile` object)
+6. Onboarding flow (name, neighborhood, permissions, terms acceptance)
+7. Favorites persistence (heart button is local state only)
+8. Quest progress wired (never updates after report)
+9. Venue detail from DB (all mock lookups)
+10. Explore feed from DB (hardcoded `exploreFeed` array)
+
+**🟡 Medium — needed before Miami launch:**
+11. Report type picker UI (walk-in / reservation / VIP / guest list)
+12. Friend system wired (search + requests write to DB)
+13. Badges system wired (Edge Function checks criteria after report)
+14. Leaderboard (weekly snapshot job)
+15. Reward redemption flow (points deducted, code generated)
+16. Push notifications (Expo push token captured on login)
+17. Wait drop alerts (UI + Edge Function)
+
+**⚪ Phase 2 — post-launch:**
+18. B2B dashboard (separate web app)
+19. Voice AI agent (Vapi + Claude + ElevenLabs)
+20. Arrival nudge (background location detection)
+
+### Schema Gaps Filled (Data Flow Audit)
+New tables added beyond original 30:
+- `auth_events` — login/logout tracking, device info, fraud signals
+- `featured_venues` — home screen carousel, admin-managed
+- `venue_interactions` — views, direction taps, report taps (B2B visibility)
+- `wait_drop_events` — feeds explore feed and wait drop alerts
+- `community_impact_snapshots` — pre-computed people helped stats
+- `report_confirmations` — who confirmed which report
+- `search_queries` — search tracking for B2B visibility
+- `user_sessions` — app session tracking for funnel analysis
+- `venue_hours` — structured open/close times per day
+- `smb_alerts` — B2B alert history
+- `referral_codes` + `referral_uses` — growth loop
