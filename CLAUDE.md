@@ -633,3 +633,74 @@ Identified for business partners' lawyer meeting. High-level, one per category:
 
 **Third-Party APIs & IP**
 - Google Places API seeds our entire business database — are there commercial licensing restrictions on how we use and store that data?
+
+---
+
+## Backend Infrastructure Plan
+
+### Stack Decision
+Supabase handles the entire backend at pre-seed — no separate server needed:
+- **Database:** Postgres (via Supabase)
+- **Auth:** Supabase Auth — email + Google + Apple Sign-In
+- **Real-time:** Supabase Realtime subscriptions (live wait time updates)
+- **Storage:** Supabase Storage (venue photos, user avatars)
+- **Edge Functions:** wait time engine, anomaly detection, SkipPoints awards
+
+### Google Maps Strategy
+- **SDK:** `react-native-maps` — renders interactive map in app (requires EAS build)
+- **Places API:** one-time Miami venue seeding script — pulls ~3,500 venues into Supabase
+- **Maps API:** powers map tiles, search, coordinates
+- **One API key** from Google Cloud covers all three
+- **Migrate to Mapbox** at 10K+ users — 60% cheaper at scale, full brand control
+
+### Build Infrastructure Cost
+
+| Phase | Service | Cost |
+|-------|---------|------|
+| **Development (now)** | Supabase Free | $0 |
+| | Google Cloud (Maps + Places) | $0 (covered by $200/mo credit) |
+| | Expo EAS Free | $0 |
+| | GitHub | $0 |
+| | **Subtotal** | **$0/mo** |
+| **Beta (pre-launch)** | Apple Developer Account | $99 one-time |
+| | Google Play Developer | $25 one-time |
+| | Privacy Policy/Terms (Termly) | $30/mo |
+| | **Subtotal** | **$124 one-time + $30/mo** |
+| **Miami Launch** | Supabase Pro | $25/mo |
+| | Google Maps SDK | ~$10/mo after credit |
+| | Google Places API | ~$50/mo |
+| | EAS Production | $14/mo |
+| | Stripe | 2.9% + $0.30/transaction |
+| | Cloudflare | Free tier |
+| | Sentry | Free tier |
+| | **Subtotal** | **~$100–150/mo** |
+| **Scale (10K–100K users)** | Supabase Pro | $25–599/mo |
+| | Google Maps → Mapbox | ~$500/mo |
+| | Redis (Upstash) | $100–300/mo |
+| | EAS Production | $99/mo |
+| | Cloudflare Pro | $20/mo |
+| | Sentry | $80/mo |
+| | Mixpanel/PostHog | $200–400/mo |
+| | **Subtotal** | **~$1,500–2,500/mo** |
+
+**18-month total: ~$15,000–16,000 — less than 2% of the $1MM raise**
+
+### Team Sync Backlog (priority order)
+1. Google Cloud setup — create project, enable Maps SDK + Places API, get API key
+2. Supabase schema design — venues, reports, users, points, badges tables
+3. EAS dev build — real map on phone
+4. Miami venue seeding script — Google Places → Supabase (~3,500 venues, ~$0 cost)
+5. Wire app to real Supabase data — replace mock-data.ts
+6. Auth — Supabase Auth + Google + Apple Sign-In
+7. Wait time engine + anomaly detection
+8. Push notifications — arrival nudge, wait drop alerts
+9. Apple Developer Account ($99) — needed before TestFlight
+10. Google Play Developer ($25) — needed before Android launch
+11. Legal — Privacy Policy, Terms, Beta NDA, provisional patent, trademark
+12. TestFlight beta — team + early Miami users
+
+### Domain + Email
+- Domain registered through IONOS
+- Shared group email (team@skiptheline.site) routes to all team members — set up via IONOS group email
+- Future: Google Workspace (~$6/mo per user) for company Google accounts
+- Google Cloud: create now with personal Gmail, transfer ownership to company account later
