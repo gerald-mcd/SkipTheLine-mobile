@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "seed": "npx ts-node --project tsconfig.json scripts/seed.ts",
     "seed:wipe": "npx ts-node --project tsconfig.json scripts/seed.ts --wipe",
-    "seed:miami": "node scripts/seed-miami.js"
+    "seed:miami": "node scripts/seed-miami.js",
+    "patch:reviews": "node scripts/patch-reviews-hours.js"
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
