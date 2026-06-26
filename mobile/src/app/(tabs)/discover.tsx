@@ -243,7 +243,7 @@ function SheetVenueRow({ venue, onPress }: { venue: Venue; onPress: () => void }
   const waitColor = getWaitColor(getSeverity(venue.current_wait_minutes))
   return (
     <Pressable style={styles.venueRow} onPress={onPress} testID={`map-venue-${venue.id}`}>
-      <Image source={{ uri: venue.primary_image_url ?? '' }} style={styles.venueThumb} resizeMode="cover" />
+      {venue.primary_image_url ? <Image source={{ uri: venue.primary_image_url }} style={styles.venueThumb} resizeMode="cover" /> : <View style={[styles.venueThumb, { backgroundColor: '#EDE6DD' }]} />}
       <View style={{ flex: 1 }}>
         <Text style={styles.venueName} numberOfLines={1}>{venue.name}</Text>
         <View style={styles.venueMeta}>

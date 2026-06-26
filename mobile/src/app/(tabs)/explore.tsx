@@ -140,7 +140,7 @@ function FeedCard({ item, venuesMap, venuesList, cardIndex }: {
         onPress={() => router.push({ pathname: '/venue/[id]', params: { id: venue.id } })}
       >
         <View style={cardStyles.imageWrap}>
-          <Image source={{ uri: venue.primary_image_url ?? '' }} style={cardStyles.venueImage} resizeMode="cover" />
+          {venue.primary_image_url ? <Image source={{ uri: venue.primary_image_url }} style={cardStyles.venueImage} resizeMode="cover" /> : null}
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.72)']}
             style={StyleSheet.absoluteFillObject}

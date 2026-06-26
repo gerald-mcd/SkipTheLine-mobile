@@ -139,7 +139,7 @@ export default function ReportScreen() {
             <View style={styles.venueIconCircle}>
               <MapPin size={18} color={COLORS.primary} strokeWidth={2.5} />
             </View>
-            <Text style={styles.venueCardName} numberOfLines={1}>{selectedVenue.name}</Text>
+            <Text style={styles.venueCardName} numberOfLines={1}>{selectedVenue?.name ?? 'Select a venue'}</Text>
           </View>
           <ChevronRight size={20} color={COLORS.mutedForeground} strokeWidth={2} />
         </Pressable>
@@ -616,6 +616,7 @@ const styles = StyleSheet.create({
 
 function VenuePickerModal({
   selectedId,
+  venues,
   onSelect,
   onClose,
 }: {
