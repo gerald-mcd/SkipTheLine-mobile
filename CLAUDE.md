@@ -903,3 +903,95 @@ New tables added beyond original 30:
 - `venue_hours` — structured open/close times per day
 - `smb_alerts` — B2B alert history
 - `referral_codes` + `referral_uses` — growth loop
+
+---
+
+## Current Build Status — Team Sync Report (June 26, 2026)
+
+### Completed This Session
+- ✅ Google Cloud project — Maps SDK + Places API enabled, API key wired into app
+- ✅ EAS configured — project linked (@gerald_mcd/skiptheline), eas.json generated
+- ✅ Supabase MCP connected — Claude Code has direct DB access via .mcp.json
+- ✅ Supabase JS client installed — src/lib/supabase.ts wired with anon key
+- ✅ 41-table schema live — all tables created, RLS enabled, seed data inserted
+- ✅ Content gaps filled — 17 badges, 9 quests, report types, 16 config keys
+
+### Audits Completed
+| Audit | Key Finding |
+|-------|-------------|
+| Feature-to-Schema Gap Analysis | Every screen reads mock data — zero DB connections yet |
+| Data Flow Audit | 12 missing tables identified and added |
+| Analytics Instrumentation Audit | 115 events mapped across all screens |
+| B2B Report Assessment | Full weekly report built — 95% of data captured by schema |
+| Content Inventory Audit | Missing badges/quests/report types — now filled |
+| Production Readiness Framework | Phase 1 at 85%, Phases 2–5 pending |
+
+### Current Blockers
+
+**🔴 BLOCKER 1 — Apple Developer Account ($99/yr)**
+- Required before: EAS iOS dev build, TestFlight, App Store
+- Impact: Cannot install real app on iPhone, cannot test real Google Maps, cannot share with team via TestFlight
+- Action: Enroll at developer.apple.com — 24–48hr approval time
+- Workaround: Android dev build works without it (no Apple account needed)
+
+**🔴 BLOCKER 2 — Auth Flow Not Built**
+- Required before: Any real data can be read/written per user
+- Impact: Reports save nothing, points don't accrue, profile shows mock data
+- Action: Build email + Google + Apple Sign-In screens (~3–4 hours)
+- Workaround: "Test User" bypass button being added for team testing
+
+**🟠 BLOCKER 3 — App Not Connected to Supabase**
+- Required before: Real data appears in app
+- Impact: All screens still read mock-data.ts — looks real but is fake
+- Action: Replace mock data calls with Supabase queries screen by screen
+- Workaround: Seed script will populate realistic fake data for demo purposes
+
+**🟡 BLOCKER 4 — Google Play Developer ($25 one-time)**
+- Required before: Android app on Play Store
+- Impact: Android dev builds still work without it — only needed for public distribution
+- Action: Enroll at play.google.com/console — same-day approval
+
+### Cost Tracker — Actual vs Estimated
+
+| Service | Estimated | Actual | Status |
+|---------|-----------|--------|--------|
+| Supabase | $0 (free tier) | **$0** | ✅ Active, free tier |
+| Google Cloud | $200/mo ongoing | **$300 one-time (90 days)** | ✅ Active, credit covers all dev usage |
+| Expo EAS | $14/mo | **$0 — free tier sufficient** | ✅ Active, 30 builds/mo |
+| Apple Developer | $99/yr | **$99/yr — pending enrollment** | ⬜ Not yet enrolled |
+| Google Play | $25 one-time | **$25 one-time — pending** | ⬜ Not yet enrolled |
+| Supabase Pro | $25/mo at launch | **$0 until launch** | ⬜ Upgrade when going live |
+| Stripe | 2.9% + $0.30/tx | **$0 until revenue** | ⬜ Not yet needed |
+| **Total to date** | | **$0 spent** | |
+| **Total before launch** | | **$124 one-time** | Apple $99 + Google $25 |
+| **Monthly at launch** | | **~$100–150/mo** | Supabase Pro + Maps |
+| **18-month total** | | **~$15,000–16,000** | <2% of $1MM raise |
+
+### What's Next (Priority Order)
+1. Add `is_test_user` flag → test accounts for team
+2. Build seed script (`npm run seed` / `npm run seed:wipe`)
+3. Add "Test User" bypass button on welcome screen
+4. Build auth flow — email + Google + Apple Sign-In
+5. Wire app to real Supabase data (replace mock-data.ts)
+6. Enroll Apple Developer Account ($99) → EAS iOS build → real map on phone
+7. Miami venue seeding script (Google Places → Supabase, ~3,500 venues)
+8. Wait time engine + anomaly detection Edge Function
+9. Push notifications (arrival nudge, wait drop alerts)
+10. TestFlight beta — team + early Miami users
+
+### Terminology Reference for Team
+| Term | Definition |
+|------|-----------|
+| Feature-to-Schema Gap Analysis | Screen-by-screen audit of what UI shows vs what DB supports |
+| Data Flow Audit | Where data comes from, where it goes, what's missing |
+| Content Inventory Audit | What static content (badges, quests, rewards) is referenced but not fully defined |
+| Analytics Instrumentation Audit | What events need tracking to make product decisions |
+| Seed Data / Seed Script | `npm run seed` — creates realistic fake test data |
+| Wipe Script | `npm run seed:wipe` — removes all test data |
+| is_test_user | Flag on user rows marking accounts as test — test data traces back to this |
+| Production Readiness Framework | Phase 1–5 checklist from prototype to launch |
+| RLS (Row Level Security) | Supabase policy system controlling who can read/write each table |
+| MCP (Model Context Protocol) | Direct connection between Claude Code and Supabase |
+| EAS (Expo Application Services) | Expo's cloud build system — compiles real iOS/Android apps |
+| Anomaly Detection | Edge Function that scores every report 0–100 for fraud signals |
+| Trust Score | Per-user score (0–100) that degrades with bad reports, seeds anomaly weighting |

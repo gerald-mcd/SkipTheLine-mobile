@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const supabaseUrl = 'https://bcwlzzuevmtvlahxxdqb.supabase.co'
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? ''
+const SUPABASE_URL = 'https://bcwlzzuevmtvlahxxdqb.supabase.co'
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,
@@ -15,3 +15,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     params: { eventsPerSecond: 10 },
   },
 })
+
+// Get current authenticated user ID
+export async function getCurrentUserId(): Promise<string | null> {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user?.id ?? null
+}
