@@ -169,6 +169,11 @@ async function placeDetails(placeId: string): Promise<any> {
   const url  = `https://maps.googleapis.com/maps/api/place/details/json?${params}`
   const res  = await fetch(url)
   const data = await res.json() as any
+
+  if (data.status !== 'OK') {
+    // Return null silently — caller will fall back to nearby search data
+    return null
+  }
   return data.result ?? null
 }
 
@@ -244,21 +249,37 @@ async function seedMiami() {
             if (seen.has(place.place_id)) { skipped++; continue }
             seen.add(place.place_id)
 
-            // Get full details
-            await sleep(100) // avoid rate limiting
+            // Try full details first, fall back to nearby search data
+            await sleep(100)
             const detail = await placeDetails(place.place_id)
-            if (!detail) { errors++; continue }
 
-            const venue = transformVenue(detail, section.name, section.is_launched)
+            // Build source from detail if available, else use nearby search data
+            const source = detail ?? {
+              place_id:               place.place_id,
+              name:                   place.name,
+              formatted_address:      place.vicinity ?? '',
+              geometry:               place.geometry,
+              types:                  place.types ?? [],
+              rating:                 place.rating ?? null,
+              user_ratings_total:     place.user_ratings_total ?? null,
+              price_level:            place.price_level ?? null,
+              photos:                 place.photos ?? [],
+              opening_hours:          null,
+              formatted_phone_number: null,
+              website:                null,
+            }
 
-            // Upsert into Supabase
+            if (!source.name) { errors++; continue }
+
+            const venue = transformVenue(source, section.name, section.is_launched)
+
             const { error } = await sb.from('venues').upsert(venue, {
               onConflict: 'google_place_id',
             })
 
             if (error) {
               errors++
-              console.error(`\n   ❌ ${detail.name}: ${error.message}`)
+              console.error(`\n   ❌ ${source.name}: ${error.message}`)
             } else {
               inserted++
             }

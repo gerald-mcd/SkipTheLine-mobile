@@ -7,14 +7,16 @@ import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Moon, Sun, Settings, Search, Heart, SlidersHorizontal, X } from 'lucide-react-native'
 import { spacing, fontFamily } from '@/constants/theme'
-import { venues, categories, profile, type Category, getSeverity, getWaitColor } from '@/lib/mock-data'
+import { categories, type Category, getSeverity, getWaitColor } from '@/lib/mock-data'
 import { OnboardingTour } from '@/components/OnboardingTour'
 import { useThemeStore, useColors } from '@/lib/theme-store'
+import { getLaunchedVenues, toggleFavorite, getFavoriteIds, type Venue } from '@/lib/queries'
+import { supabase } from '@/lib/supabase'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const CARD_WIDTH = SCREEN_WIDTH - spacing.md * 2
 
-const FIRST_REPORT_VENUES = new Set(['v4', 'v8'])
+const FIRST_REPORT_VENUES = new Set<string>([])
 
 const featuredExperiences = [
   {
@@ -236,7 +238,7 @@ function VenueCard({
   onToggleLike,
   onPress,
 }: {
-  venue: (typeof venues)[0]
+  venue: Venue
   liked: boolean
   onToggleLike: () => void
   onPress: () => void
@@ -252,7 +254,7 @@ function VenueCard({
       testID={`venue-card-${venue.id}`}
     >
       <View style={cardStyles.imageWrapper}>
-        <Image source={{ uri: venue.image }} style={cardStyles.image} resizeMode="cover" />
+        <Image source={{ uri: venue.primary_image_url ?? '' }} style={cardStyles.image} resizeMode="cover" />
         <Pressable style={cardStyles.heart} onPress={onToggleLike} testID={`heart-${venue.id}`}>
           <Heart
             size={13}
@@ -271,9 +273,9 @@ function VenueCard({
         <Text style={[cardStyles.name, { color: c.foreground }]} numberOfLines={1}>{venue.name}</Text>
         <View style={cardStyles.metaRow}>
           <Text style={[cardStyles.meta, { color: c.mutedForeground }]} numberOfLines={1}>
-            {venue.liveReporters} reporting · {venue.distance}
+            {venue.live_reporters} reporting · {venue.neighborhood ?? venue.city}
           </Text>
-          <WaitPill minutes={venue.waitMinutes} />
+          <WaitPill minutes={venue.current_wait_minutes} />
         </View>
       </View>
     </Pressable>
@@ -327,37 +329,50 @@ export default function HomeScreen() {
   const [tourVisible, setTourVisible] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [showShortWaitsOnly, setShowShortWaitsOnly] = useState(false)
+  const [allVenues, setAllVenues] = useState<Venue[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
     hydrateTheme()
+    loadVenues()
+    loadUser()
   }, [])
 
-  function toggleLike(id: string) {
-    setLiked((prev) => {
+  async function loadVenues() {
+    const data = await getLaunchedVenues()
+    setAllVenues(data)
+  }
+
+  async function loadUser() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    setUserId(user.id)
+    const favIds = await getFavoriteIds(user.id)
+    setLiked(new Set(favIds))
+  }
+
+  async function toggleLike(venueId: string) {
+    const isFav = liked.has(venueId)
+    setLiked(prev => {
       const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
+      if (isFav) next.delete(venueId)
+      else next.add(venueId)
       return next
     })
+    if (userId) await toggleFavorite(userId, venueId, isFav)
   }
 
   const filtered = useMemo(() => {
-    let list = venues.filter((v) => cat === 'all' || v.category === cat)
-    if (showShortWaitsOnly) list = list.filter(v => v.waitMinutes <= 15)
-    const sorted = list.sort((a, b) => b.liveReporters - a.liveReporters)
-    if (!searchQuery.trim()) return sorted
-    const q = searchQuery.toLowerCase()
-    return sorted.filter(v => v.name.toLowerCase().includes(q) || v.categoryLabel.toLowerCase().includes(q))
-  }, [cat, searchQuery, showShortWaitsOnly])
+    let list = allVenues.filter(v => cat === 'all' || v.category === cat)
+    if (showShortWaitsOnly) list = list.filter(v => v.current_wait_minutes <= 15)
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
+      list = list.filter(v => v.name.toLowerCase().includes(q) || v.category_label?.toLowerCase().includes(q))
+    }
+    return list
+  }, [allVenues, cat, searchQuery, showShortWaitsOnly])
 
-  const rankTrend: string = (profile as any).rankTrend ?? 'flat'
-  const rankDelta: number = (profile as any).rankDelta ?? 0
-  const rankColor =
-    rankTrend === 'up'
-      ? c.success
-      : rankTrend === 'down'
-        ? c.destructive
-        : c.mutedForeground
+  const rankColor = c.mutedForeground
 
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
@@ -367,17 +382,11 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <View style={[styles.avatarWrap, styles.avatar]}>
-              <Text style={styles.avatarText}>{profile.avatar ?? profile.name.charAt(0)}</Text>
+              <Text style={styles.avatarText}>S</Text>
             </View>
-            <Text style={[styles.greeting, { color: c.foreground }]}>Hi, {profile.name.split(' ')[0]}!</Text>
+            <Text style={[styles.greeting, { color: c.foreground }]}>Hi there!</Text>
             <View style={[styles.rankBadge, { backgroundColor: `${rankColor}22` }]}>
-              <Text style={[styles.rankText, { color: rankColor }]}>#{profile.rank}</Text>
-              {rankDelta > 0 && rankTrend === 'up' && (
-                <Text style={[styles.rankDelta, { color: rankColor }]}> ↗{rankDelta}</Text>
-              )}
-              {rankDelta > 0 && rankTrend === 'down' && (
-                <Text style={[styles.rankDelta, { color: rankColor }]}> ↘{rankDelta}</Text>
-              )}
+              <Text style={[styles.rankText, { color: rankColor }]}>#–</Text>
             </View>
           </View>
           <View style={styles.headerRight}>

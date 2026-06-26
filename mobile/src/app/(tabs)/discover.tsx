@@ -7,7 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Search, MapPin, Users, SlidersHorizontal, ChevronDown } from 'lucide-react-native'
 import { useRouter } from 'expo-router'
-import { venues, getSeverity, getWaitColor } from '@/lib/mock-data'
+import { getSeverity, getWaitColor } from '@/lib/mock-data'
+// getSeverity + getWaitColor still used for wait pill color logic
+import { getLaunchedVenues, type Venue } from '@/lib/queries'
 import { fontFamily } from '@/constants/theme'
 import { MAP_STYLE, MIAMI_REGION, getWaitColorFromMinutes } from '@/lib/map-style'
 import { WaitDotPin, WaitTearDropPin } from '@/components/MapPins'
@@ -53,11 +55,16 @@ export default function DiscoverScreen() {
   const insets = useSafeAreaInsets()
   const [search, setSearch] = useState('')
   const [isAtFullSnap, setIsAtFullSnap] = useState(false)
+  const [allVenues, setAllVenues] = useState<Venue[]>([])
   const listScrollY = useRef(0)
 
-  const filtered = venues
+  useEffect(() => {
+    getLaunchedVenues().then(setAllVenues)
+  }, [])
+
+  const filtered = allVenues
     .filter(v => !search.trim() || v.name.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => b.liveReporters - a.liveReporters)
+    .sort((a, b) => b.live_reporters - a.live_reporters)
 
   // Sheet animation
   const sheetY = useRef(new Animated.Value(SCREEN_H - SNAP_HALF)).current
@@ -126,14 +133,14 @@ export default function DiscoverScreen() {
           toolbarEnabled={false}
           moveOnMarkerPress={false}
         >
-          {venues.map(v => (
+          {allVenues.map(v => (
             <Marker
               key={v.id}
               coordinate={{ latitude: v.lat ?? 25.7617, longitude: v.lng ?? -80.1918 }}
               tracksViewChanges={false}
               onPress={() => router.push(`/venue/${v.id}`)}
             >
-              <WaitDotPin minutes={v.waitMinutes} />
+              <WaitDotPin minutes={v.current_wait_minutes} />
             </Marker>
           ))}
         </MapView>
@@ -232,19 +239,19 @@ export default function DiscoverScreen() {
   )
 }
 
-function SheetVenueRow({ venue, onPress }: { venue: typeof venues[0]; onPress: () => void }) {
-  const waitColor = getWaitColor(getSeverity(venue.waitMinutes))
+function SheetVenueRow({ venue, onPress }: { venue: Venue; onPress: () => void }) {
+  const waitColor = getWaitColor(getSeverity(venue.current_wait_minutes))
   return (
     <Pressable style={styles.venueRow} onPress={onPress} testID={`map-venue-${venue.id}`}>
-      <Image source={{ uri: venue.image }} style={styles.venueThumb} resizeMode="cover" />
+      <Image source={{ uri: venue.primary_image_url ?? '' }} style={styles.venueThumb} resizeMode="cover" />
       <View style={{ flex: 1 }}>
         <Text style={styles.venueName} numberOfLines={1}>{venue.name}</Text>
         <View style={styles.venueMeta}>
           <MapPin size={9} color={C.muted} strokeWidth={2} />
-          <Text style={styles.venueMetaText}>{venue.distance}</Text>
+          <Text style={styles.venueMetaText}>{venue.neighborhood ?? venue.city}</Text>
           <Text style={styles.venueMetaDot}>·</Text>
           <Users size={9} color={C.muted} strokeWidth={2} />
-          <Text style={styles.venueMetaText}>{venue.liveReporters}</Text>
+          <Text style={styles.venueMetaText}>{venue.live_reporters}</Text>
         </View>
       </View>
       <View style={[styles.waitPill, { overflow: 'hidden' }]}>
@@ -253,7 +260,7 @@ function SheetVenueRow({ venue, onPress }: { venue: typeof venues[0]; onPress: (
           start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
           style={styles.waitPillGradient}
         >
-          <Text style={styles.waitPillText}>{venue.waitMinutes} min</Text>
+          <Text style={styles.waitPillText}>{venue.current_wait_minutes} min</Text>
         </LinearGradient>
       </View>
     </Pressable>
