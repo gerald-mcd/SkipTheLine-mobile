@@ -16,7 +16,7 @@ import { supabase } from '@/lib/supabase'
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const CARD_WIDTH = SCREEN_WIDTH - spacing.md * 2
 
-const FIRST_REPORT_VENUES = new Set<string>([])
+const PAGE_SIZE = 20
 
 const featuredExperiences = [
   {
@@ -231,6 +231,19 @@ const chipStyles = StyleSheet.create({
   label: { fontSize: 13, fontWeight: '600' },
 })
 
+// Category emoji for photo placeholder
+const CATEGORY_EMOJI: Record<string, string> = {
+  restaurants:   '🍽️',
+  barbershops:   '💈',
+  grocery:       '🛒',
+  government:    '🏛️',
+  healthcare:    '⚕️',
+  retail:        '🛍️',
+  entertainment: '🎬',
+  landmarks:     '📍',
+  attractions:   '🎡',
+}
+
 // ─── Venue card ───────────────────────────────────────────────────────────────
 function VenueCard({
   venue,
@@ -245,7 +258,9 @@ function VenueCard({
 }) {
   const c = useColors()
   const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - spacing.sm) / 2
-  const showFirstReport = FIRST_REPORT_VENUES.has(venue.id)
+  const hasPhoto = !!venue.primary_image_url
+  const hasWait = venue.current_wait_minutes > 0 || venue.reports_count > 0
+  const emoji = CATEGORY_EMOJI[venue.category] ?? '📍'
 
   return (
     <Pressable
@@ -254,7 +269,18 @@ function VenueCard({
       testID={`venue-card-${venue.id}`}
     >
       <View style={cardStyles.imageWrapper}>
-        <Image source={{ uri: venue.primary_image_url ?? '' }} style={cardStyles.image} resizeMode="cover" />
+        {hasPhoto ? (
+          <Image source={{ uri: venue.primary_image_url! }} style={cardStyles.image} resizeMode="cover" />
+        ) : (
+          // Photo placeholder — gradient with category emoji
+          <LinearGradient
+            colors={['#2A2A2A', '#1A1A1A']}
+            style={[cardStyles.image, cardStyles.placeholder]}
+          >
+            <Text style={cardStyles.placeholderEmoji}>{emoji}</Text>
+            <Text style={cardStyles.placeholderName} numberOfLines={2}>{venue.name}</Text>
+          </LinearGradient>
+        )}
         <Pressable style={cardStyles.heart} onPress={onToggleLike} testID={`heart-${venue.id}`}>
           <Heart
             size={13}
@@ -263,9 +289,10 @@ function VenueCard({
             strokeWidth={2}
           />
         </Pressable>
-        {showFirstReport ? (
+        {/* First to report banner — shown when no wait time exists yet */}
+        {!hasWait ? (
           <View style={cardStyles.firstReportBanner}>
-            <Text style={cardStyles.firstReportText}>⟫ First report · +15 pts</Text>
+            <Text style={cardStyles.firstReportText}>⟫ Be first to report · +15 pts</Text>
           </View>
         ) : null}
       </View>
@@ -273,9 +300,15 @@ function VenueCard({
         <Text style={[cardStyles.name, { color: c.foreground }]} numberOfLines={1}>{venue.name}</Text>
         <View style={cardStyles.metaRow}>
           <Text style={[cardStyles.meta, { color: c.mutedForeground }]} numberOfLines={1}>
-            {venue.live_reporters} reporting · {venue.neighborhood ?? venue.city}
+            {venue.live_reporters > 0 ? `${venue.live_reporters} live · ` : ''}{venue.neighborhood ?? venue.city}
           </Text>
-          <WaitPill minutes={venue.current_wait_minutes} />
+          {hasWait ? (
+            <WaitPill minutes={venue.current_wait_minutes} />
+          ) : (
+            <View style={cardStyles.noWaitPill}>
+              <Text style={cardStyles.noWaitText}>–</Text>
+            </View>
+          )}
         </View>
       </View>
     </Pressable>
@@ -295,6 +328,15 @@ const cardStyles = StyleSheet.create({
   },
   imageWrapper: { position: 'relative', height: 130 },
   image: { width: '100%', height: 130 },
+  placeholder: {
+    alignItems: 'center', justifyContent: 'center', gap: 4,
+  },
+  placeholderEmoji: { fontSize: 28 },
+  placeholderName: {
+    fontSize: 10, color: 'rgba(255,255,255,0.6)',
+    textAlign: 'center', paddingHorizontal: 8,
+    fontFamily: fontFamily.body,
+  },
   heart: {
     position: 'absolute', top: 8, right: 8,
     width: 30, height: 30, borderRadius: 15,
@@ -306,7 +348,7 @@ const cardStyles = StyleSheet.create({
     backgroundColor: '#F8682B',
     paddingVertical: 5, paddingHorizontal: 8, alignItems: 'center',
   },
-  firstReportText: { color: '#fff', fontSize: 10, fontWeight: '700', letterSpacing: 0.2 },
+  firstReportText: { color: '#fff', fontSize: 9, fontWeight: '700', letterSpacing: 0.2 },
   body: { padding: 10 },
   name: { fontSize: 13, fontWeight: '700', marginBottom: 5, fontFamily: fontFamily.display },
   metaRow: {
@@ -314,6 +356,11 @@ const cardStyles = StyleSheet.create({
     justifyContent: 'space-between', gap: 4,
   },
   meta: { fontSize: 10, flex: 1, fontFamily: fontFamily.body },
+  noWaitPill: {
+    borderRadius: 9999, paddingHorizontal: 9, paddingVertical: 4,
+    backgroundColor: '#EDE6DD',
+  },
+  noWaitText: { fontSize: 10, fontWeight: '700', color: '#857565' },
 })
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
@@ -331,6 +378,7 @@ export default function HomeScreen() {
   const [showShortWaitsOnly, setShowShortWaitsOnly] = useState(false)
   const [allVenues, setAllVenues] = useState<Venue[]>([])
   const [userId, setUserId] = useState<string | null>(null)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   useEffect(() => {
     hydrateTheme()
@@ -349,6 +397,11 @@ export default function HomeScreen() {
     setUserId(user.id)
     const favIds = await getFavoriteIds(user.id)
     setLiked(new Set(favIds))
+  }
+
+  function handleCatChange(newCat: Category | 'all') {
+    setCat(newCat)
+    setVisibleCount(PAGE_SIZE)
   }
 
   async function toggleLike(venueId: string) {
@@ -446,7 +499,7 @@ export default function HomeScreen() {
             <Text style={[styles.seeAll, { color: c.primary }]}>See all</Text>
           </Pressable>
         </View>
-        <CategoryChips active={cat} onChange={setCat} />
+        <CategoryChips active={cat} onChange={handleCatChange} />
 
         {/* Around you */}
         <View style={[styles.sectionHeader, { marginTop: 24 }]}>
@@ -459,9 +512,9 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* 2-col venue grid */}
+        {/* 2-col venue grid — paginated */}
         <View style={styles.grid}>
-          {filtered.map((v) => (
+          {filtered.slice(0, visibleCount).map((v) => (
             <VenueCard
               key={v.id}
               venue={v}
@@ -471,6 +524,18 @@ export default function HomeScreen() {
             />
           ))}
         </View>
+
+        {/* Show more button */}
+        {visibleCount < filtered.length && (
+          <Pressable
+            style={styles.showMoreBtn}
+            onPress={() => setVisibleCount(c => c + PAGE_SIZE)}
+          >
+            <Text style={styles.showMoreText}>
+              Show more · {filtered.length - visibleCount} remaining
+            </Text>
+          </Pressable>
+        )}
 
         <View style={{ height: 32 }} />
       </ScrollView>
@@ -552,5 +617,16 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row', flexWrap: 'wrap',
     paddingHorizontal: spacing.md, gap: spacing.sm,
+  },
+  showMoreBtn: {
+    marginHorizontal: spacing.md, marginTop: 16, marginBottom: 4,
+    paddingVertical: 14, borderRadius: 12,
+    borderWidth: 1, borderColor: '#EDE6DD',
+    alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  showMoreText: {
+    fontSize: 13, fontWeight: '600', color: '#F8682B',
+    fontFamily: 'Inter_600SemiBold',
   },
 })
