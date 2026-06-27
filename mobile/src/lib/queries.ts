@@ -5,6 +5,7 @@
  */
 
 import { supabase } from './supabase'
+import { DEMO_MODE, applyDemoOverlayAll, getDemoReports, applyDemoOverlay } from './demo'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -105,9 +106,6 @@ export async function getLaunchedVenues(city = 'Miami'): Promise<Venue[]> {
     .order('name', { ascending: true })
 
   if (error) { console.error('getLaunchedVenues:', error.message); return [] }
-
-  // Apply demo overlay — adds realistic wait times + reporter counts without DB writes
-  const { DEMO_MODE, applyDemoOverlayAll } = await import('./demo')
   const venues = (data ?? []) as Venue[]
   return DEMO_MODE ? applyDemoOverlayAll(venues) : venues
 }
@@ -208,8 +206,6 @@ export async function getWaitCache(venueId: string): Promise<WaitCache | null> {
 
 /** Get recent reports for a venue */
 export async function getVenueReports(venueId: string, limit = 10): Promise<Report[]> {
-  const { DEMO_MODE, getDemoReports, applyDemoOverlay } = await import('./demo')
-
   if (DEMO_MODE) {
     // Return mock reports — no DB read needed
     const venue = await getVenueById(venueId)
