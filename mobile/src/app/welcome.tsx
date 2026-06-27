@@ -14,6 +14,7 @@ import { MapPin } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { signInAsTestUser } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
 
 const { width, height } = Dimensions.get('window')
 
@@ -134,7 +135,10 @@ export default function WelcomeScreen() {
     } finally { setLoading(null) }
   }
 
-  const handleEmailAuth = async () => handleTestUser()
+  const handleEmailAuth = () => {
+    // Navigate to dedicated email sign in / sign up screen
+    router.push('/auth/email' as any)
+  }
 
   const handleGoogleAuth = async () => {
     try {
@@ -144,9 +148,11 @@ export default function WelcomeScreen() {
         options: { redirectTo: 'skiptheline://auth/callback' },
       })
       if (error) throw error
+      // OAuth opens browser — onAuthStateChange in _layout handles redirect
     } catch (e: any) {
       Alert.alert('Google sign in failed', e.message ?? 'Could not sign in with Google')
-    } finally { setLoading(null) }
+      setLoading(null)
+    }
   }
 
   const handleAppleAuth = async () => {
@@ -159,7 +165,8 @@ export default function WelcomeScreen() {
       if (error) throw error
     } catch (e: any) {
       Alert.alert('Apple sign in failed', e.message ?? 'Could not sign in with Apple')
-    } finally { setLoading(null) }
+      setLoading(null)
+    }
   }
 
   const eyebrowText = SLIDES[slideIndex].label.toUpperCase()

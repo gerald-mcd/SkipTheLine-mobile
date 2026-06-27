@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -34,6 +34,20 @@ export const unstable_settings = {
 const queryClient = new QueryClient()
 
 function RootLayoutNav() {
+  const router = useRouter()
+
+  // Listen for auth state — redirect to tabs on sign in, welcome on sign out
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        router.replace('/(tabs)')
+      } else if (event === 'SIGNED_OUT') {
+        router.replace('/welcome')
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
   return (
     <>
       <StatusBar style="light" />
@@ -42,7 +56,9 @@ function RootLayoutNav() {
         contentStyle: { backgroundColor: colors.background },
         animation: 'slide_from_right',
       }}>
+        <Stack.Screen name="index" options={{ gestureEnabled: false }} />
         <Stack.Screen name="welcome" options={{ gestureEnabled: false }} />
+        <Stack.Screen name="auth/email" options={{ presentation: 'card', animation: 'slide_from_bottom' }} />
         <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
         <Stack.Screen name="venue/[id]" options={{
           headerShown: false,
@@ -55,11 +71,6 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  // Always sign out on app start so welcome screen always shows
-  useEffect(() => {
-    supabase.auth.signOut()
-  }, [])
-
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
