@@ -21,67 +21,112 @@ const PAGE_SIZE = 20
 // ─── Premium Pass teaser ──────────────────────────────────────────────────────
 function PremiumTeaser({ onPress }: { onPress: () => void }) {
   return (
-    <Pressable style={premiumStyles.wrap} onPress={onPress}>
-      <LinearGradient
-        colors={['#1A1040', '#2D1B69', '#1A1040']}
-        start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-        style={premiumStyles.card}
-      >
-        {/* Diamond + eyebrow */}
+    <Pressable
+      style={({ pressed }) => [premiumStyles.wrap, pressed && { opacity: 0.92 }]}
+      onPress={onPress}
+    >
+      <View style={premiumStyles.card}>
+        {/* Top row — diamond badge + text */}
         <View style={premiumStyles.top}>
-          <LinearGradient
-            colors={['#6B4FBB', '#9B6FE8']}
-            start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-            style={premiumStyles.diamond}
-          >
-            <Text style={premiumStyles.diamondIcon}>◆</Text>
-          </LinearGradient>
-          <View style={{ flex: 1 }}>
-            <Text style={premiumStyles.eyebrow}>PREMIUM PASS · FOR BUSINESS OWNERS</Text>
-            <Text style={premiumStyles.title}>Turn your line into your edge.</Text>
+          {/* Orange diamond matching app primary */}
+          <View style={premiumStyles.diamondWrap}>
+            <LinearGradient
+              colors={['#F8682B', '#F2934D']}
+              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+              style={premiumStyles.diamond}
+            >
+              <Text style={premiumStyles.diamondIcon}>◆</Text>
+            </LinearGradient>
+          </View>
+          <View style={{ flex: 1, gap: 2 }}>
+            <Text style={premiumStyles.eyebrow}>FOR BUSINESS OWNERS</Text>
+            <Text style={premiumStyles.title}>Turn your line{'\n'}into your edge.</Text>
+          </View>
+          {/* Arrow */}
+          <View style={premiumStyles.arrowWrap}>
+            <Text style={premiumStyles.arrow}>›</Text>
           </View>
         </View>
 
-        {/* Description */}
-        <Text style={premiumStyles.desc}>
-          Wait intel, foot traffic, competitor pulse, reporter quality, event lift, CSV exports.
-        </Text>
+        {/* Divider */}
+        <View style={premiumStyles.divider} />
 
-        {/* Tags + CTA */}
-        <View style={premiumStyles.bottom}>
-          <View style={premiumStyles.tags}>
-            {['Wait Intel', 'Foot Traffic', 'Competitors', 'Events'].map(tag => (
-              <View key={tag} style={premiumStyles.tag}>
-                <Text style={premiumStyles.tagText}>{tag}</Text>
-              </View>
-            ))}
-          </View>
-          <View style={premiumStyles.cta}>
-            <Text style={premiumStyles.ctaText}>Preview suite</Text>
-            <Text style={premiumStyles.ctaArrow}>›</Text>
+        {/* Feature pills — app chip style */}
+        <View style={premiumStyles.pills}>
+          {['Wait Intel', 'Foot Traffic', 'Competitors', 'Event Lift'].map(tag => (
+            <View key={tag} style={premiumStyles.pill}>
+              <Text style={premiumStyles.pillText}>{tag}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* CTA row */}
+        <View style={premiumStyles.ctaRow}>
+          <Text style={premiumStyles.ctaDesc}>From $29/mo · Preview with demo data</Text>
+          <View style={premiumStyles.ctaBtn}>
+            <Text style={premiumStyles.ctaBtnText}>Preview suite</Text>
           </View>
         </View>
-      </LinearGradient>
+      </View>
     </Pressable>
   )
 }
 
 const premiumStyles = StyleSheet.create({
   wrap: { marginHorizontal: spacing.md, marginBottom: 4 },
-  card: { borderRadius: 20, padding: 18, gap: 12, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(155,111,232,0.25)' },
-  top: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
-  diamond: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  diamondIcon: { fontSize: 18, color: '#FFFFFF' },
-  eyebrow: { fontSize: 9, fontWeight: '700', color: 'rgba(255,255,255,0.55)', letterSpacing: 0.8, fontFamily: fontFamily.accent, marginBottom: 3 },
-  title: { fontSize: 15, fontWeight: '800', color: '#FFFFFF', fontFamily: fontFamily.displayBold, letterSpacing: -0.3, lineHeight: 20 },
-  desc: { fontSize: 12, color: 'rgba(255,255,255,0.65)', fontFamily: fontFamily.body, lineHeight: 17 },
-  bottom: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 8 },
-  tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, flex: 1 },
-  tag: { backgroundColor: 'rgba(255,255,255,0.10)', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
-  tagText: { fontSize: 11, color: 'rgba(255,255,255,0.80)', fontFamily: fontFamily.body },
-  cta: { flexDirection: 'row', alignItems: 'center', gap: 2, backgroundColor: '#FFFFFF', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8, flexShrink: 0 },
-  ctaText: { fontSize: 12, fontWeight: '700', color: '#1A1040', fontFamily: fontFamily.display },
-  ctaArrow: { fontSize: 14, color: '#1A1040', fontWeight: '700' },
+  card: {
+    borderRadius: 20,
+    backgroundColor: '#1C1A26',
+    padding: 18,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(248,104,43,0.18)',
+    shadowColor: '#F8682B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+  top: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+  diamondWrap: { paddingTop: 2 },
+  diamond: {
+    width: 38, height: 38, borderRadius: 10,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  diamondIcon: { fontSize: 16, color: '#FFFFFF' },
+  eyebrow: {
+    fontSize: 9, fontWeight: '700',
+    color: '#F8682B', letterSpacing: 1.2,
+    fontFamily: fontFamily.accent,
+  },
+  title: {
+    fontSize: 16, fontWeight: '800',
+    color: '#FFFFFF', letterSpacing: -0.3,
+    lineHeight: 21, fontFamily: fontFamily.displayBold,
+  },
+  arrowWrap: {
+    width: 28, height: 28, borderRadius: 14,
+    backgroundColor: 'rgba(248,104,43,0.12)',
+    alignItems: 'center', justifyContent: 'center',
+    marginTop: 2,
+  },
+  arrow: { fontSize: 18, color: '#F8682B', lineHeight: 22 },
+  divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.06)' },
+  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  pill: {
+    borderRadius: 9999,
+    paddingHorizontal: 10, paddingVertical: 4,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.10)',
+  },
+  pillText: { fontSize: 11, color: 'rgba(255,255,255,0.65)', fontFamily: fontFamily.body },
+  ctaRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  ctaDesc: { fontSize: 11, color: 'rgba(255,255,255,0.40)', fontFamily: fontFamily.body, flex: 1 },
+  ctaBtn: {
+    borderRadius: 9999, paddingHorizontal: 14, paddingVertical: 7,
+    backgroundColor: '#F8682B',
+  },
+  ctaBtnText: { fontSize: 12, fontWeight: '700', color: '#FFFFFF', fontFamily: fontFamily.display },
 })
 
 const featuredExperiences = [
