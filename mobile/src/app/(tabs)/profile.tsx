@@ -12,6 +12,8 @@ import {
   tierFor, quests, rewards, communityImpact, peoplePool, incomingRequests,
   type Quest, type Reward, type Person,
 } from '@/lib/mock-data'
+import { signOut } from '@/lib/auth'
+import { useRouter } from 'expo-router'
 import { fontFamily } from '@/constants/theme'
 import { getUserProfile, type UserProfile } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
@@ -33,6 +35,7 @@ const COLORS = {
 }
 
 export default function ProfileScreen() {
+  const router = useRouter()
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [findOpen, setFindOpen] = useState(false)
   const [extraFriends, setExtraFriends] = useState<any[]>([])
@@ -265,6 +268,16 @@ export default function ProfileScreen() {
               <SettingsRow label="Units" value="Minutes" />
               <SettingsRow label="App version" value="1.0.0" />
             </View>
+            <Pressable
+              style={settingsModalStyles.signOutBtn}
+              onPress={async () => {
+                await signOut()
+                setSettingsOpen(false)
+                router.replace('/welcome')
+              }}
+            >
+              <Text style={settingsModalStyles.signOutText}>Sign out</Text>
+            </Pressable>
           </View>
         </Modal>
       ) : null}
@@ -289,6 +302,16 @@ const settingsModalStyles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: '700', color: COLORS.foreground, letterSpacing: -0.3, fontFamily: fontFamily.display },
   closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.background, alignItems: 'center', justifyContent: 'center' },
   list: { paddingHorizontal: 16 },
+  signOutBtn: {
+    marginHorizontal: 16, marginTop: 24, marginBottom: 8,
+    paddingVertical: 14, borderRadius: 12,
+    backgroundColor: '#FFF0EE',
+    alignItems: 'center',
+  },
+  signOutText: {
+    fontSize: 15, fontWeight: '600', color: '#D9462E',
+    fontFamily: 'Inter_600SemiBold',
+  },
 })
 
 function StatBox({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
