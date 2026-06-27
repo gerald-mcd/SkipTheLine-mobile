@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { colors } from '@/constants/theme'
 import React, { useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -54,6 +55,11 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
+  // Always sign out on app start so welcome screen always shows
+  useEffect(() => {
+    supabase.auth.signOut()
+  }, [])
+
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
