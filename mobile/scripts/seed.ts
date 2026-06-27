@@ -175,40 +175,16 @@ async function seed() {
   const allUserIds = Object.values(userIds)
   if (allUserIds.length === 0) { console.error('❌ No users created — aborting'); return }
 
-  // ── 2. Seed venues ─────────────────────────────────────────────────────────
-  console.log('   Seeding venues...')
-  const venueIds: string[] = []
-
-  for (const v of VENUES) {
-    const waitNow = rand(Math.max(0, v.typical_wait - 20), v.typical_wait + 20)
-    const { data: venue, error } = await sb.from('venues').upsert({
-      name:                 v.name,
-      category:             v.category,
-      category_label:       v.category.charAt(0).toUpperCase() + v.category.slice(1),
-      lat:                  v.lat,
-      lng:                  v.lng,
-      address:              v.address,
-      city:                 'Miami',
-      neighborhood:         'Brickell',
-      hours:                v.hours,
-      vibe:                 v.vibe,
-      price_range:          v.price_range,
-      typical_wait_minutes: v.typical_wait,
-      current_wait_minutes: waitNow,
-      trend:                waitNow > v.typical_wait ? 'up' : waitNow < v.typical_wait ? 'down' : 'flat',
-      severity:             waitNow <= 15 ? 'short' : waitNow <= 45 ? 'moderate' : 'long',
-      average_rating:       parseFloat((rand(38, 49) / 10).toFixed(1)),
-      live_reporters:       rand(1, 8),
-      reports_count:        rand(5, 35),
-      last_report_at:       minsAgo(rand(1, 20)),
-      is_active:            true,
-      source:               'seed',
-    }, { onConflict: 'name' }).select('id').single()
-
-    if (error) { console.error(`   ❌ Venue error ${v.name}:`, error.message); continue }
-    venueIds.push(venue!.id)
-  }
-  console.log(`   ✅ ${venueIds.length} venues seeded`)
+  // ── 2. Use real venues already in the database ─────────────────────────────
+  console.log('   Loading real venues from database...')
+  const { data: realVenues } = await sb
+    .from('venues')
+    .select('id')
+    .eq('is_launched', true)
+    .eq('city', 'Miami')
+    .limit(20)
+  const venueIds: string[] = (realVenues ?? []).map(v => v.id)
+  console.log(`   ✅ Using ${venueIds.length} real Brickell venues`)
 
   // ── 3. Seed reports ────────────────────────────────────────────────────────
   console.log('   Seeding reports...')
