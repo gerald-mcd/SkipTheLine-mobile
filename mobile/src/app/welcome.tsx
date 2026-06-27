@@ -18,119 +18,123 @@ import { supabase } from '@/lib/supabase'
 
 const { width, height } = Dimensions.get('window')
 
+// ─── Slides ───────────────────────────────────────────────────────────────────
+
 const SLIDES = [
-  { category: 'Restaurants',   wait: '42m', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=85' },
-  { category: 'Barbershops',   wait: '8m',  image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&q=85' },
-  { category: 'Grocery',       wait: '12m', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=900&q=85' },
-  { category: 'Government',    wait: '95m', image: 'https://images.unsplash.com/photo-1568745468016-b8da6b4e2dc2?w=900&q=85' },
-  { category: 'Healthcare',    wait: '110m',image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=900&q=85' },
-  { category: 'Retail',        wait: '18m', image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900&q=85' },
-  { category: 'Entertainment', wait: '65m', image: 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=900&q=85' },
-  { category: 'Landmarks',     wait: '30m', image: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=900&q=85' },
-  { category: 'Attractions',   wait: '45m', image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=85' },
+  { label: 'Restaurants · 42m wait now',   image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Barbershops · 8m wait now',    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Grocery · 12m wait now',       image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Government · 95m wait now',    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Healthcare · 110m wait now',   image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Retail · 18m wait now',        image: 'https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Entertainment · 65m wait now', image: 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Landmarks · 30m wait now',     image: 'https://images.unsplash.com/photo-1473625247510-8ceb1760943f?w=1200&q=80&auto=format&fit=crop' },
+  { label: 'Attractions · 45m wait now',   image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&q=80&auto=format&fit=crop' },
 ]
 
+// ─── Tokens ───────────────────────────────────────────────────────────────────
+
+const PRIMARY      = '#F8682B'
+const PRIMARY_GLOW = '#FFB37A'
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
 export default function WelcomeScreen() {
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
+  const router  = useRouter()
+  const insets  = useSafeAreaInsets()
   const [slideIndex, setSlideIndex] = useState(0)
+  const [loading, setLoading] = useState<string | null>(null)
 
   // Per-slide animated values
-  const fadeAnims = useRef(SLIDES.map((_, i) => new Animated.Value(i === 0 ? 1 : 0))).current
+  const fadeAnims  = useRef(SLIDES.map((_, i) => new Animated.Value(i === 0 ? 1 : 0))).current
   const scaleAnims = useRef(SLIDES.map(() => new Animated.Value(1.0))).current
 
-  // Content entrance anims
-  const contentOpacity  = useRef(new Animated.Value(0)).current
-  const contentTranslate = useRef(new Animated.Value(12)).current
-  const eyebrowOpacity  = useRef(new Animated.Value(0)).current
-  const eyebrowTranslate = useRef(new Animated.Value(12)).current
-  const h1Opacity       = useRef(new Animated.Value(0)).current
-  const h1Translate     = useRef(new Animated.Value(12)).current
-  const subOpacity      = useRef(new Animated.Value(0)).current
-  const subTranslate    = useRef(new Animated.Value(12)).current
-  const btnsOpacity     = useRef(new Animated.Value(0)).current
-  const btnsTranslate   = useRef(new Animated.Value(12)).current
+  // Content stagger anims
+  const brandAnim   = useRef(new Animated.Value(0)).current
+  const brandTY     = useRef(new Animated.Value(12)).current
+  const eyebrowAnim = useRef(new Animated.Value(0)).current
+  const eyebrowTY   = useRef(new Animated.Value(12)).current
+  const h1Anim      = useRef(new Animated.Value(0)).current
+  const h1TY        = useRef(new Animated.Value(12)).current
+  const subAnim     = useRef(new Animated.Value(0)).current
+  const subTY       = useRef(new Animated.Value(12)).current
+  const btnsAnim    = useRef(new Animated.Value(0)).current
+  const btnsTY      = useRef(new Animated.Value(12)).current
 
-  const eyebrowText = `${SLIDES[slideIndex].category} · ${SLIDES[slideIndex].wait} wait now`
+  // ── Auth guard ──────────────────────────────────────────────────────────────
 
   useEffect(() => {
-    // Entrance stagger
-    Animated.stagger(60, [
-      Animated.parallel([
-        Animated.timing(contentOpacity,   { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(contentTranslate, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.timing(eyebrowOpacity,   { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(eyebrowTranslate, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.timing(h1Opacity,   { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(h1Translate, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.timing(subOpacity,   { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(subTranslate, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]),
-      Animated.parallel([
-        Animated.timing(btnsOpacity,   { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(btnsTranslate, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]),
-    ]).start()
+    getSession().then(s => { if (s) router.replace('/(tabs)') })
   }, [])
 
   useEffect(() => {
-    // Ken-Burns on active slide
-    Animated.timing(scaleAnims[slideIndex], {
-      toValue: 1.06,
-      duration: 6000,
-      useNativeDriver: true,
-    }).start()
-
-    const interval = setInterval(() => {
-      const next = (slideIndex + 1) % SLIDES.length
-      // Fade out current
-      Animated.timing(fadeAnims[slideIndex], {
-        toValue: 0,
-        duration: 1600,
-        useNativeDriver: true,
-      }).start()
-      // Fade in next
-      Animated.timing(fadeAnims[next], {
-        toValue: 1,
-        duration: 1600,
-        useNativeDriver: true,
-      }).start()
-      // Reset scale on old, start new
-      scaleAnims[slideIndex].setValue(1.0)
-      scaleAnims[next].setValue(1.0)
-      Animated.timing(scaleAnims[next], {
-        toValue: 1.06,
-        duration: 6000,
-        useNativeDriver: true,
-      }).start()
-      setSlideIndex(next)
-    }, 4200)
-
-    return () => clearInterval(interval)
-  }, [slideIndex])
-
-  // Check if already logged in on mount
-  useEffect(() => {
-    getSession().then(session => {
-      if (session) router.replace('/(tabs)')
-    })
-  }, [])
-
-  // Listen for auth state changes
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) router.replace('/(tabs)')
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, s) => {
+      if (s) router.replace('/(tabs)')
     })
     return () => subscription.unsubscribe()
   }, [])
 
-  const [loading, setLoading] = useState<string | null>(null)
+  // ── Entrance animation ──────────────────────────────────────────────────────
+
+  useEffect(() => {
+    const dur = 500
+    const ease = { useNativeDriver: true }
+    const fadeUp = (opac: Animated.Value, ty: Animated.Value, delay: number) =>
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.parallel([
+          Animated.timing(opac, { toValue: 1, duration: dur, ...ease }),
+          Animated.timing(ty,   { toValue: 0, duration: dur, ...ease }),
+        ]),
+      ])
+
+    Animated.parallel([
+      fadeUp(brandAnim,   brandTY,   0),
+      fadeUp(eyebrowAnim, eyebrowTY, 60),
+      fadeUp(h1Anim,      h1TY,      120),
+      fadeUp(subAnim,     subTY,     180),
+      fadeUp(btnsAnim,    btnsTY,    240),
+    ]).start()
+  }, [])
+
+  // ── Slide carousel ──────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    // Ken Burns on first slide
+    Animated.timing(scaleAnims[0], { toValue: 1.06, duration: 6000, useNativeDriver: true }).start()
+
+    const interval = setInterval(() => {
+      setSlideIndex(prev => {
+        const next = (prev + 1) % SLIDES.length
+
+        // Crossfade 1600ms
+        Animated.timing(fadeAnims[prev], { toValue: 0, duration: 1600, useNativeDriver: true }).start()
+        Animated.timing(fadeAnims[next], { toValue: 1, duration: 1600, useNativeDriver: true }).start()
+
+        // Ken Burns reset + animate next
+        scaleAnims[prev].setValue(1.0)
+        scaleAnims[next].setValue(1.0)
+        Animated.timing(scaleAnims[next], { toValue: 1.06, duration: 6000, useNativeDriver: true }).start()
+
+        return next
+      })
+    }, 4200)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  function jumpToSlide(i: number) {
+    if (i === slideIndex) return
+    Animated.timing(fadeAnims[slideIndex], { toValue: 0, duration: 400, useNativeDriver: true }).start()
+    scaleAnims[i].setValue(1.0)
+    Animated.parallel([
+      Animated.timing(fadeAnims[i],   { toValue: 1,    duration: 400,  useNativeDriver: true }),
+      Animated.timing(scaleAnims[i],  { toValue: 1.06, duration: 6000, useNativeDriver: true }),
+    ]).start()
+    setSlideIndex(i)
+  }
+
+  // ── Auth handlers ───────────────────────────────────────────────────────────
 
   const handleTestUser = async () => {
     try {
@@ -138,67 +142,57 @@ export default function WelcomeScreen() {
       await signInAsTestUser()
     } catch (e: any) {
       Alert.alert('Sign in failed', e.message ?? 'Could not sign in as test user')
-    } finally {
-      setLoading(null)
-    }
+    } finally { setLoading(null) }
   }
 
-  const handleEmailAuth = async () => {
-    // Email auth screen — navigate to a dedicated screen
-    // For now falls back to test user so flow works end to end
-    await handleTestUser()
-  }
+  const handleEmailAuth = async () => handleTestUser()
 
   const handleGoogleAuth = async () => {
     try {
       setLoading('google')
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo: 'skiptheline://auth/callback' },
       })
       if (error) throw error
     } catch (e: any) {
       Alert.alert('Google sign in failed', e.message ?? 'Could not sign in with Google')
-    } finally {
-      setLoading(null)
-    }
+    } finally { setLoading(null) }
   }
 
   const handleAppleAuth = async () => {
     try {
       setLoading('apple')
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: { redirectTo: 'skiptheline://auth/callback' },
       })
       if (error) throw error
     } catch (e: any) {
       Alert.alert('Apple sign in failed', e.message ?? 'Could not sign in with Apple')
-    } finally {
-      setLoading(null)
-    }
+    } finally { setLoading(null) }
   }
 
+  const eyebrowText = SLIDES[slideIndex].label.toUpperCase()
+
   return (
-    <View style={styles.container}>
-      {/* Background carousel */}
+    <View style={s.container}>
+
+      {/* ── Background slideshow ── */}
       {SLIDES.map((slide, i) => (
         <Animated.View
           key={i}
-          style={[
-            StyleSheet.absoluteFillObject,
-            { opacity: fadeAnims[i] },
-          ]}
+          style={[StyleSheet.absoluteFillObject, { opacity: fadeAnims[i] }]}
         >
           <Animated.Image
             source={{ uri: slide.image }}
-            style={[styles.bgImage, { transform: [{ scale: scaleAnims[i] }] }]}
+            style={[s.bgImage, { transform: [{ scale: scaleAnims[i] }] }]}
             resizeMode="cover"
           />
         </Animated.View>
       ))}
 
-      {/* Overlay gradient */}
+      {/* ── Gradient overlay ── */}
       <LinearGradient
         colors={[
           'rgba(0,0,0,0.55)',
@@ -209,140 +203,114 @@ export default function WelcomeScreen() {
         style={StyleSheet.absoluteFillObject}
       />
 
-      {/* Content — bottom anchored */}
-      <View style={[styles.content, { paddingBottom: insets.bottom + 40 }]}>
+      {/* ── Content ── */}
+      <View style={[s.content, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 24 }]}>
 
-        {/* Brand row */}
-        <Animated.View
-          style={[
-            styles.brandRow,
-            { opacity: contentOpacity, transform: [{ translateY: contentTranslate }] },
-          ]}
-        >
-          <View style={styles.logoTile}>
-            <MapPin size={18} color="#FFFFFF" fill="#FFFFFF" />
+        {/* Brand mark */}
+        <Animated.View style={[s.brand, { opacity: brandAnim, transform: [{ translateY: brandTY }] }]}>
+          <View style={s.logoTile}>
+            <MapPin size={16} color="#FFFFFF" fill="#FFFFFF" />
           </View>
-          <Text style={styles.wordmark}>SkipTheLine</Text>
+          <Text style={s.wordmark}>SkipTheLine</Text>
         </Animated.View>
 
+        {/* Spacer pushes everything below to bottom */}
+        <View style={{ flex: 1 }} />
+
         {/* Eyebrow */}
-        <Animated.View
-          style={[
-            styles.eyebrowRow,
-            { opacity: eyebrowOpacity, transform: [{ translateY: eyebrowTranslate }] },
-          ]}
-        >
-          <View style={styles.eyebrowDot} />
-          <Text style={styles.eyebrowText}>{eyebrowText.toUpperCase()}</Text>
+        <Animated.View style={[s.eyebrowRow, { opacity: eyebrowAnim, transform: [{ translateY: eyebrowTY }] }]}>
+          <View style={s.eyebrowDot} />
+          <Text style={s.eyebrowText}>{eyebrowText}</Text>
         </Animated.View>
 
         {/* H1 */}
-        <Animated.Text
-          style={[
-            styles.h1,
-            { opacity: h1Opacity, transform: [{ translateY: h1Translate }] },
-          ]}
-        >
-          {'Know the wait\n'}
-          <Text style={styles.h1Accent}>before you go.</Text>
-        </Animated.Text>
+        <Animated.View style={{ opacity: h1Anim, transform: [{ translateY: h1TY }] }}>
+          <Text style={s.h1}>
+            {'Know the wait\n'}
+            <Text style={s.h1Accent}>before you go.</Text>
+          </Text>
+        </Animated.View>
 
         {/* Subhead */}
-        <Animated.Text
-          style={[
-            styles.subhead,
-            { opacity: subOpacity, transform: [{ translateY: subTranslate }] },
-          ]}
-        >
+        <Animated.Text style={[s.subhead, { opacity: subAnim, transform: [{ translateY: subTY }] }]}>
           Live, crowd-powered wait times for restaurants, clubs, barbers, landmarks — anywhere you'd rather not stand in line.
         </Animated.Text>
 
         {/* Auth buttons */}
-        <Animated.View
-          style={[
-            styles.buttonsBlock,
-            { opacity: btnsOpacity, transform: [{ translateY: btnsTranslate }] },
-          ]}
-        >
-          {/* Primary CTA — Email */}
+        <Animated.View style={[s.buttons, { opacity: btnsAnim, transform: [{ translateY: btnsTY }] }]}>
+
+          {/* Email — primary */}
           <Pressable
             testID="btn-continue-email"
-            style={({ pressed }) => [styles.btnEmail, pressed && { opacity: 0.88 }]}
+            style={({ pressed }) => [s.btnPrimary, pressed && s.pressed]}
             onPress={handleEmailAuth}
             disabled={loading !== null}
           >
-            <Text style={styles.btnEmailText}>
+            <Text style={s.btnPrimaryText}>
               {loading === 'email' ? 'Signing in...' : 'Continue with email'}
             </Text>
           </Pressable>
 
-          {/* Divider */}
-          <View style={styles.dividerRow}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* Social buttons row */}
-          <View style={styles.socialRow}>
+          {/* Social row */}
+          <View style={s.socialRow}>
             {/* Google */}
             <Pressable
               testID="btn-continue-google"
-              style={({ pressed }) => [styles.btnSocialPill, pressed && { opacity: 0.75 }]}
+              style={({ pressed }) => [s.btnGlass, s.btnSocial, pressed && s.pressed]}
               onPress={handleGoogleAuth}
               disabled={loading !== null}
             >
-              <Text style={styles.btnSocialPillIcon}>G</Text>
-              <Text style={styles.btnSocialPillText}>
-                {loading === 'google' ? '...' : 'Google'}
-              </Text>
+              {/* Google G SVG — rendered as styled text since SVG needs react-native-svg */}
+              <Text style={s.googleG}>G</Text>
+              <Text style={s.btnGlassText}>{loading === 'google' ? '...' : 'Google'}</Text>
             </Pressable>
 
             {/* Apple */}
             <Pressable
               testID="btn-continue-apple"
-              style={({ pressed }) => [styles.btnSocialPill, pressed && { opacity: 0.75 }]}
+              style={({ pressed }) => [s.btnGlass, s.btnSocial, pressed && s.pressed]}
               onPress={handleAppleAuth}
               disabled={loading !== null}
             >
-              <Text style={styles.btnSocialPillIcon}></Text>
-              <Text style={styles.btnSocialPillText}>
-                {loading === 'apple' ? '...' : 'Apple'}
-              </Text>
+              <Text style={s.appleIcon}></Text>
+              <Text style={s.btnGlassText}>{loading === 'apple' ? '...' : 'Apple'}</Text>
             </Pressable>
           </View>
 
-          {/* Test User bypass — dev/demo only */}
+          {/* Test User */}
           <Pressable
             testID="btn-test-user"
-            style={({ pressed }) => [styles.btnTestUser, pressed && { opacity: 0.7 }]}
+            style={({ pressed }) => [s.btnGlass, s.btnTestUser, pressed && s.pressed]}
             onPress={handleTestUser}
             disabled={loading !== null}
           >
-            <Text style={styles.btnTestUserText}>
+            <Text style={s.btnTestText}>
               {loading === 'test' ? '⚙ Signing in...' : '⚙ Test User'}
             </Text>
           </Pressable>
+
         </Animated.View>
 
         {/* Legal */}
-        <Text style={styles.legal}>By continuing you agree to the Terms &amp; Privacy.</Text>
+        <Text style={s.legal}>By continuing you agree to the Terms &amp; Privacy.</Text>
 
         {/* Slide indicators */}
-        <View style={styles.indicators}>
+        <View style={s.indicators}>
           {SLIDES.map((_, i) => (
-            <View
-              key={i}
-              style={[styles.indicator, i === slideIndex ? styles.indicatorActive : styles.indicatorInactive]}
-            />
+            <Pressable key={i} onPress={() => jumpToSlide(i)} hitSlop={8}>
+              <View style={[s.dot, i === slideIndex ? s.dotActive : s.dotInactive]} />
+            </Pressable>
           ))}
         </View>
+
       </View>
     </View>
   )
 }
 
-const styles = StyleSheet.create({
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
+const s = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
@@ -350,37 +318,38 @@ const styles = StyleSheet.create({
   bgImage: {
     width,
     height,
+    position: 'absolute',
   },
   content: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
     gap: 12,
   },
 
   // Brand
-  brandRow: {
+  brand: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginBottom: 4,
   },
   logoTile: {
     width: 36,
     height: 36,
-    borderRadius: 10,
-    backgroundColor: '#F8682B',
+    borderRadius: 12,
+    backgroundColor: PRIMARY,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: PRIMARY,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 8,
   },
   wordmark: {
     fontSize: 16,
     fontWeight: '800',
     color: '#FFFFFF',
-    letterSpacing: -0.3,
+    letterSpacing: -0.4,
     fontFamily: fontFamily.displayBold,
   },
 
@@ -394,39 +363,41 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#F2934D',
-    shadowColor: '#F2934D',
+    backgroundColor: PRIMARY_GLOW,
+    shadowColor: PRIMARY_GLOW,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.9,
-    shadowRadius: 4,
+    shadowRadius: 6,
+    elevation: 4,
   },
   eyebrowText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: 'rgba(255,255,255,0.85)',
-    letterSpacing: 0.18 * 11,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.80)',
+    letterSpacing: 11 * 0.18,
     fontFamily: fontFamily.accent,
   },
 
-  // H1
+  // Headline
   h1: {
     fontSize: 44,
     fontWeight: '800',
     color: '#FFFFFF',
     lineHeight: 44 * 0.95,
     letterSpacing: -1,
+    fontFamily: fontFamily.displayBold,
     textShadowColor: 'rgba(0,0,0,0.4)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 24,
-    fontFamily: fontFamily.displayBold,
   },
   h1Accent: {
-    color: '#F2934D',
+    color: PRIMARY_GLOW,
   },
 
   // Subhead
   subhead: {
     fontSize: 14,
+    fontWeight: '500',
     color: 'rgba(255,255,255,0.85)',
     lineHeight: 21,
     maxWidth: 320,
@@ -434,73 +405,88 @@ const styles = StyleSheet.create({
   },
 
   // Buttons
-  buttonsBlock: {
-    gap: 12,
+  buttons: {
+    gap: 10,
     marginTop: 4,
   },
-  btnEmail: {
-    backgroundColor: '#F8682B',
+  pressed: {
+    transform: [{ scale: 0.985 }, { translateY: 1 }],
+  },
+
+  // Primary email button
+  btnPrimary: {
     height: 52,
-    borderRadius: 9999,
+    borderRadius: 16,
+    backgroundColor: PRIMARY,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#F8682B',
+    shadowColor: PRIMARY,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.40,
     shadowRadius: 20,
     elevation: 10,
   },
-  btnEmailText: {
+  btnPrimaryText: {
     color: '#FFFCF7',
     fontSize: 15,
     fontWeight: '700',
-    fontFamily: fontFamily.bodySemiBold,
+    letterSpacing: -0.2,
+    fontFamily: fontFamily.display,
   },
 
-  // Divider
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-  },
-  dividerText: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.5)',
-    fontFamily: fontFamily.body,
-  },
-
-  // Social row — side by side pills
-  socialRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  btnSocialPill: {
-    flex: 1,
+  // Glass base
+  btnGlass: {
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.14)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.28)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 52,
-    borderRadius: 9999,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.25)',
-    gap: 7,
+    gap: 8,
   },
-  btnSocialPillIcon: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#FFFFFF',
-  },
-  btnSocialPillText: {
+  btnGlassText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#FFFFFF',
     fontFamily: fontFamily.bodySemiBold,
+  },
+
+  // Social row
+  socialRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  btnSocial: {
+    flex: 1,
+  },
+
+  // Google G
+  googleG: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    lineHeight: 20,
+  },
+
+  // Apple icon
+  appleIcon: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    lineHeight: 22,
+  },
+
+  // Test user
+  btnTestUser: {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderColor: 'rgba(255,255,255,0.15)',
+  },
+  btnTestText: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.55)',
+    fontFamily: fontFamily.body,
+    letterSpacing: 0.3,
   },
 
   // Legal
@@ -508,42 +494,27 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'rgba(255,255,255,0.65)',
     textAlign: 'center',
+    fontFamily: fontFamily.body,
   },
 
-  // Indicators
+  // Slide indicators
   indicators: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     gap: 6,
     marginTop: 4,
   },
-  indicator: {
+  dot: {
     height: 4,
     borderRadius: 2,
   },
-  indicatorActive: {
+  dotActive: {
     width: 18,
-    backgroundColor: '#F2934D',
+    backgroundColor: PRIMARY_GLOW,
   },
-  indicatorInactive: {
+  dotInactive: {
     width: 6,
     backgroundColor: 'rgba(255,255,255,0.35)',
-  },
-  btnTestUser: {
-    alignSelf: 'center',
-    marginTop: 4,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.10)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.20)',
-  },
-  btnTestUserText: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.55)',
-    fontFamily: 'Inter_400Regular',
-    letterSpacing: 0.3,
   },
 })
