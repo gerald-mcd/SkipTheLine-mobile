@@ -1,13 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Dimensions,
-  Animated,
-  Alert,
-  TextInput,
+  View, Text, StyleSheet, Pressable, Dimensions,
+  Animated, Alert, TextInput, ScrollView,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -18,8 +12,8 @@ import { signInAsTestUser } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
 const { width, height } = Dimensions.get('window')
-
-// ─── Slides ───────────────────────────────────────────────────────────────────
+const PRIMARY      = '#F8682B'
+const PRIMARY_GLOW = '#FFB37A'
 
 const SLIDES = [
   { label: 'Restaurants · 42m wait now',   image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80&auto=format&fit=crop' },
@@ -33,132 +27,54 @@ const SLIDES = [
   { label: 'Attractions · 45m wait now',   image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&q=80&auto=format&fit=crop' },
 ]
 
-// ─── Tokens ───────────────────────────────────────────────────────────────────
-
-const PRIMARY      = '#F8682B'
-const PRIMARY_GLOW = '#FFB37A'
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
-
 export default function WelcomeScreen() {
   const router  = useRouter()
   const insets  = useSafeAreaInsets()
   const [slideIndex, setSlideIndex] = useState(0)
   const [loading, setLoading] = useState<string | null>(null)
   const [email, setEmail] = useState('')
-  const [showOtherOptions, setShowOtherOptions] = useState(false)
+  const [showOther, setShowOther] = useState(false)
 
-  // Per-slide animated values
   const fadeAnims  = useRef(SLIDES.map((_, i) => new Animated.Value(i === 0 ? 1 : 0))).current
   const scaleAnims = useRef(SLIDES.map(() => new Animated.Value(1.0))).current
+  const contentAnim = useRef(new Animated.Value(0)).current
+  const contentTY   = useRef(new Animated.Value(16)).current
 
-  // Content stagger anims
-  const brandAnim   = useRef(new Animated.Value(0)).current
-  const brandTY     = useRef(new Animated.Value(12)).current
-  const eyebrowAnim = useRef(new Animated.Value(0)).current
-  const eyebrowTY   = useRef(new Animated.Value(12)).current
-  const h1Anim      = useRef(new Animated.Value(0)).current
-  const h1TY        = useRef(new Animated.Value(12)).current
-  const subAnim     = useRef(new Animated.Value(0)).current
-  const subTY       = useRef(new Animated.Value(12)).current
-  const btnsAnim    = useRef(new Animated.Value(0)).current
-  const btnsTY      = useRef(new Animated.Value(12)).current
-
-  // No session detection — always start on welcome screen
-  // User must explicitly tap a button to enter the app
-
-  // ── Entrance animation ──────────────────────────────────────────────────────
-
+  // Entrance animation
   useEffect(() => {
-    const dur = 500
-    const ease = { useNativeDriver: true }
-    const fadeUp = (opac: Animated.Value, ty: Animated.Value, delay: number) =>
-      Animated.sequence([
-        Animated.delay(delay),
-        Animated.parallel([
-          Animated.timing(opac, { toValue: 1, duration: dur, ...ease }),
-          Animated.timing(ty,   { toValue: 0, duration: dur, ...ease }),
-        ]),
-      ])
-
     Animated.parallel([
-      fadeUp(brandAnim,   brandTY,   0),
-      fadeUp(eyebrowAnim, eyebrowTY, 60),
-      fadeUp(h1Anim,      h1TY,      120),
-      fadeUp(subAnim,     subTY,     180),
-      fadeUp(btnsAnim,    btnsTY,    240),
+      Animated.timing(contentAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
+      Animated.timing(contentTY,   { toValue: 0, duration: 600, useNativeDriver: true }),
     ]).start()
   }, [])
 
-  // ── Slide carousel ──────────────────────────────────────────────────────────
-
+  // Slideshow
   useEffect(() => {
-    // Ken Burns on first slide
     Animated.timing(scaleAnims[0], { toValue: 1.06, duration: 6000, useNativeDriver: true }).start()
-
     const interval = setInterval(() => {
       setSlideIndex(prev => {
         const next = (prev + 1) % SLIDES.length
-
-        // Crossfade 1600ms
         Animated.timing(fadeAnims[prev], { toValue: 0, duration: 1600, useNativeDriver: true }).start()
         Animated.timing(fadeAnims[next], { toValue: 1, duration: 1600, useNativeDriver: true }).start()
-
-        // Ken Burns reset + animate next
         scaleAnims[prev].setValue(1.0)
         scaleAnims[next].setValue(1.0)
         Animated.timing(scaleAnims[next], { toValue: 1.06, duration: 6000, useNativeDriver: true }).start()
-
         return next
       })
     }, 4200)
-
     return () => clearInterval(interval)
   }, [])
 
-  function jumpToSlide(i: number) {
-    if (i === slideIndex) return
-    Animated.timing(fadeAnims[slideIndex], { toValue: 0, duration: 400, useNativeDriver: true }).start()
-    scaleAnims[i].setValue(1.0)
-    Animated.parallel([
-      Animated.timing(fadeAnims[i],   { toValue: 1,    duration: 400,  useNativeDriver: true }),
-      Animated.timing(scaleAnims[i],  { toValue: 1.06, duration: 6000, useNativeDriver: true }),
-    ]).start()
-    setSlideIndex(i)
-  }
-
-  // ── Auth handlers ───────────────────────────────────────────────────────────
-
-  const handleTestUser = async () => {
-    try {
-      setLoading('test')
-      await signInAsTestUser()
-    } catch (e: any) {
-      Alert.alert('Sign in failed', e.message ?? 'Could not sign in as test user')
-    } finally { setLoading(null) }
-  }
-
-  const handleEmailAuth = () => {
-    // Navigate to dedicated email sign in / sign up screen
-    router.push('/auth/email' as any)
-  }
-
-  const handleGoogleAuth = async () => {
-    try {
-      setLoading('google')
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: 'skiptheline://auth/callback' },
-      })
-      if (error) throw error
-      // OAuth opens browser — onAuthStateChange in _layout handles redirect
-    } catch (e: any) {
-      Alert.alert('Google sign in failed', e.message ?? 'Could not sign in with Google')
-      setLoading(null)
+  // Auth handlers
+  const handleEmailContinue = () => {
+    if (!email.trim()) {
+      Alert.alert('Enter your email', 'Please enter your email to continue.')
+      return
     }
+    router.push({ pathname: '/auth/email', params: { prefillEmail: email.trim() } } as any)
   }
 
-  const handleAppleAuth = async () => {
+  const handleApple = async () => {
     try {
       setLoading('apple')
       const { error } = await supabase.auth.signInWithOAuth({
@@ -167,22 +83,39 @@ export default function WelcomeScreen() {
       })
       if (error) throw error
     } catch (e: any) {
-      Alert.alert('Apple sign in failed', e.message ?? 'Could not sign in with Apple')
-      setLoading(null)
-    }
+      Alert.alert('Apple sign in failed', e.message)
+    } finally { setLoading(null) }
   }
 
-  const eyebrowText = SLIDES[slideIndex].label.toUpperCase()
+  const handleGoogle = async () => {
+    try {
+      setLoading('google')
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: 'skiptheline://auth/callback' },
+      })
+      if (error) throw error
+    } catch (e: any) {
+      Alert.alert('Google sign in failed', e.message)
+    } finally { setLoading(null) }
+  }
+
+  const handleTestUser = async () => {
+    try {
+      setLoading('test')
+      await signInAsTestUser()
+      router.replace('/(tabs)')
+    } catch (e: any) {
+      Alert.alert('Sign in failed', e.message)
+    } finally { setLoading(null) }
+  }
 
   return (
-    <View style={s.container}>
+    <View style={s.root}>
 
-      {/* ── Background slideshow ── */}
+      {/* Slideshow */}
       {SLIDES.map((slide, i) => (
-        <Animated.View
-          key={i}
-          style={[StyleSheet.absoluteFillObject, { opacity: fadeAnims[i] }]}
-        >
+        <Animated.View key={i} style={[StyleSheet.absoluteFillObject, { opacity: fadeAnims[i] }]}>
           <Animated.Image
             source={{ uri: slide.image }}
             style={[s.bgImage, { transform: [{ scale: scaleAnims[i] }] }]}
@@ -191,425 +124,273 @@ export default function WelcomeScreen() {
         </Animated.View>
       ))}
 
-      {/* ── Gradient overlay ── */}
+      {/* Overlay */}
       <LinearGradient
-        colors={[
-          'rgba(0,0,0,0.55)',
-          'rgba(0,0,0,0.40)',
-          'rgba(0,0,0,0.85)',
-        ]}
-        locations={[0, 0.38, 1]}
+        colors={['rgba(0,0,0,0.35)', 'rgba(0,0,0,0.30)', 'rgba(0,0,0,0.88)']}
+        locations={[0, 0.35, 1]}
         style={StyleSheet.absoluteFillObject}
       />
 
-      {/* ── Content ── */}
-      <View style={[s.content, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 24 }]}>
+      {/* Brand — top */}
+      <View style={[s.brandRow, { top: insets.top + 20 }]}>
+        <View style={s.logoTile}>
+          <MapPin size={16} color="#fff" fill="#fff" />
+        </View>
+        <Text style={s.wordmark}>SkipTheLine</Text>
+      </View>
 
-        {/* Brand mark */}
-        <Animated.View style={[s.brand, { opacity: brandAnim, transform: [{ translateY: brandTY }] }]}>
-          <View style={s.logoTile}>
-            <MapPin size={16} color="#FFFFFF" fill="#FFFFFF" />
-          </View>
-          <Text style={s.wordmark}>SkipTheLine</Text>
-        </Animated.View>
-
-        {/* Spacer pushes everything below to bottom */}
-        <View style={{ flex: 1 }} />
-
+      {/* Bottom content */}
+      <Animated.View
+        style={[
+          s.bottom,
+          { paddingBottom: insets.bottom + 20 },
+          { opacity: contentAnim, transform: [{ translateY: contentTY }] },
+        ]}
+      >
         {/* Eyebrow */}
-        <Animated.View style={[s.eyebrowRow, { opacity: eyebrowAnim, transform: [{ translateY: eyebrowTY }] }]}>
+        <View style={s.eyebrowRow}>
           <View style={s.eyebrowDot} />
-          <Text style={s.eyebrowText}>{eyebrowText}</Text>
-        </Animated.View>
+          <Text style={s.eyebrowText}>{SLIDES[slideIndex].label.toUpperCase()}</Text>
+        </View>
 
-        {/* H1 */}
-        <Animated.View style={{ opacity: h1Anim, transform: [{ translateY: h1TY }] }}>
-          <Text style={s.h1}>
-            {'Know the wait\n'}
-            <Text style={s.h1Accent}>before you go.</Text>
-          </Text>
-        </Animated.View>
+        {/* Headline */}
+        <Text style={s.h1}>
+          {'Know the wait\n'}
+          <Text style={s.h1Accent}>before you go.</Text>
+        </Text>
 
         {/* Subhead */}
-        <Animated.Text style={[s.subhead, { opacity: subAnim, transform: [{ translateY: subTY }] }]}>
+        <Text style={s.sub}>
           Live, crowd-powered wait times for restaurants, clubs, barbers, landmarks — anywhere you'd rather not stand in line.
-        </Animated.Text>
+        </Text>
 
-        {/* Auth section */}
-        <Animated.View style={[s.buttons, { opacity: btnsAnim, transform: [{ translateY: btnsTY }] }]}>
+        {/* ── Auth section ── */}
+        <View style={s.auth}>
 
           {/* Email input */}
           <TextInput
             style={s.emailInput}
             placeholder="Email / Phone number"
-            placeholderTextColor="rgba(255,255,255,0.5)"
+            placeholderTextColor="rgba(255,255,255,0.45)"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
             returnKeyType="done"
-            onSubmitEditing={handleEmailAuth}
+            onSubmitEditing={handleEmailContinue}
           />
 
-          {/* Continue — orange primary */}
+          {/* Continue */}
           <Pressable
-            testID="btn-continue-email"
-            style={({ pressed }) => [s.btnPrimary, pressed && s.pressed]}
-            onPress={handleEmailAuth}
+            style={({ pressed }) => [s.btnOrange, pressed && s.pressed]}
+            onPress={handleEmailContinue}
             disabled={loading !== null}
           >
-            <Text style={s.btnPrimaryText}>
-              {loading === 'email' ? 'Signing in...' : 'Continue'}
-            </Text>
+            <Text style={s.btnOrangeText}>Continue</Text>
           </Pressable>
 
           {/* Divider */}
-          <View style={s.dividerRow}>
-            <View style={s.dividerLine} />
-            <Text style={s.dividerText}>or login with</Text>
-            <View style={s.dividerLine} />
+          <View style={s.divRow}>
+            <View style={s.divLine} />
+            <Text style={s.divText}>or login with</Text>
+            <View style={s.divLine} />
           </View>
 
-          {/* Apple — dark pill */}
+          {/* Apple */}
           <Pressable
-            testID="btn-continue-apple"
-            style={({ pressed }) => [s.btnApple, pressed && s.pressed]}
-            onPress={handleAppleAuth}
+            style={({ pressed }) => [s.btnDark, pressed && s.pressed]}
+            onPress={handleApple}
             disabled={loading !== null}
           >
             <Text style={s.appleIcon}></Text>
-            <Text style={s.btnAppleText}>
+            <Text style={s.btnDarkText}>
               {loading === 'apple' ? 'Signing in...' : 'Sign in with Apple'}
             </Text>
           </Pressable>
 
           {/* Other sign up options */}
           <Pressable
-            style={({ pressed }) => [s.btnOther, pressed && s.pressed]}
-            onPress={() => setShowOtherOptions(o => !o)}
+            style={({ pressed }) => [s.btnOutline, pressed && s.pressed]}
+            onPress={() => setShowOther(o => !o)}
           >
-            <Text style={s.btnOtherText}>
-              {showOtherOptions ? 'Hide options' : 'Other sign up options'}
+            <Text style={s.btnOutlineText}>
+              {showOther ? 'Hide options' : 'Other sign up options'}
             </Text>
           </Pressable>
 
-          {/* Expanded: Google + Test User */}
-          {showOtherOptions && (
-            <View style={s.otherOptions}>
+          {/* Expanded options */}
+          {showOther && (
+            <View style={s.otherWrap}>
               <Pressable
-                testID="btn-continue-google"
-                style={({ pressed }) => [s.btnGlass, pressed && s.pressed]}
-                onPress={handleGoogleAuth}
+                style={({ pressed }) => [s.btnOutline, pressed && s.pressed]}
+                onPress={handleGoogle}
                 disabled={loading !== null}
               >
                 <Text style={s.googleG}>G</Text>
-                <Text style={s.btnGlassText}>
+                <Text style={s.btnOutlineText}>
                   {loading === 'google' ? 'Signing in...' : 'Continue with Google'}
                 </Text>
               </Pressable>
               <Pressable
-                testID="btn-test-user"
-                style={({ pressed }) => [s.btnGlass, s.btnTestUser, pressed && s.pressed]}
+                style={({ pressed }) => [s.btnOutline, s.btnGhost, pressed && s.pressed]}
                 onPress={handleTestUser}
                 disabled={loading !== null}
               >
-                <Text style={s.btnTestText}>
+                <Text style={s.btnGhostText}>
                   {loading === 'test' ? '⚙ Signing in...' : '⚙ Test User'}
                 </Text>
               </Pressable>
             </View>
           )}
 
-        </Animated.View>
+        </View>
 
         {/* Legal */}
         <Text style={s.legal}>By continuing you agree to the Terms &amp; Privacy.</Text>
 
-        {/* Slide indicators */}
-        <View style={s.indicators}>
+        {/* Dots */}
+        <View style={s.dots}>
           {SLIDES.map((_, i) => (
-            <Pressable key={i} onPress={() => jumpToSlide(i)} hitSlop={8}>
-              <View style={[s.dot, i === slideIndex ? s.dotActive : s.dotInactive]} />
+            <Pressable key={i} onPress={() => setSlideIndex(i)} hitSlop={8}>
+              <View style={[s.dot, i === slideIndex ? s.dotOn : s.dotOff]} />
             </Pressable>
           ))}
         </View>
 
-      </View>
+      </Animated.View>
     </View>
   )
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
 const s = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  bgImage: {
-    width,
-    height,
-    position: 'absolute',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    gap: 12,
-  },
+  root:    { flex: 1, backgroundColor: '#000' },
+  bgImage: { position: 'absolute', width, height },
 
-  // Brand
-  brand: {
+  // Brand top-left
+  brandRow: {
+    position: 'absolute',
+    left: 24,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    zIndex: 10,
   },
   logoTile: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
+    width: 36, height: 36, borderRadius: 10,
     backgroundColor: PRIMARY,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: PRIMARY,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    elevation: 8,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: PRIMARY, shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4, shadowRadius: 12, elevation: 6,
   },
   wordmark: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: -0.4,
-    fontFamily: fontFamily.displayBold,
+    fontSize: 16, fontWeight: '800', color: '#fff',
+    letterSpacing: -0.4, fontFamily: fontFamily.displayBold,
+  },
+
+  // Bottom content block
+  bottom: {
+    position: 'absolute',
+    bottom: 0, left: 0, right: 0,
+    paddingHorizontal: 24,
+    gap: 10,
   },
 
   // Eyebrow
-  eyebrowRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
+  eyebrowRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   eyebrowDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 6, height: 6, borderRadius: 3,
     backgroundColor: PRIMARY_GLOW,
-    shadowColor: PRIMARY_GLOW,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowColor: PRIMARY_GLOW, shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9, shadowRadius: 6,
   },
   eyebrowText: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 11, fontWeight: '600',
     color: 'rgba(255,255,255,0.80)',
-    letterSpacing: 11 * 0.18,
-    fontFamily: fontFamily.accent,
+    letterSpacing: 1.8, fontFamily: fontFamily.accent,
   },
 
   // Headline
   h1: {
-    fontSize: 44,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    lineHeight: 44 * 0.95,
-    letterSpacing: -1,
+    fontSize: 40, fontWeight: '800', color: '#fff',
+    lineHeight: 38, letterSpacing: -1,
     fontFamily: fontFamily.displayBold,
     textShadowColor: 'rgba(0,0,0,0.4)',
     textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 24,
+    textShadowRadius: 16,
   },
-  h1Accent: {
-    color: PRIMARY_GLOW,
-  },
+  h1Accent: { color: PRIMARY_GLOW },
 
   // Subhead
-  subhead: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: 'rgba(255,255,255,0.85)',
-    lineHeight: 21,
-    maxWidth: 320,
-    fontFamily: fontFamily.body,
+  sub: {
+    fontSize: 13, color: 'rgba(255,255,255,0.80)',
+    lineHeight: 19, fontFamily: fontFamily.body,
   },
 
-  // Buttons
-  buttons: {
-    gap: 10,
-    marginTop: 4,
-  },
-  pressed: {
-    transform: [{ scale: 0.985 }, { translateY: 1 }],
-  },
-
-  // Primary email button
-  btnPrimary: {
-    height: 52,
-    borderRadius: 999,
-    backgroundColor: PRIMARY,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: PRIMARY,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.40,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  btnPrimaryText: {
-    color: '#FFFCF7',
-    fontSize: 15,
-    fontWeight: '700',
-    letterSpacing: -0.2,
-    fontFamily: fontFamily.display,
-  },
-
-  // Glass base — dark visible container matching target
-  btnGlass: {
-    height: 52,
-    borderRadius: 999,
-    backgroundColor: 'rgba(30,30,30,0.72)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.18)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  btnGlassText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    fontFamily: fontFamily.bodySemiBold,
-    letterSpacing: -0.2,
-  },
-
-  // Google G
-  googleG: {
-    fontSize: 17,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    lineHeight: 20,
-  },
-
-  // Apple icon
-  appleIcon: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    lineHeight: 22,
-  },
-
-  // Test user — slightly more transparent
-  btnTestUser: {
-    backgroundColor: 'rgba(30,30,30,0.55)',
-    borderColor: 'rgba(255,255,255,0.12)',
-  },
-  btnTestText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: 'rgba(255,255,255,0.70)',
-    fontFamily: fontFamily.body,
-    letterSpacing: 0.1,
-  },
+  // Auth container
+  auth: { gap: 10, marginTop: 4 },
 
   // Email input
   emailInput: {
-    height: 52,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.30)',
+    height: 52, borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)',
     paddingHorizontal: 20,
-    fontSize: 15,
-    color: '#FFFFFF',
+    fontSize: 15, color: '#fff',
     fontFamily: fontFamily.body,
+  },
+
+  // Orange primary
+  btnOrange: {
+    height: 52, borderRadius: 999,
+    backgroundColor: PRIMARY,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: PRIMARY, shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.38, shadowRadius: 14, elevation: 8,
+  },
+  btnOrangeText: {
+    fontSize: 15, fontWeight: '700', color: '#fff',
+    fontFamily: fontFamily.display,
   },
 
   // Divider
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: 'rgba(255,255,255,0.20)',
-  },
-  dividerText: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.55)',
-    fontFamily: fontFamily.body,
-  },
+  divRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  divLine: { flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.18)' },
+  divText: { fontSize: 12, color: 'rgba(255,255,255,0.50)', fontFamily: fontFamily.body },
 
-  // Apple dark pill
-  btnApple: {
-    height: 52,
-    borderRadius: 999,
-    backgroundColor: '#000000',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+  // Apple dark
+  btnDark: {
+    height: 52, borderRadius: 999,
+    backgroundColor: 'rgba(10,10,10,0.85)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
   },
-  btnAppleText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    fontFamily: fontFamily.bodySemiBold,
-  },
+  appleIcon: { fontSize: 18, color: '#fff', lineHeight: 22 },
+  btnDarkText: { fontSize: 15, fontWeight: '600', color: '#fff', fontFamily: fontFamily.bodySemiBold },
 
-  // Other options button
-  btnOther: {
-    height: 52,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.10)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.20)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  // Outline / ghost
+  btnOutline: {
+    height: 52, borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
   },
-  btnOtherText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: 'rgba(255,255,255,0.75)',
-    fontFamily: fontFamily.body,
-  },
+  btnOutlineText: { fontSize: 14, fontWeight: '500', color: 'rgba(255,255,255,0.80)', fontFamily: fontFamily.body },
+  btnGhost: { backgroundColor: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.10)' },
+  btnGhostText: { fontSize: 13, color: 'rgba(255,255,255,0.55)', fontFamily: fontFamily.body },
+  googleG: { fontSize: 16, fontWeight: '800', color: '#fff' },
 
-  // Expanded other options
-  otherOptions: {
-    gap: 10,
-  },
+  // Other options expanded
+  otherWrap: { gap: 10 },
+
+  // Press feedback
+  pressed: { opacity: 0.78 },
 
   // Legal
-  legal: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.65)',
-    textAlign: 'center',
-    fontFamily: fontFamily.body,
-  },
+  legal: { fontSize: 11, color: 'rgba(255,255,255,0.55)', textAlign: 'center', fontFamily: fontFamily.body },
 
-  // Slide indicators
-  indicators: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 4,
-  },
-  dot: {
-    height: 4,
-    borderRadius: 2,
-  },
-  dotActive: {
-    width: 18,
-    backgroundColor: PRIMARY_GLOW,
-  },
-  dotInactive: {
-    width: 6,
-    backgroundColor: 'rgba(255,255,255,0.35)',
-  },
+  // Dots
+  dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: 2 },
+  dot:  { height: 4, borderRadius: 2 },
+  dotOn:  { width: 18, backgroundColor: PRIMARY_GLOW },
+  dotOff: { width: 6,  backgroundColor: 'rgba(255,255,255,0.30)' },
 })
