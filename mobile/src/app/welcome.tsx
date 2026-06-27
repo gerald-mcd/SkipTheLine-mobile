@@ -130,12 +130,52 @@ export default function WelcomeScreen() {
     return () => subscription.unsubscribe()
   }, [])
 
+  const [loading, setLoading] = useState<string | null>(null)
+
   const handleTestUser = async () => {
     try {
+      setLoading('test')
       await signInAsTestUser()
-      // onAuthStateChange handles redirect
     } catch (e: any) {
-      Alert.alert('Error', e.message ?? 'Could not sign in as test user')
+      Alert.alert('Sign in failed', e.message ?? 'Could not sign in as test user')
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  const handleEmailAuth = async () => {
+    // Email auth screen — navigate to a dedicated screen
+    // For now falls back to test user so flow works end to end
+    await handleTestUser()
+  }
+
+  const handleGoogleAuth = async () => {
+    try {
+      setLoading('google')
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: 'skiptheline://auth/callback' },
+      })
+      if (error) throw error
+    } catch (e: any) {
+      Alert.alert('Google sign in failed', e.message ?? 'Could not sign in with Google')
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  const handleAppleAuth = async () => {
+    try {
+      setLoading('apple')
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: { redirectTo: 'skiptheline://auth/callback' },
+      })
+      if (error) throw error
+    } catch (e: any) {
+      Alert.alert('Apple sign in failed', e.message ?? 'Could not sign in with Apple')
+    } finally {
+      setLoading(null)
     }
   }
 
@@ -224,42 +264,64 @@ export default function WelcomeScreen() {
             { opacity: btnsOpacity, transform: [{ translateY: btnsTranslate }] },
           ]}
         >
-          {/* Email CTA */}
+          {/* Primary CTA — Email */}
           <Pressable
             testID="btn-continue-email"
             style={({ pressed }) => [styles.btnEmail, pressed && { opacity: 0.88 }]}
-            onPress={handleTestUser}
+            onPress={handleEmailAuth}
+            disabled={loading !== null}
           >
-            <Text style={styles.btnEmailText}>Continue with email</Text>
+            <Text style={styles.btnEmailText}>
+              {loading === 'email' ? 'Signing in...' : 'Continue with email'}
+            </Text>
           </Pressable>
 
-          {/* Google */}
-          <Pressable
-            testID="btn-continue-google"
-            style={({ pressed }) => [styles.btnSocial, pressed && { opacity: 0.75 }]}
-            onPress={handleTestUser}
-          >
-            <Text style={styles.btnSocialIcon}>G</Text>
-            <Text style={styles.btnSocialText}>Continue with Google</Text>
-          </Pressable>
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
 
-          {/* Apple */}
-          <Pressable
-            testID="btn-continue-apple"
-            style={({ pressed }) => [styles.btnSocial, pressed && { opacity: 0.75 }]}
-            onPress={handleTestUser}
-          >
-            <Text style={styles.btnSocialIcon}></Text>
-            <Text style={styles.btnSocialText}>Continue with Apple</Text>
-          </Pressable>
+          {/* Social buttons row */}
+          <View style={styles.socialRow}>
+            {/* Google */}
+            <Pressable
+              testID="btn-continue-google"
+              style={({ pressed }) => [styles.btnSocialPill, pressed && { opacity: 0.75 }]}
+              onPress={handleGoogleAuth}
+              disabled={loading !== null}
+            >
+              <Text style={styles.btnSocialPillIcon}>G</Text>
+              <Text style={styles.btnSocialPillText}>
+                {loading === 'google' ? '...' : 'Google'}
+              </Text>
+            </Pressable>
+
+            {/* Apple */}
+            <Pressable
+              testID="btn-continue-apple"
+              style={({ pressed }) => [styles.btnSocialPill, pressed && { opacity: 0.75 }]}
+              onPress={handleAppleAuth}
+              disabled={loading !== null}
+            >
+              <Text style={styles.btnSocialPillIcon}></Text>
+              <Text style={styles.btnSocialPillText}>
+                {loading === 'apple' ? '...' : 'Apple'}
+              </Text>
+            </Pressable>
+          </View>
 
           {/* Test User bypass — dev/demo only */}
           <Pressable
             testID="btn-test-user"
             style={({ pressed }) => [styles.btnTestUser, pressed && { opacity: 0.7 }]}
             onPress={handleTestUser}
+            disabled={loading !== null}
           >
-            <Text style={styles.btnTestUserText}>⚙ Test User</Text>
+            <Text style={styles.btnTestUserText}>
+              {loading === 'test' ? '⚙ Signing in...' : '⚙ Test User'}
+            </Text>
           </Pressable>
         </Animated.View>
 
@@ -373,13 +435,13 @@ const styles = StyleSheet.create({
 
   // Buttons
   buttonsBlock: {
-    gap: 10,
+    gap: 12,
     marginTop: 4,
   },
   btnEmail: {
     backgroundColor: '#F8682B',
-    height: 48,
-    borderRadius: 22,
+    height: 52,
+    borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#F8682B',
@@ -394,24 +456,48 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: fontFamily.bodySemiBold,
   },
-  btnSocial: {
+
+  // Divider
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  dividerText: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.5)',
+    fontFamily: fontFamily.body,
+  },
+
+  // Social row — side by side pills
+  socialRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  btnSocialPill: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 48,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.14)',
+    height: 52,
+    borderRadius: 9999,
+    backgroundColor: 'rgba(255,255,255,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.28)',
-    gap: 8,
+    borderColor: 'rgba(255,255,255,0.25)',
+    gap: 7,
   },
-  btnSocialIcon: {
-    fontSize: 15,
+  btnSocialPillIcon: {
+    fontSize: 16,
     fontWeight: '800',
     color: '#FFFFFF',
   },
-  btnSocialText: {
-    fontSize: 15,
+  btnSocialPillText: {
+    fontSize: 14,
     fontWeight: '600',
     color: '#FFFFFF',
     fontFamily: fontFamily.bodySemiBold,

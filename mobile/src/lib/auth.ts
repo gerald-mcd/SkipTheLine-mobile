@@ -35,7 +35,7 @@ export async function signInWithEmail(email: string, password: string) {
 // ─── Sign in as test user (bypass for dev/demo) ───────────────────────────────
 
 export async function signInAsTestUser() {
-  const TEST_EMAIL    = 'test@skiptheline.site'
+  const TEST_EMAIL    = 'skiptheline.demo@gmail.com'
   const TEST_PASSWORD = 'SkipTest2024!'
 
   // Try signing in first

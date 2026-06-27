@@ -25,10 +25,9 @@ const WIPE_ONLY = process.argv.includes('--wipe')
 
 // ─── Test users ───────────────────────────────────────────────────────────────
 
+// One shared demo account — all team members use "⚙ Test User" button
 const TEST_USERS = [
-  { email: 'gerald@skiptheline.site',  name: 'Gerald McDonald',  handle: '@gerald',  points: 2840, streak: 12, rank: 47  },
-  { email: 'jason@skiptheline.site',   name: 'Jason Mizrachi',   handle: '@jason',   points: 1250, streak: 5,  rank: 112 },
-  { email: 'test@skiptheline.site',    name: 'Test User',        handle: '@testuser',points: 340,  streak: 3,  rank: 389 },
+  { email: 'skiptheline.demo@gmail.com', name: 'Alex Rivera', handle: '@alexr', points: 2840, streak: 12, rank: 47 },
 ]
 
 // ─── Miami venues (realistic coordinates) ────────────────────────────────────
