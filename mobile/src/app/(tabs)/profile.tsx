@@ -17,6 +17,7 @@ import { useRouter } from 'expo-router'
 import { fontFamily } from '@/constants/theme'
 import { getUserProfile, type UserProfile } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
+import { DEMO_MODE, DEMO_PROFILE, DEMO_FRIENDS } from '@/lib/demo'
 
 const COLORS = {
   background: '#FCFBF9',
@@ -44,7 +45,7 @@ export default function ProfileScreen() {
   const [showAllBadges, setShowAllBadges] = useState(false)
 
   useEffect(() => {
-    loadProfile()
+    if (!DEMO_MODE) loadProfile()
   }, [])
 
   async function loadProfile() {
@@ -54,18 +55,21 @@ export default function ProfileScreen() {
     if (p) setUserProfile(p)
   }
 
-  // Use real profile data or fallback defaults while loading
-  const points    = userProfile?.points ?? 0
-  const streak    = userProfile?.streak ?? 0
-  const rank      = userProfile?.rank ?? null
-  const rankTrend = userProfile?.rank_trend ?? 'flat'
-  const rankDelta = userProfile?.rank_delta ?? 0
-  const name      = userProfile?.name ?? 'Skipper'
-  const handle    = userProfile?.handle ?? '@you'
+  // Demo mode — use DEMO_PROFILE, otherwise real profile or defaults
+  const src       = DEMO_MODE ? DEMO_PROFILE : userProfile
+  const points    = src?.points    ?? 0
+  const streak    = src?.streak    ?? 0
+  const rank      = src?.rank      ?? null
+  const rankTrend = (src as any)?.rank_trend  ?? 'flat'
+  const rankDelta = (src as any)?.rank_delta  ?? 0
+  const name      = src?.name      ?? 'Skipper'
+  const handle    = (src as any)?.handle ?? '@you'
 
   const { current: tier, next: nextTier, progress } = tierFor(points)
   const pointsToNext = nextTier ? Math.max(0, nextTier.min - points) : 0
-  const allFriends = useMemo(() => [...extraFriends], [extraFriends])
+  const allFriends = useMemo(() =>
+    DEMO_MODE ? [...DEMO_FRIENDS, ...extraFriends] : [...extraFriends]
+  , [extraFriends])
 
   const RankIcon = rankTrend === 'up' ? TrendingUp
     : rankTrend === 'down' ? TrendingDown : Minus

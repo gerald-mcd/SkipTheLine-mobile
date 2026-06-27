@@ -6,8 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { ArrowDownRight } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { exploreFeed, type FeedItem } from '@/lib/mock-data'
+import { type FeedItem } from '@/lib/mock-data'
 import { getLaunchedVenues, type Venue } from '@/lib/queries'
+import { DEMO_MODE, getDemoFeedItems } from '@/lib/demo'
 import { fontFamily } from '@/constants/theme'
 import WaitBadge from '@/components/WaitBadge'
 
@@ -237,13 +238,18 @@ export default function ExploreScreen() {
     })
   }, [])
 
+  // Use demo feed when in demo mode, otherwise empty (real feed not built yet)
+  const feedSource = useMemo(() =>
+    DEMO_MODE ? getDemoFeedItems(realVenuesList) : []
+  , [realVenuesList])
+
   const items = useMemo(() => {
-    if (filter === 'all') return exploreFeed
+    if (filter === 'all') return feedSource
     const map: Record<Exclude<Filter, 'all'>, FeedItem['kind']> = {
       drops: 'drop', reports: 'report', venues: 'venue', system: 'system',
     }
-    return exploreFeed.filter(i => i.kind === map[filter])
-  }, [filter])
+    return feedSource.filter((i: any) => i.kind === map[filter])
+  }, [filter, feedSource])
 
   return (
     <SafeAreaView edges={['top']} style={styles.safe} testID="explore-screen">

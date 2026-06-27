@@ -102,10 +102,14 @@ export async function getLaunchedVenues(city = 'Miami'): Promise<Venue[]> {
     .eq('is_launched', true)
     .eq('city', city)
     .eq('is_active', true)
-    .order('live_reporters', { ascending: false })
+    .order('name', { ascending: true })
 
   if (error) { console.error('getLaunchedVenues:', error.message); return [] }
-  return (data ?? []) as Venue[]
+
+  // Apply demo overlay — adds realistic wait times + reporter counts without DB writes
+  const { DEMO_MODE, applyDemoOverlayAll } = await import('./demo')
+  const venues = (data ?? []) as Venue[]
+  return DEMO_MODE ? applyDemoOverlayAll(venues) : venues
 }
 
 /** Get venues by category */
@@ -204,6 +208,16 @@ export async function getWaitCache(venueId: string): Promise<WaitCache | null> {
 
 /** Get recent reports for a venue */
 export async function getVenueReports(venueId: string, limit = 10): Promise<Report[]> {
+  const { DEMO_MODE, getDemoReports, applyDemoOverlay } = await import('./demo')
+
+  if (DEMO_MODE) {
+    // Return mock reports — no DB read needed
+    const venue = await getVenueById(venueId)
+    if (!venue) return []
+    const overlaid = applyDemoOverlay(venue)
+    return getDemoReports(overlaid, limit) as unknown as Report[]
+  }
+
   const { data, error } = await supabase
     .from('reports')
     .select(`
