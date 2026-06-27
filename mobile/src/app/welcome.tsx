@@ -13,8 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { MapPin } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { signInAsTestUser, getSession } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { signInAsTestUser } from '@/lib/auth'
 
 const { width, height } = Dimensions.get('window')
 
@@ -61,18 +60,8 @@ export default function WelcomeScreen() {
   const btnsAnim    = useRef(new Animated.Value(0)).current
   const btnsTY      = useRef(new Animated.Value(12)).current
 
-  // ── Auth guard ──────────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    getSession().then(s => { if (s) router.replace('/(tabs)') })
-  }, [])
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, s) => {
-      if (s) router.replace('/(tabs)')
-    })
-    return () => subscription.unsubscribe()
-  }, [])
+  // No session detection — always start on welcome screen
+  // User must explicitly tap a button to enter the app
 
   // ── Entrance animation ──────────────────────────────────────────────────────
 

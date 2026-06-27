@@ -27,6 +27,9 @@ export const unstable_settings = {
   initialRouteName: 'welcome',
 }
 
+// Prevent going back to welcome once logged in
+// and prevent going back to tabs once logged out
+
 const queryClient = new QueryClient()
 
 function RootLayoutNav() {
@@ -38,8 +41,8 @@ function RootLayoutNav() {
         contentStyle: { backgroundColor: colors.background },
         animation: 'slide_from_right',
       }}>
-        <Stack.Screen name="welcome" />
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="welcome" options={{ gestureEnabled: false }} />
+        <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
         <Stack.Screen name="venue/[id]" options={{
           headerShown: false,
           contentStyle: { backgroundColor: '#FCFBF9' },
