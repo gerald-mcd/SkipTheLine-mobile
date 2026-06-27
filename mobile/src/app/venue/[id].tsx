@@ -24,7 +24,7 @@ import { fontFamily } from '@/constants/theme'
 import { openDirections } from '@/lib/actions'
 import { Linking } from 'react-native'
 import { ReviewModal } from '@/components/ReviewModal'
-import { getVenueById, getVenueReports, getVenueReviews, getVenuePhotos, toggleFavorite, getFavoriteIds, type Venue, type Report, type VenueReview } from '@/lib/queries'
+import { getVenueById, getVenueReports, getVenueReviews, getVenuePhotos, getVenueHours, getTodayHours, formatAllHours, toggleFavorite, getFavoriteIds, type Venue, type Report, type VenueReview, type VenueHour } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
 
 const COLORS = {
@@ -97,6 +97,8 @@ export default function VenueDetailScreen() {
   const [photos, setPhotos] = useState<string[]>([])
   const [reviews, setReviews] = useState<VenueReview[]>([])
   const [recentReports, setRecentReports] = useState<Report[]>([])
+  const [hours, setHours] = useState<VenueHour[]>([])
+  const [hoursExpanded, setHoursExpanded] = useState(false)
   const [isFavorited, setIsFavorited] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
   const [photoIdx, setPhotoIdx] = useState(0)
@@ -108,12 +110,14 @@ export default function VenueDetailScreen() {
   }, [id])
 
   async function loadVenueData() {
-    const [venueData, reportsData, reviewsData, photosData] = await Promise.all([
+    const [venueData, reportsData, reviewsData, photosData, hoursData] = await Promise.all([
       getVenueById(id as string),
       getVenueReports(id as string, 8),
       getVenueReviews(id as string, 5),
       getVenuePhotos(id as string),
+      getVenueHours(id as string),
     ])
+    setHours(hoursData)
 
     setVenue(venueData)
     setRecentReports(reportsData)
@@ -319,7 +323,7 @@ export default function VenueDetailScreen() {
         {/* Event card — shown when active event exists for this venue */}
         {null}
 
-        {/* ── Stats row (3 equal boxes) ── */}
+        {/* ── Stats row ── */}
         <View style={styles.section}>
           <View style={styles.statsRow}>
             <View style={styles.statBox}>
@@ -332,12 +336,39 @@ export default function VenueDetailScreen() {
               <Text style={styles.statValue}>{venue.reports_count}</Text>
               <Text style={styles.statLabel}>REPORTS</Text>
             </View>
-            <View style={styles.statBox}>
+            {/* Hours box — shows today only, tap to expand */}
+            <Pressable style={styles.statBox} onPress={() => setHoursExpanded(e => !e)}>
               <Clock size={14} color={COLORS.primary} strokeWidth={2} />
-              <Text style={styles.statValue}>{venue.hours}</Text>
-              <Text style={styles.statLabel}>OPEN</Text>
-            </View>
+              {hours.length > 0 ? (() => {
+                const { label, isOpen } = getTodayHours(hours)
+                return (
+                  <>
+                    <Text style={[styles.statValue, { fontSize: 11 }]} numberOfLines={1}>{label}</Text>
+                    <Text style={[styles.statLabel, { color: isOpen ? '#5DB18A' : COLORS.mutedForeground }]}>
+                      {isOpen ? 'OPEN NOW' : 'CLOSED'}
+                    </Text>
+                  </>
+                )
+              })() : (
+                <>
+                  <Text style={styles.statValue} numberOfLines={1}>–</Text>
+                  <Text style={styles.statLabel}>HOURS</Text>
+                </>
+              )}
+            </Pressable>
           </View>
+
+          {/* Expandable full hours */}
+          {hoursExpanded && hours.length > 0 && (
+            <View style={styles.hoursExpanded}>
+              {formatAllHours(hours).map(({ day, label }) => (
+                <View key={day} style={styles.hoursRow}>
+                  <Text style={styles.hoursDay}>{day}</Text>
+                  <Text style={styles.hoursLabel}>{label}</Text>
+                </View>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* ── Reviews section ── */}
@@ -774,6 +805,32 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     textTransform: 'uppercase',
     fontFamily: fontFamily.accent,
+  },
+
+  // ── Hours expanded ──
+  hoursExpanded: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    gap: 8,
+  },
+  hoursRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  hoursDay: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: COLORS.foreground,
+    fontFamily: fontFamily.bodySemiBold,
+    width: 100,
+  },
+  hoursLabel: {
+    fontSize: 13,
+    color: COLORS.mutedForeground,
+    fontFamily: fontFamily.body,
   },
 
   // ── Reviews ──

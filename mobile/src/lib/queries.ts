@@ -259,6 +259,80 @@ export async function getVenueReviews(venueId: string, limit = 5): Promise<Venue
   return (data ?? []) as unknown as VenueReview[]
 }
 
+// ─── VENUE HOURS ──────────────────────────────────────────────────────────────
+
+export interface VenueHour {
+  day_of_week: number   // 0=Sun, 1=Mon...6=Sat
+  open_time:   string | null
+  close_time:  string | null
+  is_closed:   boolean
+  is_24h:      boolean
+}
+
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const DAY_FULL  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+export async function getVenueHours(venueId: string): Promise<VenueHour[]> {
+  const { data, error } = await supabase
+    .from('venue_hours')
+    .select('day_of_week, open_time, close_time, is_closed, is_24h')
+    .eq('venue_id', venueId)
+    .order('day_of_week', { ascending: true })
+
+  if (error) return []
+  return (data ?? []) as VenueHour[]
+}
+
+/** Format a time string like "12:00" → "12:00 PM" */
+function formatTime(t: string | null): string {
+  if (!t) return ''
+  const [hStr, mStr] = t.split(':')
+  let h = parseInt(hStr, 10)
+  const m = parseInt(mStr, 10)
+  const ampm = h >= 12 ? 'PM' : 'AM'
+  if (h === 0) h = 12
+  else if (h > 12) h -= 12
+  return m === 0 ? `${h} ${ampm}` : `${h}:${mStr} ${ampm}`
+}
+
+/** Get today's hours as a display string e.g. "12 PM – 1 AM" */
+export function getTodayHours(hours: VenueHour[]): { label: string; isOpen: boolean } {
+  const today = new Date().getDay() // 0=Sun
+  const todayHours = hours.find(h => h.day_of_week === today)
+
+  if (!todayHours) return { label: 'Hours unavailable', isOpen: false }
+  if (todayHours.is_closed) return { label: 'Closed today', isOpen: false }
+  if (todayHours.is_24h) return { label: 'Open 24 hours', isOpen: true }
+
+  const open  = formatTime(todayHours.open_time)
+  const close = formatTime(todayHours.close_time)
+  const label = open && close ? `${open} – ${close}` : 'Hours unavailable'
+
+  // Rough open/closed check
+  const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes()
+  const [oh, om] = (todayHours.open_time ?? '00:00').split(':').map(Number)
+  let [ch, cm]   = (todayHours.close_time ?? '23:59').split(':').map(Number)
+  const openMin  = oh * 60 + om
+  let closeMin   = ch * 60 + cm
+  if (closeMin < openMin) closeMin += 1440 // past midnight
+  const isOpen   = nowMinutes >= openMin && nowMinutes < closeMin
+
+  return { label, isOpen }
+}
+
+/** Format all hours for the expanded view */
+export function formatAllHours(hours: VenueHour[]): { day: string; label: string }[] {
+  return DAY_FULL.map((day, i) => {
+    const h = hours.find(h => h.day_of_week === i)
+    if (!h) return { day, label: '–' }
+    if (h.is_closed) return { day, label: 'Closed' }
+    if (h.is_24h)    return { day, label: 'Open 24 hours' }
+    const open  = formatTime(h.open_time)
+    const close = formatTime(h.close_time)
+    return { day, label: open && close ? `${open} – ${close}` : '–' }
+  })
+}
+
 // ─── VENUE PHOTOS ─────────────────────────────────────────────────────────────
 
 /** Get all photos for a venue */
