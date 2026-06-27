@@ -251,33 +251,29 @@ export default function WelcomeScreen() {
             </Text>
           </Pressable>
 
-          {/* Social row */}
-          <View style={s.socialRow}>
-            {/* Google */}
-            <Pressable
-              testID="btn-continue-google"
-              style={({ pressed }) => [s.btnGlass, s.btnSocial, pressed && s.pressed]}
-              onPress={handleGoogleAuth}
-              disabled={loading !== null}
-            >
-              {/* Google G SVG — rendered as styled text since SVG needs react-native-svg */}
-              <Text style={s.googleG}>G</Text>
-              <Text style={s.btnGlassText}>{loading === 'google' ? '...' : 'Google'}</Text>
-            </Pressable>
+          {/* Google — full width */}
+          <Pressable
+            testID="btn-continue-google"
+            style={({ pressed }) => [s.btnGlass, pressed && s.pressed]}
+            onPress={handleGoogleAuth}
+            disabled={loading !== null}
+          >
+            <Text style={s.googleG}>G</Text>
+            <Text style={s.btnGlassText}>{loading === 'google' ? 'Signing in...' : 'Continue with Google'}</Text>
+          </Pressable>
 
-            {/* Apple */}
-            <Pressable
-              testID="btn-continue-apple"
-              style={({ pressed }) => [s.btnGlass, s.btnSocial, pressed && s.pressed]}
-              onPress={handleAppleAuth}
-              disabled={loading !== null}
-            >
-              <Text style={s.appleIcon}></Text>
-              <Text style={s.btnGlassText}>{loading === 'apple' ? '...' : 'Apple'}</Text>
-            </Pressable>
-          </View>
+          {/* Apple — full width */}
+          <Pressable
+            testID="btn-continue-apple"
+            style={({ pressed }) => [s.btnGlass, pressed && s.pressed]}
+            onPress={handleAppleAuth}
+            disabled={loading !== null}
+          >
+            <Text style={s.appleIcon}></Text>
+            <Text style={s.btnGlassText}>{loading === 'apple' ? 'Signing in...' : 'Continue with Apple'}</Text>
+          </Pressable>
 
-          {/* Test User */}
+          {/* Test User — full width */}
           <Pressable
             testID="btn-test-user"
             style={({ pressed }) => [s.btnGlass, s.btnTestUser, pressed && s.pressed]}
@@ -285,7 +281,7 @@ export default function WelcomeScreen() {
             disabled={loading !== null}
           >
             <Text style={s.btnTestText}>
-              {loading === 'test' ? '⚙ Signing in...' : '⚙ Test User'}
+              {loading === 'test' ? '⚙ Signing in...' : 'Test User'}
             </Text>
           </Pressable>
 
@@ -416,7 +412,7 @@ const s = StyleSheet.create({
   // Primary email button
   btnPrimary: {
     height: 52,
-    borderRadius: 16,
+    borderRadius: 999,
     backgroundColor: PRIMARY,
     alignItems: 'center',
     justifyContent: 'center',
@@ -434,32 +430,24 @@ const s = StyleSheet.create({
     fontFamily: fontFamily.display,
   },
 
-  // Glass base
+  // Glass base — dark visible container matching target
   btnGlass: {
     height: 52,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.14)',
+    borderRadius: 999,
+    backgroundColor: 'rgba(30,30,30,0.72)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.28)',
+    borderColor: 'rgba(255,255,255,0.18)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 10,
   },
   btnGlassText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
     color: '#FFFFFF',
     fontFamily: fontFamily.bodySemiBold,
-  },
-
-  // Social row
-  socialRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  btnSocial: {
-    flex: 1,
+    letterSpacing: -0.2,
   },
 
   // Google G
@@ -477,16 +465,17 @@ const s = StyleSheet.create({
     lineHeight: 22,
   },
 
-  // Test user
+  // Test user — slightly more transparent
   btnTestUser: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: 'rgba(30,30,30,0.55)',
+    borderColor: 'rgba(255,255,255,0.12)',
   },
   btnTestText: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.55)',
+    fontSize: 14,
+    fontWeight: '500',
+    color: 'rgba(255,255,255,0.70)',
     fontFamily: fontFamily.body,
-    letterSpacing: 0.3,
+    letterSpacing: 0.1,
   },
 
   // Legal
