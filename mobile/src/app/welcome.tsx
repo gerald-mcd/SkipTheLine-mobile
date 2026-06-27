@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   Alert,
+  TextInput,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -44,6 +45,8 @@ export default function WelcomeScreen() {
   const insets  = useSafeAreaInsets()
   const [slideIndex, setSlideIndex] = useState(0)
   const [loading, setLoading] = useState<string | null>(null)
+  const [email, setEmail] = useState('')
+  const [showOtherOptions, setShowOtherOptions] = useState(false)
 
   // Per-slide animated values
   const fadeAnims  = useRef(SLIDES.map((_, i) => new Animated.Value(i === 0 ? 1 : 0))).current
@@ -232,10 +235,23 @@ export default function WelcomeScreen() {
           Live, crowd-powered wait times for restaurants, clubs, barbers, landmarks — anywhere you'd rather not stand in line.
         </Animated.Text>
 
-        {/* Auth buttons */}
+        {/* Auth section */}
         <Animated.View style={[s.buttons, { opacity: btnsAnim, transform: [{ translateY: btnsTY }] }]}>
 
-          {/* Email — primary */}
+          {/* Email input */}
+          <TextInput
+            style={s.emailInput}
+            placeholder="Email / Phone number"
+            placeholderTextColor="rgba(255,255,255,0.5)"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            returnKeyType="done"
+            onSubmitEditing={handleEmailAuth}
+          />
+
+          {/* Continue — orange primary */}
           <Pressable
             testID="btn-continue-email"
             style={({ pressed }) => [s.btnPrimary, pressed && s.pressed]}
@@ -243,43 +259,66 @@ export default function WelcomeScreen() {
             disabled={loading !== null}
           >
             <Text style={s.btnPrimaryText}>
-              {loading === 'email' ? 'Signing in...' : 'Continue with email'}
+              {loading === 'email' ? 'Signing in...' : 'Continue'}
             </Text>
           </Pressable>
 
-          {/* Google — full width */}
-          <Pressable
-            testID="btn-continue-google"
-            style={({ pressed }) => [s.btnGlass, pressed && s.pressed]}
-            onPress={handleGoogleAuth}
-            disabled={loading !== null}
-          >
-            <Text style={s.googleG}>G</Text>
-            <Text style={s.btnGlassText}>{loading === 'google' ? 'Signing in...' : 'Continue with Google'}</Text>
-          </Pressable>
+          {/* Divider */}
+          <View style={s.dividerRow}>
+            <View style={s.dividerLine} />
+            <Text style={s.dividerText}>or login with</Text>
+            <View style={s.dividerLine} />
+          </View>
 
-          {/* Apple — full width */}
+          {/* Apple — dark pill */}
           <Pressable
             testID="btn-continue-apple"
-            style={({ pressed }) => [s.btnGlass, pressed && s.pressed]}
+            style={({ pressed }) => [s.btnApple, pressed && s.pressed]}
             onPress={handleAppleAuth}
             disabled={loading !== null}
           >
             <Text style={s.appleIcon}></Text>
-            <Text style={s.btnGlassText}>{loading === 'apple' ? 'Signing in...' : 'Continue with Apple'}</Text>
-          </Pressable>
-
-          {/* Test User — full width */}
-          <Pressable
-            testID="btn-test-user"
-            style={({ pressed }) => [s.btnGlass, s.btnTestUser, pressed && s.pressed]}
-            onPress={handleTestUser}
-            disabled={loading !== null}
-          >
-            <Text style={s.btnTestText}>
-              {loading === 'test' ? '⚙ Signing in...' : 'Test User'}
+            <Text style={s.btnAppleText}>
+              {loading === 'apple' ? 'Signing in...' : 'Sign in with Apple'}
             </Text>
           </Pressable>
+
+          {/* Other sign up options */}
+          <Pressable
+            style={({ pressed }) => [s.btnOther, pressed && s.pressed]}
+            onPress={() => setShowOtherOptions(o => !o)}
+          >
+            <Text style={s.btnOtherText}>
+              {showOtherOptions ? 'Hide options' : 'Other sign up options'}
+            </Text>
+          </Pressable>
+
+          {/* Expanded: Google + Test User */}
+          {showOtherOptions && (
+            <View style={s.otherOptions}>
+              <Pressable
+                testID="btn-continue-google"
+                style={({ pressed }) => [s.btnGlass, pressed && s.pressed]}
+                onPress={handleGoogleAuth}
+                disabled={loading !== null}
+              >
+                <Text style={s.googleG}>G</Text>
+                <Text style={s.btnGlassText}>
+                  {loading === 'google' ? 'Signing in...' : 'Continue with Google'}
+                </Text>
+              </Pressable>
+              <Pressable
+                testID="btn-test-user"
+                style={({ pressed }) => [s.btnGlass, s.btnTestUser, pressed && s.pressed]}
+                onPress={handleTestUser}
+                disabled={loading !== null}
+              >
+                <Text style={s.btnTestText}>
+                  {loading === 'test' ? '⚙ Signing in...' : '⚙ Test User'}
+                </Text>
+              </Pressable>
+            </View>
+          )}
 
         </Animated.View>
 
@@ -472,6 +511,77 @@ const s = StyleSheet.create({
     color: 'rgba(255,255,255,0.70)',
     fontFamily: fontFamily.body,
     letterSpacing: 0.1,
+  },
+
+  // Email input
+  emailInput: {
+    height: 52,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.30)',
+    paddingHorizontal: 20,
+    fontSize: 15,
+    color: '#FFFFFF',
+    fontFamily: fontFamily.body,
+  },
+
+  // Divider
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.20)',
+  },
+  dividerText: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.55)',
+    fontFamily: fontFamily.body,
+  },
+
+  // Apple dark pill
+  btnApple: {
+    height: 52,
+    borderRadius: 999,
+    backgroundColor: '#000000',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+  },
+  btnAppleText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: fontFamily.bodySemiBold,
+  },
+
+  // Other options button
+  btnOther: {
+    height: 52,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.20)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnOtherText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: 'rgba(255,255,255,0.75)',
+    fontFamily: fontFamily.body,
+  },
+
+  // Expanded other options
+  otherOptions: {
+    gap: 10,
   },
 
   // Legal
