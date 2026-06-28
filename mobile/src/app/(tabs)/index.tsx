@@ -383,7 +383,7 @@ function VenueCard({
   onPress: () => void
 }) {
   const c = useColors()
-  const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - spacing.sm) / 2
+  const venueCardWidth = (SCREEN_WIDTH - 20 * 2 - 12) / 2
   const photoUrl = venue.primary_image_url ?? CATEGORY_PHOTOS[venue.category]
   const hasWait = venue.current_wait_minutes > 0 || venue.reports_count > 0
 
@@ -435,32 +435,26 @@ function VenueCard({
 }
 
 const cardStyles = StyleSheet.create({
+  // Standard card: rounded-2xl (22px), shadow-sm, 1px border
   card: {
-    borderRadius: 16,
+    borderRadius: 22,
     borderWidth: 1,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   imageWrapper: { position: 'relative', height: 130 },
   image: { width: '100%', height: 130 },
-  placeholder: {
-    alignItems: 'center', justifyContent: 'center', gap: 4,
-  },
-  placeholderEmoji: { fontSize: 28 },
-  placeholderName: {
-    fontSize: 10, color: 'rgba(255,255,255,0.6)',
-    textAlign: 'center', paddingHorizontal: 8,
-    fontFamily: fontFamily.body,
-  },
   heart: {
     position: 'absolute', top: 8, right: 8,
     width: 30, height: 30, borderRadius: 15,
     backgroundColor: 'rgba(255,255,255,0.92)',
     alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.10, shadowRadius: 3, elevation: 2,
   },
   firstReportBanner: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -468,13 +462,16 @@ const cardStyles = StyleSheet.create({
     paddingVertical: 5, paddingHorizontal: 8, alignItems: 'center',
   },
   firstReportText: { color: '#fff', fontSize: 9, fontWeight: '700', letterSpacing: 0.2 },
-  body: { padding: 10 },
-  name: { fontSize: 13, fontWeight: '700', marginBottom: 5, fontFamily: fontFamily.display },
+  // p-4 (16px) body padding per spec
+  body: { padding: 16 },
+  // title: text-sm (14px), weight 600
+  name: { fontSize: 14, fontWeight: '600', marginBottom: 6, fontFamily: fontFamily.display },
   metaRow: {
     flexDirection: 'row', alignItems: 'center',
     justifyContent: 'space-between', gap: 4,
   },
-  meta: { fontSize: 10, flex: 1, fontFamily: fontFamily.body },
+  // meta: text-[11px], weight 400, muted
+  meta: { fontSize: 11, flex: 1, fontFamily: fontFamily.body },
   noWaitPill: {
     borderRadius: 9999, paddingHorizontal: 9, paddingVertical: 4,
     backgroundColor: '#EDE6DD',
@@ -738,7 +735,7 @@ const styles = StyleSheet.create({
 
   grid: {
     flexDirection: 'row', flexWrap: 'wrap',
-    paddingHorizontal: spacing.md, gap: spacing.sm,
+    paddingHorizontal: 20, gap: 12,
   },
   showMoreBtn: {
     marginHorizontal: spacing.md, marginTop: 16, marginBottom: 4,
