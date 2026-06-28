@@ -46,12 +46,12 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
       ]}
       onPress={onPress}
     >
-      {/* Card with gradient wash: primary 6% top-left → card → primary-glow 5% bottom-right */}
+      {/* Card with very subtle gradient wash — barely perceptible sheen */}
       <LinearGradient
         colors={[
-          'rgba(248,104,43,0.06)',   // primary 6% tint
-          c.card,                    // neutral mid
-          'rgba(242,147,77,0.05)',   // primary-glow 5% tint
+          'rgba(248,104,43,0.03)',   // primary 3% tint top-left
+          c.card,                    // card color mid
+          'rgba(242,147,77,0.02)',   // primary-glow 2% tint bottom-right
         ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -128,7 +128,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 
 const prem = StyleSheet.create({
   // outer pressable wrapper
-  wrap: { marginHorizontal: 20, marginTop: 12, marginBottom: 4 },
+  wrap: { marginHorizontal: 20, marginTop: 12, marginBottom: 16 },
 
   // rounded-3xl (26), p-4 (16), border, shadow-md, overflow hidden
   card: {
@@ -150,8 +150,8 @@ const prem = StyleSheet.create({
     top: -48, right: -48,
     width: 144, height: 144,
     borderRadius: 9999,
-    backgroundColor: 'rgba(248,104,43,0.35)',
-    opacity: 0.6,
+    backgroundColor: 'rgba(248,104,43,0.12)',
+    opacity: 0.5,
   },
 
   // header row — flex items-start gap-3
