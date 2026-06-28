@@ -19,54 +19,73 @@ const CARD_WIDTH = SCREEN_WIDTH - spacing.md * 2
 const PAGE_SIZE = 20
 
 // ─── Premium Pass teaser ──────────────────────────────────────────────────────
+// Layout mirrors screenshot: white card, orange circle icon, pill badge,
+// 3-col feature grid with icons, bottom row price + CTA, arrow top-right
+
+const PREMIUM_FEATURES = [
+  { icon: '🕐', label: 'Wait intel'       },
+  { icon: '👥', label: 'Foot traffic'     },
+  { icon: '📊', label: 'Competitor pulse' },
+  { icon: '📅', label: 'Event lift'       },
+  { icon: '🛡️', label: 'Reporter quality' },
+  { icon: '⬇️', label: 'CSV exports'      },
+]
+
 function PremiumTeaser({ onPress }: { onPress: () => void }) {
+  const c = useColors()
   return (
     <Pressable
-      style={({ pressed }) => [premiumStyles.wrap, pressed && { opacity: 0.92 }]}
+      style={({ pressed }) => [premiumStyles.wrap, pressed && { opacity: 0.93 }]}
       onPress={onPress}
     >
-      <View style={premiumStyles.card}>
-        {/* Top row — diamond badge + text */}
-        <View style={premiumStyles.top}>
-          {/* Orange diamond matching app primary */}
-          <View style={premiumStyles.diamondWrap}>
-            <LinearGradient
-              colors={['#F8682B', '#F2934D']}
-              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-              style={premiumStyles.diamond}
-            >
-              <Text style={premiumStyles.diamondIcon}>◆</Text>
-            </LinearGradient>
+      <View style={[premiumStyles.card, { backgroundColor: c.card, borderColor: c.border }]}>
+
+        {/* Row 1 — icon + text + arrow */}
+        <View style={premiumStyles.topRow}>
+          {/* Orange circle with diamond */}
+          <View style={premiumStyles.iconCircle}>
+            <Text style={premiumStyles.iconDiamond}>◆</Text>
           </View>
-          <View style={{ flex: 1, gap: 2 }}>
-            <Text style={premiumStyles.eyebrow}>FOR BUSINESS OWNERS</Text>
-            <Text style={premiumStyles.title}>Turn your line{'\n'}into your edge.</Text>
+
+          {/* Text block */}
+          <View style={{ flex: 1 }}>
+            {/* Pill badge */}
+            <View style={premiumStyles.badge}>
+              <Text style={premiumStyles.badgeText}>PREMIUM · FOR OWNERS</Text>
+            </View>
+            <Text style={[premiumStyles.title, { color: c.foreground }]}>
+              Turn your line into your edge.
+            </Text>
+            <Text style={[premiumStyles.sub, { color: c.mutedForeground }]}>
+              The full analytics suite, built from live SkipTheLine signals.
+            </Text>
           </View>
+
           {/* Arrow */}
-          <View style={premiumStyles.arrowWrap}>
-            <Text style={premiumStyles.arrow}>›</Text>
-          </View>
+          <Text style={[premiumStyles.chevron, { color: c.mutedForeground }]}>›</Text>
         </View>
 
-        {/* Divider */}
-        <View style={premiumStyles.divider} />
-
-        {/* Feature pills — app chip style */}
-        <View style={premiumStyles.pills}>
-          {['Wait Intel', 'Foot Traffic', 'Competitors', 'Event Lift'].map(tag => (
-            <View key={tag} style={premiumStyles.pill}>
-              <Text style={premiumStyles.pillText}>{tag}</Text>
+        {/* Row 2 — 3-col feature pills with icons */}
+        <View style={premiumStyles.featGrid}>
+          {PREMIUM_FEATURES.map(f => (
+            <View key={f.label} style={[premiumStyles.featPill, { borderColor: c.border }]}>
+              <Text style={premiumStyles.featIcon}>{f.icon}</Text>
+              <Text style={[premiumStyles.featLabel, { color: c.foreground }]}>{f.label}</Text>
             </View>
           ))}
         </View>
 
-        {/* CTA row */}
-        <View style={premiumStyles.ctaRow}>
-          <Text style={premiumStyles.ctaDesc}>From $29/mo · Preview with demo data</Text>
+        {/* Row 3 — price left + CTA right */}
+        <View style={premiumStyles.bottomRow}>
+          <Text style={[premiumStyles.price, { color: c.mutedForeground }]}>
+            From <Text style={{ fontWeight: '700', color: c.foreground }}>$29/mo</Text> · No card to preview
+          </Text>
           <View style={premiumStyles.ctaBtn}>
-            <Text style={premiumStyles.ctaBtnText}>Preview suite</Text>
+            <Text style={premiumStyles.ctaText}>Preview suite</Text>
+            <Text style={premiumStyles.ctaArrow}> ›</Text>
           </View>
         </View>
+
       </View>
     </Pressable>
   )
@@ -75,58 +94,54 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 const premiumStyles = StyleSheet.create({
   wrap: { marginHorizontal: spacing.md, marginBottom: 4 },
   card: {
-    borderRadius: 20,
-    backgroundColor: '#1C1A26',
-    padding: 18,
-    gap: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(248,104,43,0.18)',
-    shadowColor: '#F8682B',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+    borderRadius: 20, borderWidth: 1,
+    padding: 16, gap: 14,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06, shadowRadius: 10, elevation: 3,
   },
-  top: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  diamondWrap: { paddingTop: 2 },
-  diamond: {
-    width: 38, height: 38, borderRadius: 10,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  diamondIcon: { fontSize: 16, color: '#FFFFFF' },
-  eyebrow: {
-    fontSize: 9, fontWeight: '700',
-    color: '#F8682B', letterSpacing: 1.2,
-    fontFamily: fontFamily.accent,
-  },
-  title: {
-    fontSize: 16, fontWeight: '800',
-    color: '#FFFFFF', letterSpacing: -0.3,
-    lineHeight: 21, fontFamily: fontFamily.displayBold,
-  },
-  arrowWrap: {
-    width: 28, height: 28, borderRadius: 14,
-    backgroundColor: 'rgba(248,104,43,0.12)',
-    alignItems: 'center', justifyContent: 'center',
-    marginTop: 2,
-  },
-  arrow: { fontSize: 18, color: '#F8682B', lineHeight: 22 },
-  divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.06)' },
-  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  pill: {
-    borderRadius: 9999,
-    paddingHorizontal: 10, paddingVertical: 4,
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.10)',
-  },
-  pillText: { fontSize: 11, color: 'rgba(255,255,255,0.65)', fontFamily: fontFamily.body },
-  ctaRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-  ctaDesc: { fontSize: 11, color: 'rgba(255,255,255,0.40)', fontFamily: fontFamily.body, flex: 1 },
-  ctaBtn: {
-    borderRadius: 9999, paddingHorizontal: 14, paddingVertical: 7,
+
+  // Top row
+  topRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+  iconCircle: {
+    width: 44, height: 44, borderRadius: 22,
     backgroundColor: '#F8682B',
+    alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0, marginTop: 2,
+    shadowColor: '#F8682B', shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35, shadowRadius: 8, elevation: 4,
   },
-  ctaBtnText: { fontSize: 12, fontWeight: '700', color: '#FFFFFF', fontFamily: fontFamily.display },
+  iconDiamond: { fontSize: 18, color: '#FFFFFF' },
+  badge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFF0E8', borderRadius: 999,
+    paddingHorizontal: 8, paddingVertical: 3, marginBottom: 5,
+  },
+  badgeText: { fontSize: 9, fontWeight: '700', color: '#F8682B', letterSpacing: 0.8, fontFamily: fontFamily.accent },
+  title: { fontSize: 15, fontWeight: '800', fontFamily: fontFamily.displayBold, letterSpacing: -0.3, lineHeight: 20, marginBottom: 3 },
+  sub: { fontSize: 12, fontFamily: fontFamily.body, lineHeight: 16 },
+  chevron: { fontSize: 22, lineHeight: 28, paddingTop: 4 },
+
+  // Feature grid — 3 columns
+  featGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  featPill: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    borderWidth: 1, borderRadius: 999,
+    paddingHorizontal: 10, paddingVertical: 5,
+    width: '30%', flexGrow: 1,
+  },
+  featIcon: { fontSize: 12 },
+  featLabel: { fontSize: 11, fontWeight: '500', fontFamily: fontFamily.body },
+
+  // Bottom row
+  bottomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  price: { fontSize: 12, fontFamily: fontFamily.body },
+  ctaBtn: {
+    flexDirection: 'row', alignItems: 'center',
+    backgroundColor: '#F8682B', borderRadius: 999,
+    paddingHorizontal: 14, paddingVertical: 8,
+  },
+  ctaText: { fontSize: 12, fontWeight: '700', color: '#FFFFFF', fontFamily: fontFamily.display },
+  ctaArrow: { fontSize: 14, color: '#FFFFFF', fontWeight: '700' },
 })
 
 const featuredExperiences = [
@@ -342,17 +357,17 @@ const chipStyles = StyleSheet.create({
   label: { fontSize: 13, fontWeight: '600' },
 })
 
-// Category emoji for photo placeholder
-const CATEGORY_EMOJI: Record<string, string> = {
-  restaurants:   '🍽️',
-  barbershops:   '💈',
-  grocery:       '🛒',
-  government:    '🏛️',
-  healthcare:    '⚕️',
-  retail:        '🛍️',
-  entertainment: '🎬',
-  landmarks:     '📍',
-  attractions:   '🎡',
+// Category stock photos — same images as welcome screen slides
+const CATEGORY_PHOTOS: Record<string, string> = {
+  restaurants:   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80&auto=format&fit=crop',
+  barbershops:   'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80&auto=format&fit=crop',
+  grocery:       'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80&auto=format&fit=crop',
+  government:    'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80&auto=format&fit=crop',
+  healthcare:    'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80&auto=format&fit=crop',
+  retail:        'https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=800&q=80&auto=format&fit=crop',
+  entertainment: 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=800&q=80&auto=format&fit=crop',
+  landmarks:     'https://images.unsplash.com/photo-1473625247510-8ceb1760943f?w=800&q=80&auto=format&fit=crop',
+  attractions:   'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80&auto=format&fit=crop',
 }
 
 // ─── Venue card ───────────────────────────────────────────────────────────────
@@ -368,10 +383,9 @@ function VenueCard({
   onPress: () => void
 }) {
   const c = useColors()
-  const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - spacing.sm) / 2
-  const hasPhoto = !!venue.primary_image_url
+  const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - 12) / 2
+  const photoUrl = venue.primary_image_url ?? CATEGORY_PHOTOS[venue.category]
   const hasWait = venue.current_wait_minutes > 0 || venue.reports_count > 0
-  const emoji = CATEGORY_EMOJI[venue.category] ?? '📍'
 
   return (
     <Pressable
@@ -380,18 +394,12 @@ function VenueCard({
       testID={`venue-card-${venue.id}`}
     >
       <View style={cardStyles.imageWrapper}>
-        {hasPhoto ? (
-          <Image source={{ uri: venue.primary_image_url! }} style={cardStyles.image} resizeMode="cover" />
-        ) : (
-          // Photo placeholder — gradient with category emoji
-          <LinearGradient
-            colors={['#2A2A2A', '#1A1A1A']}
-            style={[cardStyles.image, cardStyles.placeholder]}
-          >
-            <Text style={cardStyles.placeholderEmoji}>{emoji}</Text>
-            <Text style={cardStyles.placeholderName} numberOfLines={2}>{venue.name}</Text>
-          </LinearGradient>
-        )}
+        {/* Always show an image — real photo or category stock photo */}
+        <Image
+          source={{ uri: photoUrl ?? '' }}
+          style={cardStyles.image}
+          resizeMode="cover"
+        />
         <Pressable style={cardStyles.heart} onPress={onToggleLike} testID={`heart-${venue.id}`}>
           <Heart
             size={13}
@@ -437,8 +445,8 @@ const cardStyles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  imageWrapper: { position: 'relative', height: 130 },
-  image: { width: '100%', height: 130 },
+  imageWrapper: { position: 'relative', height: 160 },
+  image: { width: '100%', height: 160 },
   placeholder: {
     alignItems: 'center', justifyContent: 'center', gap: 4,
   },
@@ -730,7 +738,7 @@ const styles = StyleSheet.create({
 
   grid: {
     flexDirection: 'row', flexWrap: 'wrap',
-    paddingHorizontal: spacing.md, gap: spacing.sm,
+    paddingHorizontal: spacing.md, gap: 12,
   },
   showMoreBtn: {
     marginHorizontal: spacing.md, marginTop: 16, marginBottom: 4,
