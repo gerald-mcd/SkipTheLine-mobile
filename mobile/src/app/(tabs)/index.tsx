@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
 
   searchRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    paddingHorizontal: spacing.md, marginBottom: 20,
+    paddingHorizontal: spacing.md, marginBottom: 20, marginTop: 16,
   },
   searchBar: {
     flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8,
