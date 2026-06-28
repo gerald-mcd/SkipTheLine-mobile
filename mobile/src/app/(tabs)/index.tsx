@@ -127,16 +127,15 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 }
 
 const prem = StyleSheet.create({
-  // outer pressable wrapper — explicit width matching CARD_WIDTH
   wrap: {
-    width: SCREEN_WIDTH - spacing.md * 2,
+    width: CARD_WIDTH,
     alignSelf: 'center',
+    marginHorizontal: 0,
     marginTop: 12,
     marginBottom: 4,
   },
-
-  // rounded-3xl (26), p-4 (16), border, shadow-md, overflow hidden
   card: {
+    width: '100%',
     borderRadius: 26,
     borderWidth: 1,
     padding: 16,
