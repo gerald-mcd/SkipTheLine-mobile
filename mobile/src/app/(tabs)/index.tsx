@@ -49,13 +49,13 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
       {/* Card with very subtle gradient wash — barely perceptible sheen */}
       <LinearGradient
         colors={[
-          'rgba(248,104,43,0.03)',   // primary 3% tint top-left
-          c.card,                    // card color mid
-          'rgba(242,147,77,0.02)',   // primary-glow 2% tint bottom-right
+          'rgba(248,104,43,0.03)',
+          c.card,
+          'rgba(242,147,77,0.02)',
         ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[prem.card, { borderColor: c.border }]}
+        style={[prem.card, { width: CARD_WIDTH, borderColor: c.border }]}
       >
         {/* Glow blob — top-right, blur-2xl, primary 35% opacity 0.6 */}
         <View style={prem.glowBlob} pointerEvents="none" />
@@ -128,10 +128,11 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 
 const prem = StyleSheet.create({
   wrap: {
-    flex: 1,
+    marginHorizontal: spacing.md,
+    marginTop: 12,
+    marginBottom: 4,
   },
   card: {
-    width: '100%',
     borderRadius: 26,
     borderWidth: 1,
     padding: 16,
@@ -671,9 +672,7 @@ export default function HomeScreen() {
         <FeaturedCarousel onViewPress={() => router.push('/(tabs)/discover')} />
 
         {/* Premium Pass teaser */}
-        <View style={{ paddingHorizontal: spacing.md, marginTop: 12, marginBottom: 4 }}>
-          <PremiumTeaser onPress={() => router.push('/premium' as any)} />
-        </View>
+        <PremiumTeaser onPress={() => router.push('/premium' as any)} />
 
         {/* Search */}
         <View style={styles.searchRow}>
