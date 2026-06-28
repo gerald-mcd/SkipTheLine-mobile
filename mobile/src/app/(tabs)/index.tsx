@@ -127,8 +127,8 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 }
 
 const prem = StyleSheet.create({
-  // outer pressable wrapper
-  wrap: { marginHorizontal: 20, marginTop: 12, marginBottom: 16 },
+  // outer pressable wrapper — matches featured carousel horizontal margins
+  wrap: { marginHorizontal: spacing.md, marginTop: 12, marginBottom: 4 },
 
   // rounded-3xl (26), p-4 (16), border, shadow-md, overflow hidden
   card: {
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
 
   searchRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    paddingHorizontal: spacing.md, marginBottom: 20, marginTop: 16,
+    paddingHorizontal: spacing.md, marginBottom: 20, marginTop: 20,
   },
   searchBar: {
     flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8,
