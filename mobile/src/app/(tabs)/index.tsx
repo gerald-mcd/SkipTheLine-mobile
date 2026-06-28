@@ -127,8 +127,12 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 }
 
 const prem = StyleSheet.create({
-  // outer pressable wrapper — matches featured carousel horizontal margins
-  wrap: { marginHorizontal: 15, marginTop: 12, marginBottom: 4 },
+  // outer pressable wrapper
+  wrap: {
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 15,
+  },
 
   // rounded-3xl (26), p-4 (16), border, shadow-md, overflow hidden
   card: {
