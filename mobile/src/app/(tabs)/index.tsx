@@ -383,7 +383,7 @@ function VenueCard({
   onPress: () => void
 }) {
   const c = useColors()
-  const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - 12) / 2
+  const venueCardWidth = (SCREEN_WIDTH - spacing.md * 2 - spacing.sm) / 2
   const photoUrl = venue.primary_image_url ?? CATEGORY_PHOTOS[venue.category]
   const hasWait = venue.current_wait_minutes > 0 || venue.reports_count > 0
 
@@ -445,8 +445,8 @@ const cardStyles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  imageWrapper: { position: 'relative', height: 160 },
-  image: { width: '100%', height: 160 },
+  imageWrapper: { position: 'relative', height: 130 },
+  image: { width: '100%', height: 130 },
   placeholder: {
     alignItems: 'center', justifyContent: 'center', gap: 4,
   },
@@ -738,7 +738,7 @@ const styles = StyleSheet.create({
 
   grid: {
     flexDirection: 'row', flexWrap: 'wrap',
-    paddingHorizontal: spacing.md, gap: 12,
+    paddingHorizontal: spacing.md, gap: spacing.sm,
   },
   showMoreBtn: {
     marginHorizontal: spacing.md, marginTop: 16, marginBottom: 4,
