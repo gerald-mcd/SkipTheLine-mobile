@@ -5,7 +5,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Moon, Sun, Settings, Search, Heart, SlidersHorizontal, X } from 'lucide-react-native'
+import { Moon, Sun, Settings, Search, Heart, SlidersHorizontal, X, Clock, Users, BarChart2, Calendar, Shield, Download, ChevronRight } from 'lucide-react-native'
 import { spacing, fontFamily } from '@/constants/theme'
 import { categories, type Category, getSeverity, getWaitColor } from '@/lib/mock-data'
 import { OnboardingTour } from '@/components/OnboardingTour'
@@ -19,129 +19,217 @@ const CARD_WIDTH = SCREEN_WIDTH - spacing.md * 2
 const PAGE_SIZE = 20
 
 // ─── Premium Pass teaser ──────────────────────────────────────────────────────
-// Layout mirrors screenshot: white card, orange circle icon, pill badge,
-// 3-col feature grid with icons, bottom row price + CTA, arrow top-right
 
-const PREMIUM_FEATURES = [
-  { icon: '🕐', label: 'Wait intel'       },
-  { icon: '👥', label: 'Foot traffic'     },
-  { icon: '📊', label: 'Competitor pulse' },
-  { icon: '📅', label: 'Event lift'       },
-  { icon: '🛡️', label: 'Reporter quality' },
-  { icon: '⬇️', label: 'CSV exports'      },
+const P_FEATURES = [
+  { icon: <Clock size={12} color="#F8682B" strokeWidth={2} />,      label: 'Wait intel'       },
+  { icon: <Users size={12} color="#F8682B" strokeWidth={2} />,      label: 'Foot traffic'     },
+  { icon: <BarChart2 size={12} color="#F8682B" strokeWidth={2} />,  label: 'Competitor pulse' },
+  { icon: <Calendar size={12} color="#F8682B" strokeWidth={2} />,   label: 'Event lift'       },
+  { icon: <Shield size={12} color="#F8682B" strokeWidth={2} />,     label: 'Reporter quality' },
+  { icon: <Download size={12} color="#F8682B" strokeWidth={2} />,   label: 'CSV exports'      },
 ]
 
 function PremiumTeaser({ onPress }: { onPress: () => void }) {
   const c = useColors()
+
+  // Token mixes per spec
+  // primary 6% over card  → rgba(248,104,43,0.06) blended on white
+  const primaryTint6  = 'rgba(248,104,43,0.06)'
+  const primaryTint12 = 'rgba(248,104,43,0.12)'
+  const primaryTint14 = 'rgba(248,104,43,0.14)'
+
   return (
     <Pressable
-      style={({ pressed }) => [premiumStyles.wrap, pressed && { opacity: 0.93 }]}
+      style={({ pressed }) => [
+        prem.wrap,
+        pressed && { transform: [{ scale: 0.99 }, { translateY: 1 }] },
+      ]}
       onPress={onPress}
     >
-      <View style={[premiumStyles.card, { backgroundColor: c.card, borderColor: c.border }]}>
+      {/* Card with gradient wash: primary 6% top-left → card → primary-glow 5% bottom-right */}
+      <LinearGradient
+        colors={[
+          'rgba(248,104,43,0.06)',   // primary 6% tint
+          c.card,                    // neutral mid
+          'rgba(242,147,77,0.05)',   // primary-glow 5% tint
+        ]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[prem.card, { borderColor: c.border }]}
+      >
+        {/* Glow blob — top-right, blur-2xl, primary 35% opacity 0.6 */}
+        <View style={prem.glowBlob} pointerEvents="none" />
 
-        {/* Row 1 — icon + text + arrow */}
-        <View style={premiumStyles.topRow}>
-          {/* Orange circle with diamond */}
-          <View style={premiumStyles.iconCircle}>
-            <Text style={premiumStyles.iconDiamond}>◆</Text>
-          </View>
+        {/* Header row — flex items-start gap-3 */}
+        <View style={prem.headerRow}>
 
-          {/* Text block */}
-          <View style={{ flex: 1 }}>
+          {/* Icon tile — h-11 w-11 (44), rounded-2xl (22), gradient-aurora, shadow-glow */}
+          <LinearGradient
+            colors={['#F8682B', '#F2934D']}
+            start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+            style={prem.iconTile}
+          >
+            <Text style={prem.iconGlyph}>◆</Text>
+          </LinearGradient>
+
+          {/* Text stack */}
+          <View style={{ flex: 1, minWidth: 0 }}>
             {/* Pill badge */}
-            <View style={premiumStyles.badge}>
-              <Text style={premiumStyles.badgeText}>PREMIUM · FOR OWNERS</Text>
+            <View style={[prem.badge, { backgroundColor: primaryTint14 }]}>
+              <Text style={prem.badgeText}>PREMIUM · FOR OWNERS</Text>
             </View>
-            <Text style={[premiumStyles.title, { color: c.foreground }]}>
+            {/* Title */}
+            <Text style={[prem.title, { color: c.foreground }]}>
               Turn your line into your edge.
             </Text>
-            <Text style={[premiumStyles.sub, { color: c.mutedForeground }]}>
+            {/* Subtitle */}
+            <Text style={[prem.sub, { color: c.mutedForeground }]}>
               The full analytics suite, built from live SkipTheLine signals.
             </Text>
           </View>
 
-          {/* Arrow */}
-          <Text style={[premiumStyles.chevron, { color: c.mutedForeground }]}>›</Text>
+          {/* Chevron */}
+          <ChevronRight size={16} color={c.mutedForeground} strokeWidth={2} style={{ marginTop: 4 }} />
         </View>
 
-        {/* Row 2 — 3-col feature pills with icons */}
-        <View style={premiumStyles.featGrid}>
-          {PREMIUM_FEATURES.map(f => (
-            <View key={f.label} style={[premiumStyles.featPill, { borderColor: c.border }]}>
-              <Text style={premiumStyles.featIcon}>{f.icon}</Text>
-              <Text style={[premiumStyles.featLabel, { color: c.foreground }]}>{f.label}</Text>
+        {/* Feature grid — 3 cols, gap 6 */}
+        <View style={prem.featGrid}>
+          {P_FEATURES.map(f => (
+            <View
+              key={f.label}
+              style={[prem.featChip, {
+                backgroundColor: primaryTint6,
+                borderColor: primaryTint12,
+              }]}
+            >
+              {f.icon}
+              <Text style={[prem.featLabel, { color: c.foreground }]} numberOfLines={1}>
+                {f.label}
+              </Text>
             </View>
           ))}
         </View>
 
-        {/* Row 3 — price left + CTA right */}
-        <View style={premiumStyles.bottomRow}>
-          <Text style={[premiumStyles.price, { color: c.mutedForeground }]}>
-            From <Text style={{ fontWeight: '700', color: c.foreground }}>$29/mo</Text> · No card to preview
+        {/* Footer row */}
+        <View style={prem.footer}>
+          <Text style={[prem.footerCaption, { color: c.mutedForeground }]}>
+            From <Text style={{ fontWeight: '700', color: c.foreground }}>$29/mo</Text>
+            {' '}· No card to preview
           </Text>
-          <View style={premiumStyles.ctaBtn}>
-            <Text style={premiumStyles.ctaText}>Preview suite</Text>
-            <Text style={premiumStyles.ctaArrow}> ›</Text>
+          <View style={prem.ctaBtn}>
+            <Text style={prem.ctaText}>Preview suite</Text>
           </View>
         </View>
 
-      </View>
+      </LinearGradient>
     </Pressable>
   )
 }
 
-const premiumStyles = StyleSheet.create({
-  wrap: { marginHorizontal: spacing.md, marginBottom: 4 },
+const prem = StyleSheet.create({
+  // outer pressable wrapper
+  wrap: { marginHorizontal: 20, marginTop: 12, marginBottom: 4 },
+
+  // rounded-3xl (26), p-4 (16), border, shadow-md, overflow hidden
   card: {
-    borderRadius: 20, borderWidth: 1,
-    padding: 16, gap: 14,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06, shadowRadius: 10, elevation: 3,
+    borderRadius: 26,
+    borderWidth: 1,
+    padding: 16,
+    gap: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 3,
   },
 
-  // Top row
-  topRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  iconCircle: {
+  // glow blob — top:-48 right:-48, 144×144, blur simulated via shadow + low opacity
+  glowBlob: {
+    position: 'absolute',
+    top: -48, right: -48,
+    width: 144, height: 144,
+    borderRadius: 9999,
+    backgroundColor: 'rgba(248,104,43,0.35)',
+    opacity: 0.6,
+  },
+
+  // header row — flex items-start gap-3
+  headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+
+  // icon tile — h-11 w-11 (44), rounded-2xl (22), shadow-glow
+  iconTile: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#F8682B',
     alignItems: 'center', justifyContent: 'center',
     flexShrink: 0, marginTop: 2,
-    shadowColor: '#F8682B', shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.35, shadowRadius: 8, elevation: 4,
+    shadowColor: '#F8682B',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.40,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  iconDiamond: { fontSize: 18, color: '#FFFFFF' },
+  iconGlyph: { fontSize: 20, color: '#FFFFFF' },
+
+  // badge — px-1.5 py-0.5, rounded-full, text-[9px] bold uppercase tracking
   badge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#FFF0E8', borderRadius: 999,
-    paddingHorizontal: 8, paddingVertical: 3, marginBottom: 5,
+    borderRadius: 9999,
+    paddingHorizontal: 6, paddingVertical: 2,
+    marginBottom: 4,
   },
-  badgeText: { fontSize: 9, fontWeight: '700', color: '#F8682B', letterSpacing: 0.8, fontFamily: fontFamily.accent },
-  title: { fontSize: 15, fontWeight: '800', fontFamily: fontFamily.displayBold, letterSpacing: -0.3, lineHeight: 20, marginBottom: 3 },
-  sub: { fontSize: 12, fontFamily: fontFamily.body, lineHeight: 16 },
-  chevron: { fontSize: 22, lineHeight: 28, paddingTop: 4 },
-
-  // Feature grid — 3 columns
-  featGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  featPill: {
-    flexDirection: 'row', alignItems: 'center', gap: 5,
-    borderWidth: 1, borderRadius: 999,
-    paddingHorizontal: 10, paddingVertical: 5,
-    width: '30%', flexGrow: 1,
+  badgeText: {
+    fontSize: 9, fontWeight: '700', color: '#F8682B',
+    letterSpacing: 1.4, textTransform: 'uppercase',
+    fontFamily: fontFamily.accent,
   },
-  featIcon: { fontSize: 12 },
-  featLabel: { fontSize: 11, fontWeight: '500', fontFamily: fontFamily.body },
 
-  // Bottom row
-  bottomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  price: { fontSize: 12, fontFamily: fontFamily.body },
+  // title — text-[15px] bold leading-tight tracking-tight mt-1
+  title: {
+    fontSize: 15, fontWeight: '700',
+    lineHeight: 20, letterSpacing: -0.3,
+    fontFamily: fontFamily.display,
+    marginTop: 2, marginBottom: 2,
+  },
+
+  // subtitle — text-[11.5px] muted mt-0.5
+  sub: {
+    fontSize: 11.5,
+    lineHeight: 16,
+    fontFamily: fontFamily.body,
+  },
+
+  // feature grid — 3 cols, gap 6
+  featGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+
+  // chip — rounded-xl (14), px-1.5 py-1.5 (6), flex items-center gap-1, border
+  featChip: {
+    flexDirection: 'row', alignItems: 'center', gap: 4,
+    borderRadius: 14, borderWidth: 1,
+    paddingHorizontal: 8, paddingVertical: 6,
+    flexBasis: '30%', flexGrow: 1,
+  },
+  featLabel: {
+    fontSize: 10, fontWeight: '600',
+    fontFamily: fontFamily.bodySemiBold,
+    flexShrink: 1,
+  },
+
+  // footer row
+  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  footerCaption: { fontSize: 10.5, fontFamily: fontFamily.body, flex: 1 },
+
+  // CTA pill — rounded-full, px-3 py-1.5, shadow-glow
   ctaBtn: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#F8682B', borderRadius: 999,
-    paddingHorizontal: 14, paddingVertical: 8,
+    borderRadius: 9999,
+    paddingHorizontal: 12, paddingVertical: 6,
+    backgroundColor: '#F8682B',
+    shadowColor: '#F8682B',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.40,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  ctaText: { fontSize: 12, fontWeight: '700', color: '#FFFFFF', fontFamily: fontFamily.display },
-  ctaArrow: { fontSize: 14, color: '#FFFFFF', fontWeight: '700' },
+  ctaText: { fontSize: 11, fontWeight: '700', color: '#FFFFFF', fontFamily: fontFamily.display },
 })
 
 const featuredExperiences = [
