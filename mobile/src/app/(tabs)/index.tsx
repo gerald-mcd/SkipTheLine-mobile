@@ -128,11 +128,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 
 const prem = StyleSheet.create({
   wrap: {
-    width: CARD_WIDTH,
-    alignSelf: 'center',
-    marginHorizontal: 0,
-    marginTop: 12,
-    marginBottom: 4,
+    flex: 1,
   },
   card: {
     width: '100%',
@@ -675,7 +671,9 @@ export default function HomeScreen() {
         <FeaturedCarousel onViewPress={() => router.push('/(tabs)/discover')} />
 
         {/* Premium Pass teaser */}
-        <PremiumTeaser onPress={() => router.push('/premium' as any)} />
+        <View style={{ paddingHorizontal: spacing.md, marginTop: 12, marginBottom: 4 }}>
+          <PremiumTeaser onPress={() => router.push('/premium' as any)} />
+        </View>
 
         {/* Search */}
         <View style={styles.searchRow}>
