@@ -1,0 +1,2211 @@
+<!doctype html><html><head><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"capabilities":{"artifact":"artifact.0kpk9vgi.js","assets":"assets.8Gk803W0.js","comments":"comments.vw5vQdGA.js","db":"db.h-3sndFg.js","downloads":"downloads.C3GSvEDP.js","embed":"embed.CxGAyc-v.js","mcp":"mcp.Bvma3qD7.js","network":"network.B5UA9Su4.js","notifications":"notifications.ssU4jy7G.js","permissions":"permissions.BNySkLV5.js","room":"room.VSdFwTE9.js","sample":"sample.BW2Uysoh.js","self":"artifact.0kpk9vgi.js","user":"user.BpKav-Rf.js"},"transforms":"_transforms.DSB5x63f.js","comments":"_comments.C6E0cR5g.js","translate":"_translate.5HCW4BJh.js"}</script><script>(function(){"use strict";var te=["light","dark","system"],re=/^[A-Za-z0-9_-]{1,64}$/,$=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ne=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function oe(e){const t=e.toLowerCase();return t.startsWith("data-")||t.startsWith("aria-")||ne.has(t)}var Be="http://www.w3.org/1999/xhtml",se="http://www.w3.org/2000/svg",ae=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),ie=new Set(["script","style"]);function ce(e){const t=e.localName.toLowerCase();return e.namespaceURI==="http://www.w3.org/1999/xhtml"?!ae.has(t):e.namespaceURI===se?!ie.has(t):!1}function M(e,t){return e===t||(e===160||e===32)&&(t===160||t===32)}function le(e,t){const r=e.length,n=t.length;let s=0;for(;s<r&&s<n&&M(e.charCodeAt(s),t.charCodeAt(s));)s++;let o=0;for(;o<r-s&&o<n-s&&M(e.charCodeAt(r-1-o),t.charCodeAt(n-1-o));)o++;return{p:s,s:o}}function ue(e,t){const r=e.firstChild;if(e.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){e.textContent=t;return}const n=r.data,s=n.length,o=t.length,{p:i,s:c}=le(n,t);i===s&&c===0&&s===o||r.replaceData(i,s-i-c,t.slice(i,o-c));const h=r.data,p=e.ownerDocument.getSelection?.()??null,w=p!==null&&p.rangeCount>0&&(p.anchorNode===r||p.focusNode===r)?{anchor:p.anchorNode,anchorOffset:p.anchorOffset,focus:p.focusNode,focusOffset:p.focusOffset}:null;let m=-1,g=-1;for(let f=0;f<h.length&&f<t.length;f++){const v=h.charCodeAt(f),b=t.charCodeAt(f);v!==b&&M(v,b)&&(m<0&&(m=f),g=f)}const a=m>=0;if(a&&r.replaceData(m,g-m+1,t.slice(m,g+1)),a&&w!==null&&w.anchor!==null&&w.focus!==null)try{p.setBaseAndExtent(w.anchor,w.anchorOffset,w.focus,w.focusOffset)}catch{}}var fe=new Set(["html","head","body","frameset"]);function de(e){return e.namespaceURI==="http://www.w3.org/1999/xhtml"&&fe.has(e.localName)}function pe(e){if(e===null||typeof e!="object")return!1;const t=e;if(typeof t.target!="string"||!re.test(t.target)||t.text!==void 0&&typeof t.text!="string")return!1;if(t.attrsSet!==void 0){if(t.attrsSet===null||typeof t.attrsSet!="object")return!1;for(const[r,n]of Object.entries(t.attrsSet))if(!$.test(r)||typeof n!="string")return!1}if(t.attrsRemoved!==void 0){if(!Array.isArray(t.attrsRemoved))return!1;for(const r of t.attrsRemoved)if(typeof r!="string"||!$.test(r))return!1}return!0}function me(e,t){if(e===null||typeof e!="object")return!1;const{seq:r,elements:n}=e;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let s=0;s<n.length;s++)if(!t(n[s]))return!1;return!0}function he(e){return e===null||typeof e!="object"?!1:me(e.__frame_patch,pe)}function _e(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function ve(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function ye(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const r=t.theme;return typeof r=="string"&&te.includes(r)}var A=/^[\w.-]+\.js$/;function we(e,t,r){return r?"inert":typeof t=="string"&&A.test(t)?e?[t]:"inert":e?"inert":"framed"}function ge(){return{post(e,t){parent.postMessage(e,t)},on(e){const t=r=>{r.source===parent&&e(r.data,r.origin,r.isTrusted)};return addEventListener("message",t),()=>removeEventListener("message",t)}}}function be(){return{post:()=>{},on:()=>()=>{}}}var j="__frame_scroll",Ee=150,Ae=310,Se=160,Te=3e4;function ke(){let e=0,t=!1,r=!1,n=!1,s=0,o=null;const i=l=>{try{sessionStorage.setItem(j,JSON.stringify({y:l}))}catch{}},c=()=>{if(clearTimeout(e),o===null)return;const l=o;o=null,i(l)},h=()=>{if(t){t=!1;return}r=!0,o=scrollY,clearTimeout(e),e=setTimeout(c,Ee)};try{addEventListener("scroll",h,{passive:!0}),addEventListener("pagehide",c)}catch{}const p=()=>{let l;try{l=sessionStorage.getItem(j)}catch{return null}if(l===null)return null;let _;try{_=JSON.parse(l)}catch{_=null}const d=_?.y;if(!(typeof d=="number"&&Number.isFinite(d)&&d>=0)){try{sessionStorage.removeItem(j)}catch{}return null}return d};let w=!1;const m=l=>{try{const _=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),s=l,n=!0,clearTimeout(e),o=null,i(l);const d=scrollY;d!==_&&(t=!0),d!==l&&!w&&(w=!0,addEventListener("load",()=>{try{if(scrollY===d){const T=p();m(T!==null?T:s)}}catch{}},{once:!0}))}catch{}},g=()=>{try{return!!location.hash}catch{return!0}};let a=!1;const f=()=>{try{if(a||innerWidth>Ae||innerHeight>Se)return;a=!0;const l=Date.now(),_=()=>{try{removeEventListener("resize",_)}catch{}if(Date.now()-l>Te||r||g())return;const d=p();m(d!==null?d:s)};addEventListener("resize",_)}catch{}};let v=!1,b=!1;return{restore(){if(v||(v=!0,g()))return;const l=p();l!==null&&(m(l),f())},promoted(){if(b||(b=!0,g()))return;const l=p();l!==null?(m(l),f()):n&&m(s)}}}function Re(e,t,r,n){let s=null;try{s=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:h=>h})??null}catch{}const o=window.Worker,i=o?.prototype,c=Object.freeze({Worker:o,workerOn:i?.addEventListener,workerPost:i?.postMessage,workerTerminate:i?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,policy:s,origins:t});r(e).then(h=>h?.bootTopLevel?h.bootTopLevel(c,n):n.settle()).catch(()=>n.settle())}var De="modulepreload",Ie=function(e){return"/"+e},Ue={},Le=function(t,r,n){let s=Promise.resolve();function o(i){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=i,window.dispatchEvent(c),!c.defaultPrevented)throw i}return s.then(i=>{for(const c of i||[])c.status==="rejected"&&o(c.reason);return t().catch(o)})},Oe=window===top,q=Object.getOwnPropertyDescriptor(window,"claude"),k=we(Oe,window.__FRAME_PREAMBLE?.topLevel,q?.writable===!1),N=typeof k=="object"&&k[0],y=N?be():ge();(function(){const e=Object.defineProperty,t=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let s=0;s<r.length;s++){const o=r[s];try{e(t,o,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[o]}catch{}try{e(t,o,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[o]=="function"&&n++}if(n&&k==="framed")try{y.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Pe=1e4,Y=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function X(e){for(const t of Y)if(t.endsWith(":*"))try{const r=new URL(e);if(`${r.protocol}//${r.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var R=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),B=window.__FRAME_PREAMBLE?.transforms,D=window.__FRAME_PREAMBLE?.comments,I=window.__FRAME_PREAMBLE?.translate;function S(e){return Le(()=>import("/_runtime/"+e),void 0)}function G(e,t){return{contract:e.contract,changes:new Set(e.changes??[]),flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:new Map,shellOrigin:t,mount:x,hooks:O,pipe:()=>({wrap:(r,n)=>(...s)=>{try{return n(...s)}catch(o){return Promise.reject(o)}}})}}var L=null,E=null;function V(e,t,r){try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var U=!1,O={editBefore:null,edit:null};function Ce(e,t,r=!1){const n=[];let s;if(r)try{O.editBefore?.(e)}catch{}for(const o of e.elements){const i=document.querySelector(`[data-id="${o.target}"]`);if(!i){s=o.target;break}if([...Object.keys(o.attrsSet??{}),...o.attrsRemoved??[]].some(c=>!oe(c))){s=o.target;break}if(o.text!==void 0&&(!ce(i)||de(i))){s=o.target;break}for(const[c,h]of Object.entries(o.attrsSet??{}))if(!J(i,c)){try{i.setAttribute(c,h)}catch{}Z(i,c,h)}for(const c of o.attrsRemoved??[])J(i,c)||(i.removeAttribute(c),Z(i,c,null));typeof o.text=="string"&&ue(i,o.text),n.push(o.target)}if(r)try{O.edit?.(e.seq,n,s)}catch{}if(s!==void 0){y.post({__frame_patch_miss:{seq:e.seq}},t);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:e.seq,targets:n}}))}catch{}}function Z(e,t,r){if(!(e instanceof HTMLInputElement))return;const n=t.toLowerCase();n==="checked"?e.checked=r!==null:n==="value"&&e.type!=="file"&&(e.value=r??"")}function J(e,t){const r=t.toLowerCase(),n=e;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${e.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,U=!0):U&&(delete t.dataset.theme,t.style.colorScheme="",U=!1)}var P=new Map;function Me(){let e;const t={u:new Promise(r=>{e=r}),r:r=>{t.done=!0,e(r)},done:!1,nulled:!1};return t}function F(){for(const e of P.values())e.done||(e.nulled=!0,e.r(null))}var je=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),x=(e,t)=>{const r=P.get(e);if(!r||r.done){r?.nulled&&E&&y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:e}},E);return}const n=typeof t=="function"?Object.setPrototypeOf(t,je):Object.assign(Object.create(null),t);typeof n.then=="function"&&delete n.then,r.r(Object.freeze(n))};function ee(){const e=q?.value??{};V(window,"claude",e);for(const t of Object.keys(R)){if(e[t]!==void 0){V(e,t,e[t]);continue}P.set(t,Me())}if(e.use===void 0){const t=r=>{if(typeof r!="string"||!Object.hasOwn(R,r))return Promise.resolve(null);const n=P.get(r);return n?n.u:Promise.resolve(e[r]??null)};try{Object.defineProperty(e,"use",{value:t,writable:!0,configurable:!0,enumerable:!1})}catch{}}}if(k==="framed"){const e=B&&A.test(B)?S(B).catch(()=>{}):Promise.resolve(void 0),t=a=>{if(a.type==="auxclick"&&a.button!==1)return;const f=a.target,v=f&&f.closest?f.closest("a[href],area[href]"):null;if(!v)return;const b=v.getAttribute("href");if(!b)return;let l;try{l=new URL(b,document.baseURI)}catch{return}if((l.protocol==="http:"||l.protocol==="https:")&&l.origin!==location.origin){a.preventDefault();const _=(v.getAttribute("target")??"").toLowerCase(),d=a.type==="auxclick"||a.metaKey||a.ctrlKey||a.shiftKey||a.altKey||!["","_self","_top","_parent"].includes(_);y.post({__frame_nav:!0,url:l.href,newTab:d},"*")}};addEventListener("click",t,!0),addEventListener("auxclick",t,!0);const r={},n=a=>{a.isTrusted&&(r.pointer=!0)},s=a=>{a.isTrusted&&(r.click=!0)};addEventListener("pointermove",n,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0}),e.then(a=>{a?.wireNav&&(a.wireNav(),removeEventListener("click",t,!0),removeEventListener("auxclick",t,!0),removeEventListener("pointermove",n,!0),removeEventListener("click",s,!0),a.wireEngagement?.(r))});let o=null;try{o=ke()}catch{}ee();let i=null,c=null,h=0;const p=y.on((a,f)=>{X(f)&&_e(a)&&(i=a.__frame_init,E=f,p(),clearTimeout(h),c?.())});y.post({__frame_connect:!0},"*");const w=new Promise(a=>{c=a,h=setTimeout(()=>{p(),a()},Pe)}),m=document.readyState==="loading"?new Promise(a=>document.addEventListener("DOMContentLoaded",()=>a(),{once:!0})):Promise.resolve();m.then(()=>{try{o?.restore()}catch{}});const g={cb:null};y.on((a,f)=>{if(X(f)&&ve(a)){try{o?.promoted()}catch{}g.cb?.()}}),w.then(async()=>{if(!i||!E){F();return}Q(i.theme);const a=E;let f=!1,v=!1;y.on((u,z,C)=>{if(z!==a)return;ye(u)&&Q(u.__frame_theme.theme),he(u)&&Ce(u.__frame_patch,a,C);const H=u?.__fc_mode;H&&typeof H=="object"&&!f&&D&&A.test(D)&&(f=!0,S(D).then(K=>K.install?.(a,H.on===!0)).catch(()=>{}));const W=u?.__ft_cmd;W&&typeof W=="object"&&!v&&I&&A.test(I)&&(v=!0,S(I).then(K=>K.install?.(a,W)).catch(()=>{}))});const b=Object.keys(i.capabilities??{}).filter(u=>Object.hasOwn(R,u)).map(u=>[u,R[u]]).filter(u=>typeof u[1]=="string"&&A.test(u[1])),l=await Promise.allSettled(b.map(([,u])=>S(u))),_=await e,d=E;if(_?.buildBoot||y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),_?.buildBoot)try{L=_.buildBoot(i,_.TRANSFORMS??{},{shellOrigin:d,mount:x,hooks:O},u=>y.post({__frame_cap_telemetry:u},d))}catch{y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),L=G(i,d)}else L=G(i,d);const T=u=>y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:u}},d),Ne=L;l.forEach((u,z)=>{const C=b[z][0];if(u.status!=="fulfilled"){T(C);return}try{u.value?.install?.(Ne)}catch{T(C)}}),F(),await m,y.post({__frame_ready:!0},E),e.then(u=>u?.installSizeReporter?.(d,g))})}else N&&(ee(),Re(N,Y,S,{settle:F,mount:x}))})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>SkipTheLine Patent Docs</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #FCFBF9;
+    --surface: #FFFFFF;
+    --border: #EDE6DD;
+    --border-strong: #D4C9BC;
+    --fg: #33384A;
+    --muted: #857565;
+    --primary: #F8682B;
+    --primary-bg: rgba(248,104,43,0.08);
+    --primary-border: rgba(248,104,43,0.22);
+    --success: #5DB18A;
+    --success-bg: rgba(93,177,138,0.08);
+    --success-border: rgba(93,177,138,0.25);
+    --warn: #C47D2A;
+    --warn-bg: rgba(196,125,42,0.08);
+    --step-bg: #F8682B;
+    --step-fg: #fff;
+    --tag-bg: #EDE6DD;
+    --tag-fg: #857565;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0D0D0D;
+      --surface: #191916;
+      --border: rgba(238,147,86,0.14);
+      --border-strong: rgba(238,147,86,0.28);
+      --fg: #F0EDE8;
+      --muted: #9E8E7E;
+      --primary: #EE9356;
+      --primary-bg: rgba(238,147,86,0.10);
+      --primary-border: rgba(238,147,86,0.28);
+      --success: #6DC49B;
+      --success-bg: rgba(109,196,155,0.10);
+      --success-border: rgba(109,196,155,0.25);
+      --warn: #D4943E;
+      --warn-bg: rgba(212,148,62,0.10);
+      --step-bg: #EE9356;
+      --step-fg: #0D0D0D;
+      --tag-bg: rgba(255,255,255,0.07);
+      --tag-fg: #9E8E7E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0D0D0D;
+    --surface: #191916;
+    --border: rgba(238,147,86,0.14);
+    --border-strong: rgba(238,147,86,0.28);
+    --fg: #F0EDE8;
+    --muted: #9E8E7E;
+    --primary: #EE9356;
+    --primary-bg: rgba(238,147,86,0.10);
+    --primary-border: rgba(238,147,86,0.28);
+    --success: #6DC49B;
+    --success-bg: rgba(109,196,155,0.10);
+    --success-border: rgba(109,196,155,0.25);
+    --warn: #D4943E;
+    --warn-bg: rgba(212,148,62,0.10);
+    --step-bg: #EE9356;
+    --step-fg: #0D0D0D;
+    --tag-bg: rgba(255,255,255,0.07);
+    --tag-fg: #9E8E7E;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    width: 34px; height: 34px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(248,104,43,0.32);
+  }
+  .logo svg { display: block; }
+  .header-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.2px;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: auto;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+  }
+  .tab-btn {
+    padding: 14px 20px 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--fg); }
+  .tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+
+  /* ── DOCUMENT BODY ── */
+  .doc-panel { display: none; }
+  .doc-panel.active { display: block; }
+
+  .doc-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  /* ── DOC HEADER ── */
+  .doc-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.6px;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .doc-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 32px; font-weight: 800;
+    letter-spacing: -0.8px; line-height: 1.15;
+    color: var(--fg);
+    text-wrap: balance;
+    margin-bottom: 12px;
+  }
+  .doc-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 600px;
+    margin-bottom: 36px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 52px; }
+  .section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.6px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+  }
+  .section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px; font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--fg);
+    margin-bottom: 12px;
+    text-wrap: balance;
+  }
+  .section-body {
+    color: var(--fg);
+    line-height: 1.75;
+    font-size: 15px;
+  }
+  .section-body p { margin-bottom: 14px; }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* ── PROCESS STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 0 18px;
+    position: relative;
+  }
+  .step:not(:last-child) .step-rail::after {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 36px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .step-rail {
+    position: relative;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--step-bg);
+    color: var(--step-fg);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .step-num.phase {
+    border-radius: 10px;
+    width: 36px; height: 36px;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+  }
+  .step-content {
+    padding: 4px 0 32px;
+  }
+  .step-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .step-body {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .step-body p { margin-bottom: 8px; }
+  .step-body p:last-child { margin-bottom: 0; }
+  .step-body ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 5px;
+    margin-top: 8px;
+  }
+  .step-body ul li {
+    padding-left: 14px;
+    position: relative;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .step-body ul li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--primary);
+    font-size: 11px;
+    top: 3px;
+  }
+  .step-body strong { color: var(--fg); font-weight: 600; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--primary);
+    background: var(--primary-bg);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--fg);
+    line-height: 1.6;
+  }
+  .callout.success {
+    border-left-color: var(--success);
+    background: var(--success-bg);
+  }
+  .callout.warn {
+    border-left-color: var(--warn);
+    background: var(--warn-bg);
+    color: var(--warn);
+  }
+  .callout strong { color: inherit; font-weight: 600; }
+
+  /* ── TIER TABLE ── */
+  .tier-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 16px 0;
+    overflow-x: auto;
+    display: block;
+  }
+  .tier-table th {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border-strong);
+    white-space: nowrap;
+  }
+  .tier-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .tier-table tr:last-child td { border-bottom: none; }
+  .tier-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 2px 8px; border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .tier-1 { background: var(--warn-bg); color: var(--warn); }
+  .tier-2 { background: var(--primary-bg); color: var(--primary); }
+  .tier-3 { background: rgba(200,50,50,0.09); color: #C03030; }
+  .decay-bar {
+    display: flex; align-items: center; gap: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .decay-fill {
+    height: 6px; border-radius: 3px;
+    background: var(--primary);
+    opacity: 0.7;
+    transition: width 0.2s;
+  }
+
+  /* ── DIFFERENTIATOR CARDS ── */
+  .diff-list { display: flex; flex-direction: column; gap: 20px; }
+  .diff-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .diff-header {
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .diff-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--primary-bg);
+    border: 1px solid var(--primary-border);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .diff-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; font-weight: 700;
+    color: var(--fg);
+    line-height: 1.3;
+  }
+  .diff-body {
+    padding: 16px 20px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .diff-body p { margin-bottom: 10px; }
+  .diff-body p:last-child { margin-bottom: 0; }
+  .diff-body strong { color: var(--fg); font-weight: 600; }
+  .diff-questions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 12px;
+  }
+  .diff-q {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+  }
+
+  /* ── FEATURE INVENTORY ── */
+  .inv-section { margin-bottom: 36px; }
+  .inv-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.4px;
+    color: var(--primary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .inv-grid {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .inv-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .inv-item:last-child { border-bottom: none; }
+  .inv-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--fg);
+    line-height: 1.5;
+  }
+  .inv-desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .inv-desc strong { color: var(--fg); font-weight: 600; }
+  .status-tag {
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    padding: 1px 6px; border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .status-built { background: var(--success-bg); color: var(--success); }
+  .status-designed { background: var(--primary-bg); color: var(--primary); }
+
+  @media (max-width: 640px) {
+    .doc-wrap { padding: 32px 20px 80px; }
+    .site-header { padding: 14px 20px; }
+    .tabs { padding: 0 20px; overflow-x: auto; }
+    .tab-btn { padding: 12px 14px 11px; font-size: 11px; }
+    .inv-item { grid-template-columns: 1fr; gap: 4px; }
+    .doc-title { font-size: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+    </svg>
+  </div>
+  <div class="header-title">SkipTheLine — Patent Documentation</div>
+  <div class="header-sub">Attorney Package · August 2026</div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" role="tab" onclick="showTab('process', this)">Step 1 — The Process</button>
+  <button class="tab-btn" role="tab" onclick="showTab('diff', this)">Step 2 — Differentiators</button>
+  <button class="tab-btn" role="tab" onclick="showTab('inventory', this)">Step 3 — Feature Inventory</button>
+  <button class="tab-btn" role="tab" onclick="showTab('flowchart', this)">System Flow Diagram</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     DOCUMENT 1 — THE COMPLETE PROCESS
+═══════════════════════════════════════════════ -->
+<div id="tab-process" class="doc-panel active">
+<div class="doc-wrap">
+
+  <div class="doc-kicker">Step 1 of 3 · Define the Invention</div>
+  <h1 class="doc-title">This Is Exactly How SkipTheLine Works</h1>
+  <p class="doc-desc">A complete end-to-end description of the SkipTheLine system — from the moment a venue enters the database to the moment a user receives a real-time wait time alert. This document describes the entire process, including how data enters the system, how it is validated and processed, how results are delivered, and how the system generates ongoing analytical value. The attorney — not us — will determine which elements are novel and potentially protectable.</p>
+
+  <!-- PHASE A -->
+  <div class="section">
+    <div class="section-label">Phase A</div>
+    <h2 class="section-title">System Population — Before Users Arrive</h2>
+    <p class="section-body">Before any user opens the app, the system must already contain venues. SkipTheLine uses a three-source pipeline to populate and maintain the venue database.</p>
+
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Automated Google Places Grid Import</div>
+          <div class="step-body">
+            <p>Before launch, a script queries the Google Places API by venue category and city using a geographic grid pattern. Every relevant business in Miami is automatically imported into the Supabase database. This produces approximately 3,500 venue records before any user ever opens the app.</p>
+            <ul>
+              <li>Data captured per venue: name, address, GPS coordinates, category, hours, phone number, photo references</li>
+              <li>Google Popular Times data used as baseline wait time fallback while crowdsourced data accumulates</li>
+              <li>One API key from Google Cloud covers Maps SDK, Places API, and Maps API</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Business Self-Registration (B2B Layer)</div>
+          <div class="step-body">
+            <p>A business owner finds their venue listing (already in the database from the Google import) and claims it. They verify ownership, manage their profile, and optionally manage their own queue data. This is the paying SMB subscriber product — subscribers gain access to the business analytics dashboard.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">User-Submitted Venues</div>
+          <div class="step-body">
+            <p>If a user tries to report a wait at a business not in the database, they can submit it directly through the app (name, category, address). The submission enters a review queue and goes live after approval. This catches new businesses, pop-ups, and anything missed by the Google Places import.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE B -->
+  <div class="section">
+    <div class="section-label">Phase B</div>
+    <h2 class="section-title">User Onboarding & Account Creation</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Authentication</div>
+          <div class="step-body">
+            <p>User opens the app and reaches the Welcome screen. Authentication options: email/OTP, Apple Sign-In (OAuth), or Google Sign-In (OAuth). A Supabase session is created upon successful authentication.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">User Profile Initialization</div>
+          <div class="step-body">
+            <p>A user record is created in the database with initial values. The trust score system initializes at this point:</p>
+            <ul>
+              <li><strong>trust_score: 100</strong> — every new user starts with full trust</li>
+              <li><strong>report_count: 0</strong> — lifetime report counter</li>
+              <li><strong>flagged_count: 0</strong> — number of reports flagged as suspicious</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Permissions</div>
+          <div class="step-body">
+            <p>Location permission requested: "While Using" only (Phase 1 — not "Always Allow"). Push notification permission requested. Graceful degradation — the app functions fully without location; ambient features require it. Expo push token captured and stored on the user record for targeted notifications.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE C -->
+  <div class="section">
+    <div class="section-label">Phase C</div>
+    <h2 class="section-title">Venue Discovery & Browsing</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Venue List (Home Tab)</div>
+          <div class="step-body">
+            <p>The Home screen queries the Supabase database for launched venues. The user can filter by category (12 categories: Restaurants, Barbershops, DMVs, Attractions, Landmarks, Nightclubs, Dayclubs, Healthcare, Retail, Grocery, Entertainment, Government), search by name, or filter to only venues with short waits (≤15 minutes). Results paginate at 20 per page. Each venue card displays the current wait time color-coded by severity.</p>
+            <div class="callout"><strong>Wait time color language:</strong> Gray = no data · Green = 0–10 min · Orange = 11–25 min · Red = 26–45 min · Dark red = 45+ min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Map View (Discover Tab)</div>
+          <div class="step-body">
+            <p>The Map tab displays venues as geographically positioned pins on an interactive map. Each pin is color-coded by current wait time using the same color language as the list view. Venues with reports less than 5 minutes old display a pulsing ring animation on their pin — a live data signal visible to users at a glance. A bottom sheet slides up to display a sorted venue list (ordered by number of live reporters).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Venue Detail</div>
+          <div class="step-body">
+            <p>Tapping any venue opens the Venue Detail screen, which displays:</p>
+            <ul>
+              <li>Current wait time (large, color-coded by severity) with a severity label: SHORT / MODERATE / LONG LINE</li>
+              <li>Sparkline chart showing wait trend over time</li>
+              <li>Average (typical) wait time from historical data</li>
+              <li>Number of reports and last updated time</li>
+              <li>Hours of operation (tappable, expands to full week)</li>
+              <li>Recent reports: reporter name (or "Someone nearby"), report type, time elapsed, wait minutes</li>
+              <li>Photo carousel, vibe tags, reviews with rating breakdown</li>
+              <li>Directions button (deep-links to OS default maps app), Website button, Report Wait button</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE D -->
+  <div class="section">
+    <div class="section-label">Phase D</div>
+    <h2 class="section-title">Wait Time Report Submission</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Report Initiation</div>
+          <div class="step-body">
+            <p>The user taps the Report FAB (floating action button at the center of the tab bar) or the "Report Wait" button from a Venue Detail screen. If arriving from Venue Detail, the venue is pre-selected via route parameter. Otherwise, the user selects a venue through the Venue Picker (searchable by name and category).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Report Type Selection</div>
+          <div class="step-body">
+            <p>The user selects the type of wait being reported. This is a distinct, structured data field — not a free-text note:</p>
+            <ul>
+              <li><strong>Walk-in</strong> — general queue, no reservation</li>
+              <li><strong>Reservation</strong> — wait despite holding a reservation</li>
+              <li><strong>VIP</strong> — VIP entry queue at nightclubs, events</li>
+              <li><strong>Guest list</strong> — guest list entry queue</li>
+            </ul>
+            <p>These distinctions are critical: a 45-minute walk-in wait and a 0-minute reservation wait at the same venue are different data points that cannot be averaged together meaningfully.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Wait Time Entry</div>
+          <div class="step-body">
+            <p>User selects from preset options (No wait, 5 min, 15 min, 30 min, 45 min, 60 min) or enters an exact number (0–180 minutes). An optional note can be added (140 character maximum with counter). A points preview card shows the expected SkipPoints reward for a valid submission.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Report Record Created</div>
+          <div class="step-body">
+            <p>On submission, a report row is written to the database containing:</p>
+            <ul>
+              <li>venue_id, user_id, wait_minutes, report_type, optional note</li>
+              <li>timestamp (server-side)</li>
+              <li>user GPS coordinates at time of submission</li>
+              <li>anomaly_score (set to null, computed in next phase)</li>
+              <li>location_verified (set to null, computed in next phase)</li>
+              <li>flagged: false (default)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE E -->
+  <div class="section">
+    <div class="section-label">Phase E</div>
+    <h2 class="section-title">Report Validation & Anomaly Detection</h2>
+    <p class="section-body">Immediately upon report insertion, a Supabase Edge Function is triggered. This is the fraud and quality control layer — every single report goes through this process before it can affect the displayed wait time.</p>
+
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Trust Score Pre-Weighting</div>
+          <div class="step-body">
+            <p>Before any detection signals are evaluated, the submitting user's <strong>trust_score</strong> is retrieved. Reports from users with degraded trust scores are pre-weighted down before the anomaly check runs. A new user with trust_score 100 gets full weight; a user with trust_score 40 gets 40% weight as a starting point.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Six Detection Signals Evaluated</div>
+          <div class="step-body">
+            <ul>
+              <li><strong>Statistical outlier</strong> — report deviates more than 2× from the median of recent reports at the same venue</li>
+              <li><strong>Velocity abuse</strong> — same user submitted 3 or more reports at the same venue within 30 minutes</li>
+              <li><strong>Location mismatch</strong> — submitted GPS coordinates do not place the user within the expected proximity of the venue</li>
+              <li><strong>New account spam</strong> — account is less than 24 hours old and is submitting high-volume reports</li>
+              <li><strong>Pattern anomaly</strong> — user historically always reports extreme values (always 0 minutes or always 90+ minutes) across many different venues</li>
+              <li><strong>Coordinated attack</strong> — multiple accounts sharing the same IP address or device fingerprint are reporting the same outlier value at the same venue</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Anomaly Score Computed</div>
+          <div class="step-body">
+            <p>The Edge Function computes an <strong>anomaly_score</strong> of 0–100 for the report. 0 = clean. 100 = highly likely fraudulent. This score is stored on the report row and is the primary input to the response tier decision. The <strong>location_verified</strong> boolean is also set based on the GPS proximity check.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Response Tier Applied</div>
+          <div class="step-body">
+            <table class="tier-table">
+              <thead>
+                <tr>
+                  <th>Tier</th>
+                  <th>Trigger</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="tier-label tier-1">Tier 1 · Soft Flag</span></td>
+                  <td>Mildly elevated anomaly score</td>
+                  <td>Report included in calculation at reduced weight. SkipPoints awarded at reduced rate.</td>
+                </tr>
+                <tr>
+                  <td><span class="tier-label tier-2">Tier 2 · Hard Flag</span></td>
+                  <td>High anomaly score</td>
+                  <td>Report excluded from calculation entirely. <code>flagged = true</code> on report row. SkipPoints award frozen for this submission.</td>
+                </tr>
+                <tr>
+                  <td><span class="tier-label tier-3">Tier 3 · Ban</span></td>
+                  <td>Repeat offender pattern</td>
+                  <td>Account suspended from reporting. Flagged for manual review. User's trust_score degraded.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">5</div></div>
+        <div class="step-content">
+          <div class="step-title">Trust Score Updated</div>
+          <div class="step-body">
+            <p>If the report is clean (Tier 0): SkipPoints awarded, report_count incremented, trust_score maintained. If flagged: flagged_count incremented, trust_score degraded proportionally. A user's trust_score degrades over time with bad reports, meaning their future reports are pre-weighted down before the anomaly check even runs — a compounding quality signal.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE F -->
+  <div class="section">
+    <div class="section-label">Phase F</div>
+    <h2 class="section-title">Wait Time Calculation</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Report Aggregation</div>
+          <div class="step-body">
+            <p>The wait time engine aggregates all non-flagged reports for the venue. Only reports with <code>flagged = false</code> and <code>anomaly_score</code> below the threshold are eligible for inclusion.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Time-Decay Weighting</div>
+          <div class="step-body">
+            <p>Every eligible report is weighted based on how old it is at calculation time. Newer reports carry more weight; older reports decay toward zero and are eventually expired:</p>
+            <table class="tier-table">
+              <thead>
+                <tr><th>Time Since Report</th><th>Weight Applied</th><th>Visualization</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0–10 minutes</td><td>100%</td><td><div class="decay-bar"><div class="decay-fill" style="width:100px"></div></div></td></tr>
+                <tr><td>20 minutes</td><td>70%</td><td><div class="decay-bar"><div class="decay-fill" style="width:70px"></div></div></td></tr>
+                <tr><td>30 minutes</td><td>40%</td><td><div class="decay-bar"><div class="decay-fill" style="width:40px"></div></div></td></tr>
+                <tr><td>45 minutes</td><td>15%</td><td><div class="decay-bar"><div class="decay-fill" style="width:15px"></div></div></td></tr>
+                <tr><td>45+ minutes</td><td>Expired</td><td><div class="decay-bar"><div class="decay-fill" style="width:0px; opacity:0.2"></div><span style="font-size:12px;color:var(--muted)">removed</span></div></td></tr>
+              </tbody>
+            </table>
+            <p>This ensures the displayed wait time reflects current conditions, not stale historical data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Event Context Applied</div>
+          <div class="step-body">
+            <p>If an active event is attached to the venue (e.g., "Art Basel week," "Heat game night"), the venue's <strong>crowd_multiplier_estimate</strong> is factored into the wait time prediction. A venue during Art Basel with a multiplier of 2.5× behaves differently in the model than the same venue on a normal Tuesday. The event badge is also surfaced on the map pin and venue card so users understand why the wait is elevated.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Result Published</div>
+          <div class="step-body">
+            <p>The weighted average is computed and the <strong>current_wait_minutes</strong> field on the venue record is updated. If the new wait is 30% lower than the previous value, or crosses a psychological threshold (e.g., 45 min → 20 min), a wait_drop_event record is created to trigger alerts.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE G -->
+  <div class="section">
+    <div class="section-label">Phase G</div>
+    <h2 class="section-title">Information Delivery to Users</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Real-Time Update (In-App)</div>
+          <div class="step-body">
+            <p>Supabase Realtime pushes the updated wait_minutes to all app instances currently viewing that venue. Venue cards, detail screens, and map pins update instantly without requiring a manual refresh. The rate limiter is set to 10 events per second.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Wait Drop Proximity Alert (Push Notification)</div>
+          <div class="step-body">
+            <p>When a wait_drop_event is created, the system evaluates whether to fire a push notification. Three conditions must all be true:</p>
+            <ul>
+              <li>User is within 0.3 miles (walking) or 1.5 miles (driving) of the venue</li>
+              <li>Wait dropped more than 30% OR crossed a psychological threshold (e.g., 45 min → 20 min)</li>
+              <li>User showed prior interest — viewed the venue in the last 4 hours, favorited it, or previously reported there</li>
+            </ul>
+            <p>If conditions are met, the push notification delivers pure value: venue name, old wait → new wait, and distance. No question asked. One optional action: "Open in Maps."</p>
+            <div class="callout">Delivery mechanism: silent push notification wakes the app for 30 seconds; app checks current location in that window; if user is still in range, the visible notification fires; if out of range, it discards silently.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Arrival Nudge (Ambient Reporting Trigger)</div>
+          <div class="step-body">
+            <p>When a user is physically near a venue, the system proactively prompts them to report. Trigger conditions:</p>
+            <ul>
+              <li>User GPS within 80 meters of venue</li>
+              <li>Dwell time exceeds 3 minutes (eliminates walk-bys)</li>
+              <li>First detection at this venue today (prevents repeat prompting)</li>
+            </ul>
+            <p>To reduce false positives, the system uses intent correlation — multiple signals are combined before the nudge fires:</p>
+            <ul>
+              <li>Dwell > 8 min alone → nudge fires</li>
+              <li>Dwell > 3 min + user viewed venue in app today → nudge fires</li>
+              <li>Dwell > 3 min + user navigated to venue → nudge fires</li>
+              <li>Dwell &lt; 3 min + no prior signals → no nudge</li>
+            </ul>
+            <p>The nudge UI offers one-tap reporting: No wait / ~15m / ~30m / 45m+ / Don't know yet. If "Don't know yet" is selected, a follow-up fires at 15–20 minutes of dwell time.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Post-Visit Nudge (Historical Reporting)</div>
+          <div class="step-body">
+            <p>8–12 minutes after a user leaves a venue's proximity zone, a local notification fires prompting a post-visit wait time report. These reports are handled differently from real-time reports: they are labeled as historical, time-decay is applied from the moment of visit (not submission), and they are displayed with an honest timestamp ("Reported 28 min ago — may not reflect right now"). Post-visit reports never display as the current wait time without decay applied.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">5</div></div>
+        <div class="step-content">
+          <div class="step-title">Live Activity Feed (Explore Tab)</div>
+          <div class="step-body">
+            <p>The Explore tab surfaces a real-time activity feed showing recent wait drop events, user reports, and venue updates. Users can filter by type: all activity / wait drops / reports / venues / system. Feed items link directly to venue detail screens.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE H -->
+  <div class="section">
+    <div class="section-label">Phase H</div>
+    <h2 class="section-title">Gamification & User Engagement</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">SkipPoints Award</div>
+          <div class="step-body">
+            <p>Every valid, non-flagged report earns the submitting user SkipPoints. Flagged reports earn zero points. This structurally ties the reward system to data quality — bad actors are not only excluded from the calculation but also receive no reward benefit. Points accumulate on the user record.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Tier Progression & Leaderboard</div>
+          <div class="step-body">
+            <p>Users progress through named tiers as SkipPoints accumulate. Weekly XP is tracked separately from lifetime points. A weekly leaderboard snapshot job ranks users by weekly activity. Top reporters in a geographic area are surfaced to venues — a B2B differentiator where paying venues can offer perks to their top local reporters.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">Badges & Quests</div>
+          <div class="step-body">
+            <p>An Edge Function evaluates badge unlock criteria after every report submission. Badges reward behavioral milestones (first report, reporting streak, reporting at new venue types, etc.). Quests are multi-step challenges with progress bars — completing a quest awards a point bonus. Both badges and quests are designed to encourage diverse, high-quality reporting behavior across multiple venue types and time periods.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Rewards Redemption</div>
+          <div class="step-body">
+            <p>Accumulated SkipPoints can be redeemed for partner rewards (discounts, offers). Points are deducted from the user record and a unique reward code is generated upon redemption.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE I -->
+  <div class="section">
+    <div class="section-label">Phase I</div>
+    <h2 class="section-title">Historical & Analytical Value</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Permanent Report Archive</div>
+          <div class="step-body">
+            <p>Every report is stored permanently with its full metadata: venue_id, user_id, wait_minutes, report_type, timestamp, anomaly_score, location_verified, trust_score at time of submission. This builds a time-series dataset of wait conditions per venue per day, time of day, day of week, and event context.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Historical Pattern Calculation</div>
+          <div class="step-body">
+            <p>The typical_wait_minutes field on each venue is computed from historical report data. Users see this displayed as "Average wait" on the venue detail screen — allowing comparison between the current live wait and the historical norm for that time of day.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">3</div></div>
+        <div class="step-content">
+          <div class="step-title">B2B Analytics Dashboard (SMB Subscribers)</div>
+          <div class="step-body">
+            <p>Paying venue subscribers gain access to a business analytics dashboard built from the same underlying report data. The dashboard surfaces: who is waiting and when, report frequency by time of day and day of week, peak wait periods, conversion analytics (how many users who viewed the venue visited), and comparison to category averages. This is the primary B2B revenue product.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Community Impact Tracking</div>
+          <div class="step-body">
+            <p>The system pre-computes a "people helped" statistic — tracking how many other users received wait information downstream from each reporter's submissions. This is displayed on user profiles to reinforce the community contribution loop.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE J -->
+  <div class="section">
+    <div class="section-label">Phase J · Planned — Sufficiently Developed to Describe</div>
+    <h2 class="section-title">Voice AI Agent</h2>
+    <div class="steps" style="margin-top: 24px;">
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">1</div></div>
+        <div class="step-content">
+          <div class="step-title">Conversational Interface</div>
+          <div class="step-body">
+            <p>A user taps a microphone button and speaks naturally. The voice layer is a full back-and-forth conversation — not a one-shot command. The stack: Vapi (orchestration, turn-taking, interruption handling) → Whisper (speech-to-text) → Claude Sonnet (LLM reasoning over live SkipTheLine data) → ElevenLabs (text-to-speech response).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-rail"><div class="step-num">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Function Calls Against Live Data</div>
+          <div class="step-body">
+            <p>The LLM layer can call structured functions against the SkipTheLine database in real time:</p>
+            <ul>
+              <li><strong>getWaitTime(venueId)</strong> — retrieves current wait for a named venue</li>
+              <li><strong>reportWait(venueId, minutes, reportType)</strong> — submits a wait report by voice, awards SkipPoints automatically</li>
+              <li><strong>setWaitDropAlert(venueId, threshold)</strong> — sets a personalized wait drop alert ("tell me when LIV drops under 20 minutes")</li>
+              <li><strong>addToCalendar(venueId, time)</strong> — adds a venue visit to the user's device calendar via the Expo Calendar API</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE K -->
+  <div class="section">
+    <div class="section-label">Phase K · Planned — Sufficiently Developed to Describe</div>
+    <h2 class="section-title">BLE Beacon Detection (B2B)</h2>
+    <p class="section-body">Paying SMB subscribers receive BLE (Bluetooth Low Energy) beacon hardware ($15–30 per device) installed in their venue. When a user's phone detects the beacon's Bluetooth signal, the app knows the user is physically present — without requiring "Always Allow" location permission (Bluetooth permission only). This triggers the arrival nudge automatically and enables venue-verified visit detection. For the B2B subscriber, beacon data improves the accuracy of their analytics dashboard and generates more reliable wait time data for their venue. Beacon hardware becomes a B2B sales feature: subscribers get smarter, more accurate wait data because physical presence is confirmed by Bluetooth rather than inferred from GPS proximity.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     DOCUMENT 2 — DIFFERENTIATORS
+═══════════════════════════════════════════════ -->
+<div id="tab-diff" class="doc-panel">
+<div class="doc-wrap">
+
+  <div class="doc-kicker">Step 2 of 3 · Identify Differentiators</div>
+  <h1 class="doc-title">What SkipTheLine Does That Others Don't</h1>
+  <p class="doc-desc">For each item below: what it is, how it works, why it is different from existing approaches, and whether it is part of a larger process. These are factual descriptions — not legal conclusions. The attorney will determine which elements are novel and potentially protectable.</p>
+
+  <div class="diff-list">
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">01</div>
+        <div class="diff-title">Anomaly Detection + Per-User Trust Score System</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A two-layer fraud and quality control system. Every report is scored 0–100 for likelihood of being fraudulent (the anomaly score). Separately, every user carries a persistent trust score (0–100) that degrades when their reports are flagged and recovers with reliable reporting.</p>
+        <p><strong>How it works:</strong> Six detection signals are evaluated per report: statistical outlier (>2× median deviation), velocity abuse (3+ reports at same venue within 30 min), location mismatch (GPS doesn't place user near venue), new account spam (&lt;24 hrs old), pattern anomaly (always extreme values across many venues), and coordinated attack (same IP/device fingerprint). The trust score pre-weights the report before these signals are evaluated — a low-trust user's report starts at reduced weight regardless of the individual report's signals.</p>
+        <p><strong>Why it's different:</strong> Google's Popular Times data is algorithmic from historical foot traffic — it has no per-report validation and no per-user trust model. Yelp reviews are moderated by editors and crowd-flagging, not real-time algorithmic scoring. No existing crowdsourced wait time system applies a compounding per-user trust model where a user's history of fraudulent submissions reduces the influence of their future submissions before those submissions are individually evaluated.</p>
+        <p><strong>Part of a larger process:</strong> Yes — this is Phase E of the complete process, and its outputs directly feed Phase F (wait time calculation). A report that scores Tier 2 never affects the displayed wait time. The trust score feeds back into Phase E for every future report from that user.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Part of a larger process</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">02</div>
+        <div class="diff-title">Time-Decay Weighted Wait Calculation</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A mathematical weighting formula applied to all eligible reports when computing the current displayed wait time. Older reports carry less weight; reports expire completely at 45 minutes.</p>
+        <p><strong>How it works:</strong> Each report's contribution to the weighted average is multiplied by its decay factor: 100% if 0–10 min old, 70% at 20 min, 40% at 30 min, 15% at 45 min, 0% (expired) beyond 45 min. The final displayed wait is the weighted mean of all eligible non-flagged reports.</p>
+        <p><strong>Why it's different:</strong> A simple average of reports would cause stale data to persist and drag the displayed wait toward old conditions. Most crowd-sourced systems either use the most recent single report (volatile) or a straight average (lags behind reality). Time-decay weighting is a specific design decision to make the displayed number reflect the current moment, not the recent past.</p>
+        <p><strong>Part of a larger process:</strong> Yes — this is the core of Phase F. Its output is the wait time that users see, that alerts are based on, and that the B2B analytics dashboard reports.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Part of a larger process</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">03</div>
+        <div class="diff-title">Report Type Specificity — Walk-in / Reservation / VIP / Guest List</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A structured, required field on every wait time report capturing the type of entry being reported — not free text, but a defined category from a fixed set.</p>
+        <p><strong>How it works:</strong> At report submission, the user selects one of: Walk-in (general queue), Reservation (wait despite holding a reservation), VIP (VIP entry queue), Guest list (guest list entry). This field is stored on the report record and is used to segment wait time data by entry type.</p>
+        <p><strong>Why it's different:</strong> A 45-minute walk-in wait and a 0-minute reservation wait at the same restaurant are completely different data points — averaging them together produces a meaningless number. No existing public wait time product captures this distinction as structured data. For nightclubs and dayclubs specifically, this distinction (VIP vs. guest list vs. general) is the difference between useful and useless wait information.</p>
+        <p><strong>Part of a larger process:</strong> Yes — report type is captured in Phase D and stored with the report record, enabling downstream filtering and segmentation in Phases F and I.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Why is it different?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">04</div>
+        <div class="diff-title">Gamification Loop Structurally Tied to Data Quality</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A points, tier, badge, and quest system where rewards are structurally withheld from fraudulent or low-quality reports — not just manually moderated after the fact.</p>
+        <p><strong>How it works:</strong> SkipPoints are only awarded when the anomaly detection system clears a report (Tier 0 or 1). A Tier 2 (hard-flagged) report earns zero points — the SkipPoints award is frozen at the Edge Function level before it is issued. A user who submits bad reports not only fails to influence the wait time, they also fail to earn rewards.</p>
+        <p><strong>Why it's different:</strong> Waze awards points for reporting but has no structural linkage between report quality and reward. A bad actor on Waze can earn driving points while submitting false hazard reports. SkipTheLine's architecture makes the reward system and the data quality system the same system — one Edge Function output determines both.</p>
+        <p><strong>Part of a larger process:</strong> Yes — this spans Phases E and H. The anomaly detection output directly gates the gamification output.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">Why is it different?</span>
+          <span class="diff-q">Part of a larger process</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">05</div>
+        <div class="diff-title">Intent-Correlated Arrival Nudge</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A system that detects when a user is physically present at a venue and prompts them to report — but uses multiple intent signals in combination, not proximity alone, to determine whether to fire the prompt.</p>
+        <p><strong>How it works:</strong> Proximity (80m radius) and dwell time (>3 min) are necessary but not sufficient. The system also evaluates: whether the user viewed this venue in the app today, whether they navigated to it via the app, and whether this is their first detection at this venue today. Multiple signal combinations determine whether the nudge fires. This prevents the system from prompting users who merely walked past a venue.</p>
+        <p><strong>Why it's different:</strong> Standard geofence implementations fire on entry/exit only, with no dwell or intent model. The combination of proximity + dwell + prior intent signals as a composite trigger — without requiring "Always Allow" location permission — is a deliberate architectural design.</p>
+        <p><strong>Part of a larger process:</strong> Yes — this is Phase G, Step 3. The nudge's output is a user-initiated report that then flows through Phase D → E → F.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Part of a larger process</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">06</div>
+        <div class="diff-title">Event Tagging with Crowd Multiplier Estimate</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A structured event data model that attaches named events to venues with a quantified crowd impact estimate, which the wait time engine uses to adjust predictions when an event is active.</p>
+        <p><strong>How it works:</strong> Events are records in the database with: venue_id, event_name, event_type, start_time, end_time, and crowd_multiplier_estimate. When an event is active, the wait time engine multiplies expected crowd by the multiplier (e.g., 2.5× for Art Basel). Events can be system-generated (from a public events API), business-submitted (through the SMB dashboard), or user-confirmed (threshold of user event tags creates a confirmed event). The map pin and venue card display an active event badge.</p>
+        <p><strong>Why it's different:</strong> Google Maps shows business hours and ratings but has no model for event-driven wait time adjustment. A static wait time average is meaningless during a major event. The crowd_multiplier_estimate is a quantified prediction input, not just a label.</p>
+        <p><strong>Part of a larger process:</strong> Yes — event context is applied in Phase F, Step 3 of the wait time calculation.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Part of a larger process</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">07</div>
+        <div class="diff-title">B2C + B2B Dual-Loop Data Model</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A system architecture where consumer-submitted wait time data is simultaneously the product (displayed to consumers) and the input (sold as analytics to businesses). The two markets reinforce each other rather than operating as separate systems.</p>
+        <p><strong>How it works:</strong> Every consumer report that passes validation is stored permanently. The same record that contributes to the displayed wait time also contributes to the venue's analytics dashboard in the B2B product. A venue with more consumer reporters generates more accurate analytics for the business subscriber. The B2B subscriber's claimed venue also gains enhanced accuracy because the business can add their own data (hours, event schedule, entry types) that improves the context of consumer reports.</p>
+        <p><strong>Why it's different:</strong> Yelp has reviews (B2C) and business tools (B2B) but they are largely separate systems. Google Maps has user reviews and Google Business Profile but wait times are algorithmic, not the same crowdsourced loop. SkipTheLine's architecture makes B2C data quality improvements directly improve B2B analytics, and B2B subscriber data improvements directly improve B2C displayed accuracy.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Why is it different?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">08</div>
+        <div class="diff-title">Three-Source Venue Seeding Pipeline</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A structured system for populating the venue database through three distinct pathways: automated import, business self-registration, and user submission — with defined data handling for each path.</p>
+        <p><strong>How it works:</strong> (1) Google Places API grid import: automated script queries by category and city before launch, imports ~3,500 venues with structured fields. (2) B2B self-registration: business owner claims their existing database record, verifies ownership, gains SMB subscriber access. (3) User submission: if venue not in database, user submits a form that enters a review queue before going live. Each source has different trust and completeness characteristics; the database schema accommodates all three.</p>
+        <p><strong>Why it's different:</strong> Most local business data products rely on a single source. The three-source design solves the cold-start problem while building a feedback mechanism for ongoing database accuracy.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Part of a larger process</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">09</div>
+        <div class="diff-title">Honest Timestamp & Source Transparency</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A display standard where every wait time shown to users includes: how many people reported it, how long ago, and whether it is a live or post-visit report. Post-visit reports are explicitly labeled and have time-decay applied before display.</p>
+        <p><strong>How it works:</strong> Live reports (user physically present, confirmed by dwell + GPS) display with a green LIVE badge. Post-visit reports (submitted after leaving) display with an honest elapsed time label ("Reported 28 min ago — may not reflect right now") and never display as the current wait time without decay applied. The distinction between live and historical is surface-level in the UI, not hidden in the algorithm.</p>
+        <p><strong>Why it's different:</strong> Google Popular Times shows a historical average with no individual report transparency. Most crowd-sourced systems aggregate and display without revealing the age or confidence level of the underlying data. SkipTheLine's display standard makes data provenance visible to the end user.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">Why is it different?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="diff-header">
+        <div class="diff-num">10</div>
+        <div class="diff-title">BLE Beacon-Confirmed Visit Detection (B2B)</div>
+      </div>
+      <div class="diff-body">
+        <p><strong>What it is:</strong> A B2B hardware+software system where Bluetooth beacons installed at subscribing venues enable phone-side presence detection without requiring "Always Allow" GPS permission.</p>
+        <p><strong>How it works:</strong> Paying SMB subscribers receive beacon hardware. The beacon broadcasts a Bluetooth signal; the user's phone detects it via the Bluetooth permission (less invasive than Always location). Detection triggers the arrival nudge automatically — more reliably and with less user friction than GPS-based detection. The beacon-confirmed visit data flows into the subscriber's analytics dashboard as a verified visit signal.</p>
+        <p><strong>Why it's different:</strong> Traditional geofencing requires Always location permission, which users resist granting. Bluetooth beacon detection achieves the same physical presence confirmation through a separate, less sensitive permission channel. This is a hardware+software integration specifically designed to improve data accuracy at subscribing venues without requiring the most invasive location permission tier.</p>
+        <div class="diff-questions">
+          <span class="diff-q">Is this unique?</span>
+          <span class="diff-q">How does it work?</span>
+          <span class="diff-q">Why is it different?</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     DOCUMENT 3 — FEATURE INVENTORY
+═══════════════════════════════════════════════ -->
+<div id="tab-inventory" class="doc-panel">
+<div class="doc-wrap">
+
+  <div class="doc-kicker">Step 3 of 3 · Document All Features</div>
+  <h1 class="doc-title">Complete Feature & Functionality Inventory</h1>
+  <p class="doc-desc">A comprehensive inventory of every feature, system, and planned functionality in the SkipTheLine product. Organized by the categories the attorney requested: how users interact, how information enters and is processed, how it is presented, how businesses interact, analytics functionality, and planned features sufficiently developed to describe. Features marked <span class="status-tag status-built">Built</span> are implemented in the current codebase. Features marked <span class="status-tag status-designed">Designed</span> are architecturally specified and planned for near-term implementation.</p>
+
+  <!-- HOW USERS INTERACT -->
+  <div class="inv-section">
+    <div class="inv-section-title">How Users Interact with the System</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Authentication<span class="status-tag status-built">Built</span></div><div class="inv-desc">Email/OTP, Apple Sign-In (OAuth), Google Sign-In (OAuth). Supabase session management with AsyncStorage persistence, auto-refresh tokens.</div></div>
+      <div class="inv-item"><div class="inv-name">Welcome Slideshow<span class="status-tag status-built">Built</span></div><div class="inv-desc">9-category rotating photo carousel with Ken Burns scale animation (1.0→1.06 per slide), crossfade transitions every 4.2 seconds, live wait labels per category.</div></div>
+      <div class="inv-item"><div class="inv-name">Onboarding Tour<span class="status-tag status-built">Built</span></div><div class="inv-desc">4-step guided modal on first launch. Arrow indicator points at relevant tab bar icon per step. Skip or complete options.</div></div>
+      <div class="inv-item"><div class="inv-name">Home Screen Browse<span class="status-tag status-built">Built</span></div><div class="inv-desc">Venue list with category filter chips (12 categories), search bar, short wait toggle (≤15 min), 2-column grid, pagination (20/page), favorite toggle with persistence.</div></div>
+      <div class="inv-item"><div class="inv-name">Map Browse<span class="status-tag status-built">Built</span></div><div class="inv-desc">Interactive map with color-coded wait pins, pulsing ring on fresh reports (&lt;5 min), bottom sheet venue list with 3 snap points (peek/half/full), floating search bar and filter button.</div></div>
+      <div class="inv-item"><div class="inv-name">Venue Detail View<span class="status-tag status-built">Built</span></div><div class="inv-desc">Photo carousel, current wait (large, color-coded), sparkline chart, severity label, avg wait, report count, hours (expandable), recent reports list, reviews with rating, vibe tags, directions, website link.</div></div>
+      <div class="inv-item"><div class="inv-name">Wait Time Reporting<span class="status-tag status-built">Built</span></div><div class="inv-desc">Preset options (No wait / 5m / 15m / 30m / 45m / 60m) or exact entry (0–180m). Report type selection (walk-in / reservation / VIP / guest list). Optional note (140 char). Points preview.</div></div>
+      <div class="inv-item"><div class="inv-name">Venue Picker<span class="status-tag status-built">Built</span></div><div class="inv-desc">Searchable modal for selecting a venue when reporting. Search by name or category. Pre-selection via route parameter when arriving from Venue Detail.</div></div>
+      <div class="inv-item"><div class="inv-name">Live Activity Feed<span class="status-tag status-built">Built</span></div><div class="inv-desc">Real-time feed of wait drop events, user reports, venue cards, system events. Filter by type. Links to venue detail. Pulsing live indicator.</div></div>
+      <div class="inv-item"><div class="inv-name">Profile & Stats<span class="status-tag status-built">Built</span></div><div class="inv-desc">SkipPoints total, tier progression, weekly XP, reporting streak, rank, trend direction, people helped count.</div></div>
+      <div class="inv-item"><div class="inv-name">Quests<span class="status-tag status-built">Built</span></div><div class="inv-desc">Multi-step reporting challenges with progress bars, emoji, titles, reward point values. 9 quests defined.</div></div>
+      <div class="inv-item"><div class="inv-name">Badges<span class="status-tag status-built">Built</span></div><div class="inv-desc">Achievement badges with unlock criteria. 17 badges defined. Displayed in grid with locked/unlocked state.</div></div>
+      <div class="inv-item"><div class="inv-name">Rewards Redemption<span class="status-tag status-built">Built</span></div><div class="inv-desc">SkipPoints redeemable for partner rewards. Locked state shown when points insufficient. Redemption deducts points, generates reward code.</div></div>
+      <div class="inv-item"><div class="inv-name">Friend System<span class="status-tag status-built">Built</span></div><div class="inv-desc">Search by name or @handle. Add → Sent (1.2s delay) → Friends state machine. Friend list with avatars. Friends' reports visible in explore feed (Phase 2 full wiring).</div></div>
+      <div class="inv-item"><div class="inv-name">Write Review<span class="status-tag status-built">Built</span></div><div class="inv-desc">Star rating (1–5 tap) + text input modal from Venue Detail. Photo upload via expo-image-picker. Source badge distinguishes Google vs. community reviews.</div></div>
+      <div class="inv-item"><div class="inv-name">Directions Handoff<span class="status-tag status-built">Built</span></div><div class="inv-desc">Deep-links to OS default maps app. maps: URI on iOS (Apple Maps), geo: URI on Android (Google Maps). No in-app navigation built.</div></div>
+      <div class="inv-item"><div class="inv-name">Settings<span class="status-tag status-built">Built</span></div><div class="inv-desc">Notifications toggle, Location toggle, Privacy toggle, Units toggle, App version display, Sign out (clears session, routes to Welcome).</div></div>
+      <div class="inv-item"><div class="inv-name">Favorites<span class="status-tag status-built">Built</span></div><div class="inv-desc">Heart toggle on venue cards. Persisted via toggleFavorite() to Supabase user_venue_favorites table.</div></div>
+      <div class="inv-item"><div class="inv-name">Voice Reporting<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Tap microphone → speak naturally → conversational AI processes request → function calls against live DB → SkipPoints awarded automatically. Vapi + Claude Sonnet + ElevenLabs stack.</div></div>
+    </div>
+  </div>
+
+  <!-- HOW INFORMATION ENTERS -->
+  <div class="inv-section">
+    <div class="inv-section-title">How Information Enters the System</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Google Places Import<span class="status-tag status-built">Built</span></div><div class="inv-desc">Automated grid-query script imports venues by category and city before launch. Structured fields: name, address, GPS coords, category, hours, phone, photo references.</div></div>
+      <div class="inv-item"><div class="inv-name">User Wait Reports<span class="status-tag status-built">Built</span></div><div class="inv-desc">User-submitted wait times with: venue_id, user_id, wait_minutes, report_type, optional note, timestamp, GPS coordinates at submission time.</div></div>
+      <div class="inv-item"><div class="inv-name">Business Self-Registration<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Venue owner claims existing listing, verifies ownership, adds business-side data (hours, event schedule, entry type specifics). Gains SMB subscriber access.</div></div>
+      <div class="inv-item"><div class="inv-name">User-Submitted Venues<span class="status-tag status-built">Built</span></div><div class="inv-desc">Users can add venues not in database (name, category, address). Enters review queue. Approved before going live.</div></div>
+      <div class="inv-item"><div class="inv-name">Event Data<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Events enter via three paths: system-generated (public events API), business-submitted (SMB dashboard), user-confirmed (threshold of user tags). Stored with venue_id, event_name, event_type, start/end time, crowd_multiplier_estimate.</div></div>
+      <div class="inv-item"><div class="inv-name">Voice-Submitted Reports<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">reportWait() function call from the voice AI agent submits a structured report record identical to a tap-submitted report. SkipPoints awarded automatically.</div></div>
+      <div class="inv-item"><div class="inv-name">Beacon Visit Signals<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">BLE beacon at subscribing venue triggers confirmed visit detection via Bluetooth. Stored as verified visit event linked to venue_id and user_id.</div></div>
+    </div>
+  </div>
+
+  <!-- HOW INFORMATION IS PROCESSED -->
+  <div class="inv-section">
+    <div class="inv-section-title">How Information Is Processed</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Anomaly Detection Engine<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Supabase Edge Function triggered on every report insert. Evaluates 6 signals. Computes anomaly_score 0–100. Sets location_verified boolean. Determines response tier (soft flag / hard flag / ban).</div></div>
+      <div class="inv-item"><div class="inv-name">Trust Score System<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Per-user trust_score (0–100, starts at 100). Pre-weights report before anomaly signals evaluated. Degrades with flagged reports. Maintained/recovered with clean reports. Stored on user record.</div></div>
+      <div class="inv-item"><div class="inv-name">Time-Decay Wait Engine<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Aggregates non-flagged reports per venue. Applies decay weights by age (100%/70%/40%/15%/expired). Computes weighted average. Writes to current_wait_minutes on venue record.</div></div>
+      <div class="inv-item"><div class="inv-name">Event Context Application<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">If active event attached to venue, crowd_multiplier_estimate applied to wait time prediction during calculation phase.</div></div>
+      <div class="inv-item"><div class="inv-name">SkipPoints Award Logic<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Edge Function awards points only after anomaly check clears report. Tier 2 (hard flag) freezes award. Points added to user record. Points award is a direct output of the anomaly decision.</div></div>
+      <div class="inv-item"><div class="inv-name">Badge Criteria Check<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Edge Function evaluates badge unlock criteria after every valid report. If criteria met, badge record created for user. 17 badge types defined.</div></div>
+      <div class="inv-item"><div class="inv-name">Historical Pattern Computation<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">typical_wait_minutes computed from historical report archive per venue, segmented by time of day and day of week. Used for "Average wait" display and B2B analytics baseline.</div></div>
+      <div class="inv-item"><div class="inv-name">Leaderboard Snapshot Job<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Weekly batch job ranks users by weekly report activity. Snapshot stored for leaderboard display. Resets weekly XP counter.</div></div>
+      <div class="inv-item"><div class="inv-name">Intent Correlation (Arrival Nudge)<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Composite signal evaluation: GPS proximity (80m) + dwell time (>3 min) + prior venue view + navigation history + first detection today. Multiple conditions required before nudge fires.</div></div>
+      <div class="inv-item"><div class="inv-name">LLM Function Routing (Voice)<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Claude Sonnet processes natural language query, routes to appropriate function call (getWaitTime / reportWait / setWaitDropAlert / addToCalendar), returns spoken response via ElevenLabs TTS.</div></div>
+    </div>
+  </div>
+
+  <!-- HOW INFORMATION IS UPDATED -->
+  <div class="inv-section">
+    <div class="inv-section-title">How Information Is Updated</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Real-Time Push<span class="status-tag status-built">Built</span></div><div class="inv-desc">Supabase Realtime pushes updated current_wait_minutes to all app instances viewing that venue. Rate: 10 events/second. No manual refresh required.</div></div>
+      <div class="inv-item"><div class="inv-name">Wait Drop Detection<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">After each wait calculation, new value compared to previous. If drop >30% or crosses psychological threshold (e.g., 45→20 min), wait_drop_event record created. Triggers alert pipeline.</div></div>
+      <div class="inv-item"><div class="inv-name">Trust Score Decay<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">User trust_score decremented when report is flagged. Incrementally recovers with clean submissions. Updated on user record after every report processed.</div></div>
+      <div class="inv-item"><div class="inv-name">Venue Data Updates<span class="status-tag status-built">Built</span></div><div class="inv-desc">Business owners (SMB subscribers) can update venue profile data, hours, event schedule through the B2B dashboard. Changes propagate to consumer-facing display.</div></div>
+      <div class="inv-item"><div class="inv-name">Event Status<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Events activate/deactivate based on start_time and end_time. Active event badge appears/disappears on venue card and map pin automatically.</div></div>
+    </div>
+  </div>
+
+  <!-- HOW INFORMATION IS PRESENTED -->
+  <div class="inv-section">
+    <div class="inv-section-title">How Information Is Presented</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Color-Coded Wait System<span class="status-tag status-built">Built</span></div><div class="inv-desc">Consistent 5-color language across all surfaces: Gray (no data) / Green 0–10 min / Orange 11–25 min / Red 26–45 min / Dark red 45+. Applied to venue cards, map pins, badges, sparkline.</div></div>
+      <div class="inv-item"><div class="inv-name">Severity Label<span class="status-tag status-built">Built</span></div><div class="inv-desc">Venue Detail displays a text severity label alongside the numeric wait: SHORT LINE / MODERATE / LONG LINE. Reinforces color signal with words.</div></div>
+      <div class="inv-item"><div class="inv-name">Sparkline Chart<span class="status-tag status-built">Built</span></div><div class="inv-desc">SVG trend chart on Venue Detail showing wait time movement over recent period. Visual indicator of whether wait is rising or falling.</div></div>
+      <div class="inv-item"><div class="inv-name">Pulsing Pin<span class="status-tag status-built">Built</span></div><div class="inv-desc">Map pins for venues with a report &lt;5 minutes old display a pulsing ring animation — a live data signal visible at a glance on the map.</div></div>
+      <div class="inv-item"><div class="inv-name">Live vs. Historical Badge<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Reports submitted while user is physically present display with green LIVE badge. Post-visit reports display honest elapsed time label ("Reported 28 min ago — may not reflect right now").</div></div>
+      <div class="inv-item"><div class="inv-name">Report Transparency<span class="status-tag status-built">Built</span></div><div class="inv-desc">Every displayed wait shows reporter count and time elapsed. Recent reports list shows individual reporter, report type, and time. Data provenance visible to user.</div></div>
+      <div class="inv-item"><div class="inv-name">Event Badge<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Active event name displayed as badge on venue card and map pin when event is live. Users see context for elevated wait times without opening venue detail.</div></div>
+      <div class="inv-item"><div class="inv-name">Featured Carousel<span class="status-tag status-built">Built</span></div><div class="inv-desc">3-item auto-advancing carousel on Home screen featuring curated venues. Admin-managed via featured_venues table.</div></div>
+      <div class="inv-item"><div class="inv-name">Wait Drop Notification<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Push notification: venue name, old wait → new wait, distance from user, "Open in Maps" action. Fires only when 3-condition trigger is met. Pure value delivery, no question asked.</div></div>
+      <div class="inv-item"><div class="inv-name">Arrival Nudge UI<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">In-app prompt: venue name + one-tap response options (No wait / ~15m / ~30m / 45m+ / Don't know yet). Maximum one tap to submit. Follow-up at 15–20 min if "Don't know yet" selected.</div></div>
+      <div class="inv-item"><div class="inv-name">Community Impact Stat<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">"People helped" count on user profile, pre-computed from downstream report usage. Shows reporters how their submissions contribute to others.</div></div>
+    </div>
+  </div>
+
+  <!-- HOW BUSINESSES INTERACT -->
+  <div class="inv-section">
+    <div class="inv-section-title">How Businesses Interact with the System</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Venue Claim Flow<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Business owner finds existing venue listing (pre-populated from Google Places import), initiates claim flow, verifies ownership. Converts to SMB subscriber record.</div></div>
+      <div class="inv-item"><div class="inv-name">B2B Analytics Dashboard<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Real-time and historical wait data view: who is waiting and when, report frequency by time/day, peak periods, conversion analytics, comparison to category averages. Built from same consumer report data.</div></div>
+      <div class="inv-item"><div class="inv-name">Event Management<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">SMB subscribers can create and manage events attached to their venue through the dashboard. Events appear on consumer-facing map and venue detail immediately.</div></div>
+      <div class="inv-item"><div class="inv-name">SMB Alerts<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Configurable alerts for venue owners: notify when wait exceeds threshold, when report count spikes, when a wait drop occurs. Alert history stored in smb_alerts table.</div></div>
+      <div class="inv-item"><div class="inv-name">Beacon Hardware Integration<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Subscribers receive BLE beacon hardware. Beacon-confirmed visits appear in dashboard as verified arrival events. Higher-accuracy data for the subscriber compared to GPS-inferred visits.</div></div>
+      <div class="inv-item"><div class="inv-name">Top Reporter Perks<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Businesses can offer perks to top local reporters who report frequently at their venue. Creates direct incentive for high-quality reporters to maintain reporting at specific venues.</div></div>
+      <div class="inv-item"><div class="inv-name">B2B Premium Teaser (Consumer App)<span class="status-tag status-built">Built</span></div><div class="inv-desc">In-app card on Home screen previewing locked analytics data. Directs venue owners to claim their venue and subscribe. B2B conversion surface within the consumer product.</div></div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS / DATA FUNCTIONALITY -->
+  <div class="inv-section">
+    <div class="inv-section-title">Analytics & Data Functionality</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">115-Event Instrumentation<span class="status-tag status-built">Built</span></div><div class="inv-desc">115 analytics events mapped across all screens covering: core funnel (report submit, venue view), engagement (carousel swipe, filter select, favorite toggle), auth method split, notification open rates, badge/quest milestones, friend activity.</div></div>
+      <div class="inv-item"><div class="inv-name">Unified Analytics Wrapper<span class="status-tag status-built">Built</span></div><div class="inv-desc">Single track(event, properties) function. Provider-agnostic — PostHog or Mixpanel swappable by changing one file. Every event in the app calls this function.</div></div>
+      <div class="inv-item"><div class="inv-name">Report Archive<span class="status-tag status-built">Built</span></div><div class="inv-desc">Every report stored permanently with: venue_id, user_id, wait_minutes, report_type, timestamp, anomaly_score, location_verified, trust_score_at_submission. Complete audit trail.</div></div>
+      <div class="inv-item"><div class="inv-name">Venue Interaction Tracking<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Views, direction taps, report taps per venue tracked in venue_interactions table. Primary B2B visibility metric: shows venue owners how many users engaged with their listing.</div></div>
+      <div class="inv-item"><div class="inv-name">Search Query Tracking<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Search terms tracked for category demand signal and B2B visibility. Venues that appear in searches but have no reported waits identified as data gaps.</div></div>
+      <div class="inv-item"><div class="inv-name">Session Tracking<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">user_sessions table records session start/end, session duration, device info. Feeds funnel analysis and fraud signals (device fingerprinting).</div></div>
+      <div class="inv-item"><div class="inv-name">Historical Wait Patterns<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Typical wait by venue by time of day and day of week. Enables "busier than usual" and "quieter than usual" signals. B2B dashboard baseline comparison metric.</div></div>
+      <div class="inv-item"><div class="inv-name">Referral Tracking<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">referral_codes and referral_uses tables. Growth loop analytics: who referred whom, conversion rate of referred users to first reporters.</div></div>
+      <div class="inv-item"><div class="inv-name">Community Impact Snapshots<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Pre-computed "people helped" stat per user from downstream report usage. community_impact_snapshots table. Refreshed on schedule.</div></div>
+    </div>
+  </div>
+
+  <!-- DATABASE / INFRASTRUCTURE -->
+  <div class="inv-section">
+    <div class="inv-section-title">Database Schema (41 Tables)</div>
+    <div class="inv-grid">
+      <div class="inv-item"><div class="inv-name">Core: venues</div><div class="inv-desc">name, address, GPS coords, category_label, vibe, current_wait_minutes, typical_wait_minutes, live_reporters, neighborhood, city, primary_image_url, hours. RLS enabled.</div></div>
+      <div class="inv-item"><div class="inv-name">Core: reports</div><div class="inv-desc">venue_id, user_id, wait_minutes, report_type, note, timestamp, user_coordinates, anomaly_score (0–100), location_verified (bool), flagged (bool). RLS enabled.</div></div>
+      <div class="inv-item"><div class="inv-name">Core: users</div><div class="inv-desc">auth_id, trust_score (0–100, starts 100), report_count, flagged_count, skip_points, tier, push_token, is_test_user. RLS enabled.</div></div>
+      <div class="inv-item"><div class="inv-name">Gamification: badges, quests, rewards</div><div class="inv-desc">17 badge types, 9 quest types, reward catalog. user_badges, user_quests, user_rewards join tables with progress and unlock state.</div></div>
+      <div class="inv-item"><div class="inv-name">Social: friendships, friend_requests</div><div class="inv-desc">User-to-user social graph. Pending/accepted/rejected states. Bidirectional friend lookup.</div></div>
+      <div class="inv-item"><div class="inv-name">Venues: featured_venues, venue_hours, venue_interactions</div><div class="inv-desc">featured_venues (home carousel, admin-managed), venue_hours (per-day open/close), venue_interactions (views, direction taps, report taps).</div></div>
+      <div class="inv-item"><div class="inv-name">Events: events, wait_drop_events</div><div class="inv-desc">events (venue_id, event_name, event_type, start_time, end_time, crowd_multiplier_estimate), wait_drop_events (from_wait, to_wait, pct_drop, timestamp).</div></div>
+      <div class="inv-item"><div class="inv-name">Analytics: search_queries, user_sessions, auth_events</div><div class="inv-desc">search_queries (term, result count, venue selected), user_sessions (device info, duration), auth_events (method, device, fraud signals).</div></div>
+      <div class="inv-item"><div class="inv-name">B2B: smb_subscribers, smb_alerts</div><div class="inv-desc">smb_subscribers (venue_id, tier, subscription status), smb_alerts (type, threshold, delivery history).</div></div>
+      <div class="inv-item"><div class="inv-name">Growth: referral_codes, referral_uses, community_impact_snapshots</div><div class="inv-desc">referral_codes (user_id, code, uses), referral_uses (referrer, referred, converted), community_impact_snapshots (user_id, helped_count, snapshot_date).</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     DOCUMENT 4 — CONNECTED FEATURE MAP
+═══════════════════════════════════════════════ -->
+<div id="tab-flowchart" class="doc-panel">
+<div class="doc-wrap" style="max-width:980px;padding-bottom:80px;">
+
+  <div class="doc-kicker">Visual Reference · System Architecture</div>
+  <h1 class="doc-title">End-to-End System Flow</h1>
+  <p class="doc-desc">A complete visual map of the SkipTheLine system — three swimlanes showing how data moves between the User, the App, and the Backend at every stage. Read top to bottom. Branching paths at anomaly detection and the feedback loop from trust score are the core of the invention.</p>
+
+  <!-- LEGEND -->
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;align-items:center;">
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-right:4px;">Legend</span>
+    <span class="fl-legend" style="background:var(--primary-bg);border:1.5px solid var(--primary);color:var(--primary);">User Action</span>
+    <span class="fl-legend" style="background:rgba(93,177,138,0.10);border:1.5px solid var(--success);color:var(--success);">App / System</span>
+    <span class="fl-legend" style="background:rgba(100,120,200,0.09);border:1.5px solid rgba(100,120,200,0.5);color:#6478C8;">Backend / Edge Fn</span>
+    <span class="fl-legend" style="background:var(--warn-bg);border:1.5px solid var(--warn);color:var(--warn);">Decision / Branch</span>
+    <span class="fl-legend" style="background:var(--tag-bg);border:1.5px solid var(--border-strong);color:var(--muted);">Data Record</span>
+  </div>
+
+  <!-- SWIMLANE HEADERS -->
+  <div class="fl-lane-headers">
+    <div class="fl-lane-hdr fl-hdr-user">👤 User</div>
+    <div class="fl-lane-hdr fl-hdr-app">📱 App / System</div>
+    <div class="fl-lane-hdr fl-hdr-be">⚙️ Backend / Edge Functions</div>
+  </div>
+
+  <!-- ── SECTION: SETUP ── -->
+  <div class="fl-phase-banner">Phase A — System Population (Before Users Arrive)</div>
+  <div class="callout" style="margin-bottom:16px;font-size:13px;">The venue database must be populated <strong>before the app launches</strong>. Three sources feed it — automated import, business self-registration, and user submission. All three write to the same database and are available immediately to the wait time engine.</div>
+
+  <!-- Source 1: Google Places -->
+  <div class="fl-source-label">Source 1 — Automated (Pre-Launch Seeding)</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-note fl-note-app" style="text-align:left;font-style:normal;font-size:12.5px;">No user action required. This runs as a script before anyone downloads the app. Miami is fully seeded on day one.</div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-be">Google Places API Script<br><span class="fl-sub">Queries by category + city using a geographic grid pattern</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-data">~3,500 Venue Records Imported<br><span class="fl-sub">name · address · GPS coordinates · category · hours · phone · photo references</span></div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be">Google Popular Times<br><span class="fl-sub">Used as wait time <strong>fallback</strong> only — fills in "no data" venues while crowdsourced reports accumulate</span></div>
+    </div>
+  </div>
+
+  <!-- Source 2: Business Self-Registration -->
+  <div class="fl-source-label">Source 2 — Business Self-Registration (B2B Layer)</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Business Owner Finds Their Listing<br><span class="fl-sub">Already in DB from Google import — owner searches by name</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Claims Venue · Verifies Ownership<br><span class="fl-sub">Becomes the verified manager of that venue record</span></div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">SMB Subscriber Account Created<br><span class="fl-sub">Unlocks B2B analytics dashboard · can manage hours, events, entry types</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-data">Venue Record Enriched<br><span class="fl-sub">Business-side data added: event schedule · VIP/guest list entry types · verified hours</span></div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-note fl-note-be" style="font-style:normal;font-size:12.5px;text-align:left;">The venue was already in the database before the owner claimed it. Claiming unlocks the B2B tier — it does not create a new venue record, it enriches the existing one.</div>
+    </div>
+  </div>
+
+  <!-- Source 3: User Submission -->
+  <div class="fl-source-label">Source 3 — User Submission (Ongoing Growth)</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">User Tries to Report a Venue Not in DB<br><span class="fl-sub">Prompted to add it: name · category · address</span></div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-decision">Enters Review Queue<br><span class="fl-sub">Manual approval step — prevents spam venues</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-data">Approved → Venue Record Created<br><span class="fl-sub">Goes live in DB · immediately eligible to receive wait time reports</span></div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-note fl-note-be" style="font-style:normal;font-size:12.5px;text-align:left;">Catches new businesses, pop-ups, and anything missed by Google Places. Also drives user investment — they helped build the database.</div>
+    </div>
+  </div>
+
+  <!-- All sources converge -->
+  <div class="fl-source-label" style="color:var(--primary);border-color:var(--primary-border);">All Three Sources → Same Venue Database → Wait Time Engine</div>
+
+  <!-- ── SECTION: ONBOARDING ── -->
+  <div class="fl-phase-banner">Phase B — User Onboarding</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Opens App · Welcome Screen</div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-decision">Auth Method?</div>
+      <div class="fl-branch-row">
+        <div class="fl-branch-item">Email / OTP</div>
+        <div class="fl-branch-item">Apple Sign-In</div>
+        <div class="fl-branch-item">Google Sign-In</div>
+      </div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">Supabase Session Created</div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-data">User Profile Initialized<br><span class="fl-sub">trust_score: 100 · report_count: 0 · flagged_count: 0</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-app">Permissions Requested<br><span class="fl-sub">Location (While Using) · Push Notifications</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-app">4-Step Onboarding Tour</div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be">Push Token Captured<br><span class="fl-sub">Stored on user record for targeted alerts</span></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: DISCOVER ── -->
+  <div class="fl-phase-banner">Phase C — Venue Discovery</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Browse Home / Map Tab<br><span class="fl-sub">Filter · Search · Category</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Tap Venue Card</div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">Venues Queried from Supabase<br><span class="fl-sub">Paginated · 20/page · live wait times</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-app" style="font-size:12px;">Color-Coded Wait Display<br><span class="fl-sub">⬜ No data · 🟢 0–10m · 🟠 11–25m · 🔴 26–45m · 🔴 45+m<br>Pulsing pin if report &lt;5 min old</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-app">Venue Detail Screen<br><span class="fl-sub">Sparkline · avg wait · recent reports · reviews · hours</span></div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be">Realtime Subscription Active<br><span class="fl-sub">10 events/sec · auto-updates all open screens</span></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: REPORT ── -->
+  <div class="fl-phase-banner">Phase D — Wait Time Report Submission</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Tap Report FAB or "Report Wait"</div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Select Venue<br><span class="fl-sub">Pre-selected from venue detail, or via Venue Picker</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Select Report Type<br><span class="fl-sub">Walk-in · Reservation · VIP · Guest List</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Enter Wait Time<br><span class="fl-sub">Preset (No wait / 5m / 15m / 30m / 45m / 60m) or exact (0–180m)</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Submit Report</div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div style="height:32px"></div>
+      <div style="height:48px"></div>
+      <div style="height:48px"></div>
+      <div style="height:48px"></div>
+      <div style="height:48px"></div>
+      <div class="fl-node fl-app">Points Preview Shown<br><span class="fl-sub">+15 pts expected for valid report</span></div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be" style="margin-top:220px;">Report Record Created<br><span class="fl-sub">venue_id · user_id · wait_minutes · report_type · timestamp · GPS coords · anomaly_score: null · flagged: false</span></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: ANOMALY ── -->
+  <div class="fl-phase-banner">Phase E — Report Validation &amp; Anomaly Detection (Edge Function)</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user"></div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">Edge Function Triggered<br><span class="fl-sub">Fires on every report insert</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-decision">Trust Score Pre-weighting<br><span class="fl-sub">User's trust_score retrieved → report pre-weighted before signals run</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-be" style="text-align:left;font-size:12.5px;">6 Detection Signals Evaluated:<br>
+        <span class="fl-sub">
+          1. Statistical outlier (>2× median deviation)<br>
+          2. Velocity abuse (3+ reports / 30 min at same venue)<br>
+          3. Location mismatch (GPS ≠ near venue)<br>
+          4. New account spam (&lt;24 hrs old, high volume)<br>
+          5. Pattern anomaly (always extreme values across venues)<br>
+          6. Coordinated attack (shared IP / device fingerprint)
+        </span>
+      </div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-decision">Anomaly Score Computed<br><span class="fl-sub">0 = clean · 100 = highly likely fraudulent</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-decision">Response Tier?</div>
+      <div class="fl-branch-row fl-tier-row">
+        <div class="fl-tier-col">
+          <div class="fl-tier fl-tier-0">Tier 0 — Clean</div>
+          <div class="fl-tier-action">✅ Full weight<br>SkipPoints awarded<br>trust_score maintained</div>
+        </div>
+        <div class="fl-tier-col">
+          <div class="fl-tier fl-tier-1">Tier 1 — Soft Flag</div>
+          <div class="fl-tier-action">⚠️ Reduced weight<br>Partial SkipPoints<br>Included in avg</div>
+        </div>
+        <div class="fl-tier-col">
+          <div class="fl-tier fl-tier-2">Tier 2 — Hard Flag</div>
+          <div class="fl-tier-action">🚫 Excluded from calc<br>Zero SkipPoints<br>flagged = true</div>
+        </div>
+        <div class="fl-tier-col">
+          <div class="fl-tier fl-tier-3">Tier 3 — Ban</div>
+          <div class="fl-tier-action">⛔ Reporting suspended<br>Manual review queue<br>trust_score degraded</div>
+        </div>
+      </div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be" style="margin-top:16px;">anomaly_score written to report row<br><span class="fl-sub">location_verified boolean set</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">trust_score updated on user record<br><span class="fl-sub">Degrades with flags · recovers with clean reports<br>↩ Feeds back into all future reports from this user</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">Badge criteria evaluated<br><span class="fl-sub">Unlock fires if milestone reached</span></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: WAIT CALC ── -->
+  <div class="fl-phase-banner">Phase F — Wait Time Calculation</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user"></div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">Aggregate Non-Flagged Reports<br><span class="fl-sub">Only reports with flagged = false and anomaly_score below threshold</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-be" style="text-align:left;">Apply Time-Decay Weights:<br>
+        <span class="fl-sub">
+          0–10 min old → 100% weight<br>
+          20 min old → 70% weight<br>
+          30 min old → 40% weight<br>
+          45 min old → 15% weight<br>
+          45+ min old → expired / excluded
+        </span>
+      </div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-decision">Active Event on Venue?</div>
+      <div class="fl-branch-row">
+        <div class="fl-branch-item">Yes → Apply crowd_multiplier_estimate<br><span class="fl-sub">e.g. Art Basel = 2.5×</span></div>
+        <div class="fl-branch-item">No → Standard calculation</div>
+      </div>
+      <div class="fl-arrow-down" style="margin-top:8px;"></div>
+      <div class="fl-node fl-data">current_wait_minutes updated on venue record</div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-decision">Wait dropped &gt;30% or crossed threshold?</div>
+      <div class="fl-branch-row">
+        <div class="fl-branch-item">Yes → wait_drop_event created<br><span class="fl-sub">Triggers alert pipeline</span></div>
+        <div class="fl-branch-item">No → Continue</div>
+      </div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-note fl-note-be" style="margin-top:16px;">Reports from low-trust users are pre-weighted down before this calculation runs — a compounding quality signal.</div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: DELIVERY ── -->
+  <div class="fl-phase-banner">Phase G — Information Delivery</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Sees Updated Wait Time<br><span class="fl-sub">No refresh needed</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-user">Receives Wait Drop Alert<br><span class="fl-sub">"LIV: 45 min → 15 min · 6 min away"</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-user">Arrival Nudge Fires<br><span class="fl-sub">"At Komodo? How's the wait?"<br>No wait / ~15m / ~30m / 45m+ / Don't know yet</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-user">Post-Visit Nudge<br><span class="fl-sub">8–12 min after leaving venue proximity</span></div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">Supabase Realtime Push<br><span class="fl-sub">All open screens update instantly · 10 events/sec</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-decision">Wait Drop: 3 Conditions Met?<br><span class="fl-sub">1. User within 0.3mi (walk) / 1.5mi (drive)<br>2. Drop &gt;30% or crossed threshold<br>3. Prior interest (viewed / favorited / reported)</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-app">Silent push → location check → fire or discard</div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-decision">Arrival Nudge: Intent Correlated?<br><span class="fl-sub">GPS &lt;80m + dwell &gt;3 min + first today<br>+ optional: viewed venue / navigated here</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-note fl-note-app">Post-visit reports labeled historical. Time-decay applied from moment of visit, not submission.</div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be" style="margin-top:0;">Map pins + venue cards update color in real time</div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">Explore Feed Updated<br><span class="fl-sub">New wait drop events + reports surfaced</span></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: GAMIFICATION ── -->
+  <div class="fl-phase-banner">Phase H — Gamification &amp; Engagement Loop</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Earns SkipPoints<br><span class="fl-sub">Only if Tier 0 / 1 (valid report)</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Tier Progression<br><span class="fl-sub">Lifetime points → tier unlock</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Badge Unlocked / Quest Progress</div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Weekly Leaderboard Ranking</div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-user">Redeem Points for Rewards</div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-note fl-note-app" style="margin-top:0;">Gamification loop is structurally gated by anomaly detection: bad reports = zero points. Reward system and data quality system are the same system.</div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be">SkipPoints Edge Fn<br><span class="fl-sub">Award only after anomaly check clears report</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">Badge Edge Fn<br><span class="fl-sub">Evaluates criteria after every valid report</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">Weekly Snapshot Job<br><span class="fl-sub">Ranks users by weekly XP · resets counter</span></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: HISTORICAL ── -->
+  <div class="fl-phase-banner">Phase I — Historical &amp; Analytical Value</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Views "Average Wait"<br><span class="fl-sub">Historical typical wait for this time/day</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-user">B2B: Venue Owner Sees<br><span class="fl-sub">Peak times · report frequency · conversion analytics</span></div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-data">Report Archive (permanent)<br><span class="fl-sub">venue_id · user_id · wait_minutes · report_type · timestamp · anomaly_score · trust_score_at_submission</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-app">Historical Pattern Computed<br><span class="fl-sub">typical_wait_minutes per venue per time-of-day / day-of-week</span></div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be">B2B Analytics Dashboard<br><span class="fl-sub">Same underlying data → packaged as business intelligence for SMB subscribers</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">115 Analytics Events<br><span class="fl-sub">Product funnel · engagement · drop-off</span></div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK LOOP CALLOUT -->
+  <div class="fl-loop-callout">
+    <div class="fl-loop-title">↩ The Core Feedback Loop</div>
+    <div class="fl-loop-body">Every valid user report → improves wait time accuracy → earns points → motivates more reporting → more accurate data → more users trust the product → more B2B subscribers → better analytics → better B2B data → improves consumer-facing accuracy. The loop is self-reinforcing. Bad actors are structurally excluded at both the data layer (anomaly score) and the incentive layer (zero points).</div>
+  </div>
+
+  <!-- PHASE J/K PLANNED -->
+  <div class="fl-phase-banner" style="background:var(--primary-bg);border-color:var(--primary-border);color:var(--primary);">Phase J &amp; K — Planned Features (Sufficiently Developed)</div>
+  <div class="fl-row">
+    <div class="fl-cell fl-cell-user">
+      <div class="fl-node fl-user">Taps Mic · Speaks Query<br><span class="fl-sub">"What's the wait at LIV tonight?"</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-user">Hears Response via Speaker<br><span class="fl-sub">ElevenLabs TTS</span></div>
+    </div>
+    <div class="fl-cell fl-cell-app">
+      <div class="fl-node fl-app">Vapi Orchestration Layer<br><span class="fl-sub">Turn-taking · interruption handling · function routing</span></div>
+      <div class="fl-arrow-down"></div>
+      <div class="fl-node fl-be">Claude Sonnet + Function Calls<br><span class="fl-sub">getWaitTime() · reportWait() · setWaitDropAlert() · addToCalendar()</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-note fl-note-app">BLE Beacon (B2B): Bluetooth signal from venue beacon → confirmed physical presence → arrival nudge without GPS · verified visit in analytics dashboard</div>
+    </div>
+    <div class="fl-cell fl-cell-be">
+      <div class="fl-node fl-be">Whisper STT → LLM → ElevenLabs TTS<br><span class="fl-sub">All cloud-based · no on-device inference</span></div>
+      <div class="fl-vsplit"></div>
+      <div class="fl-node fl-be">BLE Beacon Hardware<br><span class="fl-sub">$15–30 per device · Bluetooth permission only (no Always location)</span></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<style>
+  /* ── FLOWCHART STYLES (legacy, kept for hidden content) ── */
+  .fl-legend {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10px;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.6px;
+    padding:3px 9px;border-radius:5px;
+    display:inline-block;
+  }
+  .fl-lane-headers {
+    display:grid;grid-template-columns:1fr 1.6fr 1fr;
+    gap:8px;margin-bottom:8px;
+  }
+  .fl-lane-hdr {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:1.2px;
+    padding:7px 12px;border-radius:6px;
+    text-align:center;
+  }
+  .fl-hdr-user{background:var(--primary-bg);color:var(--primary);border:1.5px solid var(--primary-border);}
+  .fl-hdr-app{background:var(--success-bg);color:var(--success);border:1.5px solid var(--success-border);}
+  .fl-hdr-be{background:rgba(100,120,200,0.08);color:#6478C8;border:1.5px solid rgba(100,120,200,0.3);}
+
+  .fl-phase-banner {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:1.2px;
+    padding:7px 14px;
+    background:var(--tag-bg);
+    color:var(--muted);
+    border:1px solid var(--border-strong);
+    border-radius:6px;
+    margin:20px 0 6px;
+  }
+  .fl-row {
+    display:grid;grid-template-columns:1fr 1.6fr 1fr;
+    gap:8px;margin-bottom:4px;
+    align-items:start;
+  }
+  .fl-cell {
+    display:flex;flex-direction:column;align-items:center;
+    padding:6px 4px;gap:0;
+  }
+  .fl-node {
+    width:100%;padding:9px 12px;
+    border-radius:8px;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;font-weight:600;
+    line-height:1.45;
+    text-align:center;
+  }
+  .fl-sub {
+    display:block;font-weight:400;font-size:11px;
+    margin-top:3px;opacity:0.8;line-height:1.4;
+  }
+  .fl-user {background:var(--primary-bg);border:1.5px solid var(--primary-border);color:var(--fg);}
+  .fl-app  {background:var(--success-bg);border:1.5px solid var(--success-border);color:var(--fg);}
+  .fl-be   {background:rgba(100,120,200,0.08);border:1.5px solid rgba(100,120,200,0.28);color:var(--fg);}
+  .fl-decision {background:var(--warn-bg);border:1.5px solid var(--warn);color:var(--fg);}
+  .fl-data {background:var(--tag-bg);border:1.5px solid var(--border-strong);color:var(--fg);}
+  .fl-arrow-down {
+    width:1.5px;height:18px;
+    background:var(--border-strong);
+    margin:2px auto;
+    position:relative;
+  }
+  .fl-arrow-down::after {
+    content:'';position:absolute;
+    bottom:-4px;left:-4px;
+    border-left:4.5px solid transparent;
+    border-right:4.5px solid transparent;
+    border-top:6px solid var(--border-strong);
+  }
+  .fl-vsplit {
+    width:1.5px;height:14px;
+    background:var(--border);
+    margin:3px auto;
+  }
+  .fl-branch-row {
+    display:flex;gap:6px;width:100%;margin-top:6px;
+  }
+  .fl-branch-item {
+    flex:1;padding:7px 8px;
+    border-radius:6px;
+    background:var(--tag-bg);
+    border:1px solid var(--border-strong);
+    font-family:'Inter',sans-serif;
+    font-size:11px;font-weight:500;
+    color:var(--muted);
+    text-align:center;line-height:1.4;
+  }
+  .fl-tier-row {display:flex;gap:5px;width:100%;margin-top:8px;}
+  .fl-tier-col {flex:1;display:flex;flex-direction:column;gap:4px;}
+  .fl-tier {
+    padding:5px 6px;border-radius:5px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:9.5px;font-weight:700;
+    text-transform:uppercase;letter-spacing:0.4px;
+    text-align:center;
+  }
+  .fl-tier-0{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border);}
+  .fl-tier-1{background:var(--warn-bg);color:var(--warn);border:1px solid rgba(196,125,42,0.3);}
+  .fl-tier-2{background:var(--primary-bg);color:var(--primary);border:1px solid var(--primary-border);}
+  .fl-tier-3{background:rgba(200,50,50,0.08);color:#C03030;border:1px solid rgba(200,50,50,0.25);}
+  .fl-tier-action {
+    padding:6px 7px;border-radius:5px;
+    font-family:'Inter',sans-serif;
+    font-size:10.5px;color:var(--muted);
+    background:var(--surface);
+    border:1px solid var(--border);
+    line-height:1.5;text-align:center;
+    flex:1;
+  }
+  .fl-note {
+    width:100%;padding:9px 12px;
+    border-radius:8px;
+    font-size:11.5px;line-height:1.5;
+    color:var(--muted);
+    font-style:italic;
+  }
+  .fl-note-app{background:var(--success-bg);border-left:2.5px solid var(--success);}
+  .fl-note-be{background:rgba(100,120,200,0.07);border-left:2.5px solid rgba(100,120,200,0.4);}
+  .fl-source-label {
+    margin:20px 0 8px;
+    padding:6px 14px;
+    border-radius:6px;
+    background:rgba(248,104,43,0.08);
+    border-left:3px solid var(--primary);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--primary);
+  }
+  .fl-loop-callout {
+    margin:28px 0 8px;
+    padding:18px 22px;
+    border-radius:12px;
+    background:var(--primary-bg);
+    border:1.5px solid var(--primary-border);
+  }
+  .fl-loop-title {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:14px;font-weight:700;
+    color:var(--primary);margin-bottom:8px;
+  }
+  .fl-loop-body {
+    font-size:13.5px;color:var(--fg);line-height:1.7;
+  }
+  @media (max-width:680px) {
+    .fl-lane-headers,.fl-row {grid-template-columns:1fr;}
+    .fl-lane-hdr:not(.fl-hdr-app) {display:none;}
+    .fl-tier-row {flex-wrap:wrap;}
+    .fl-tier-col {flex:1 1 45%;}
+  }
+</style>
+
+<style>
+/* ── FLOWCHART TAB NEW STYLES ── */
+.fleg{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:2px 9px;border-radius:4px;border:1.5px solid;}
+.fu{background:var(--primary-bg);border-color:var(--primary-border);color:var(--primary);}
+.fa{background:var(--success-bg);border-color:var(--success-border);color:var(--success);}
+.fb{background:rgba(100,120,200,0.09);border-color:rgba(100,120,200,0.35);color:#6478C8;}
+.fd{background:var(--tag-bg);border-color:var(--border-strong);color:var(--muted);}
+.fs{background:rgba(93,177,138,0.15);border-color:rgba(93,177,138,0.5);color:var(--success);}
+.fw{background:var(--warn-bg);border-color:var(--warn);color:var(--warn);}
+.fr{background:rgba(180,30,30,0.09);border-color:rgba(180,30,30,0.4);color:#C03030;}
+.fp{background:transparent;border-color:var(--muted);border-style:dashed;color:var(--muted);}
+.floop{margin-top:28px;padding:18px 22px;border-radius:12px;background:var(--primary-bg);border:1.5px solid var(--primary-border);}
+.floop-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;}
+.floop-body{font-size:13.5px;color:var(--fg);line-height:1.75;}
+</style>
+
+<script>
+/* ── CONNECTED NODE GRAPH DIAGRAM ── */
+(function(){
+  var svg = document.getElementById('fsvg');
+  if(!svg) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(tag,a,p){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+
+  var dark = (document.documentElement.getAttribute('data-theme')==='dark') ||
+             (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  var P = dark ? {
+    bg:'#191916', fg:'#F0EDE8', muted:'#9E8E7E', sub:'#6A5A4C', edge:'rgba(255,255,255,0.16)',
+    edgeLbl:'rgba(255,255,255,0.42)', arr:'rgba(255,255,255,0.28)',
+    ph:{f:'rgba(255,255,255,0.025)',s:'rgba(255,255,255,0.07)',t:'rgba(255,255,255,0.28)'},
+    tp:{user:{f:'rgba(238,147,86,0.14)',s:'rgba(238,147,86,0.52)'},
+        app: {f:'rgba(109,196,155,0.14)',s:'rgba(109,196,155,0.52)'},
+        be:  {f:'rgba(100,130,220,0.14)',s:'rgba(100,130,220,0.52)'},
+        data:{f:'rgba(255,255,255,0.06)',s:'rgba(255,255,255,0.25)'},
+        ok:  {f:'rgba(109,196,155,0.22)',s:'#6DC49B'},
+        warn:{f:'rgba(212,148,62,0.2)', s:'#D4943E'},
+        pri: {f:'rgba(238,147,86,0.2)', s:'#EE9356'},
+        bad: {f:'rgba(200,60,60,0.2)',  s:'#CC4444'}}
+  } : {
+    bg:'#FCFBF9', fg:'#33384A', muted:'#857565', sub:'#A09080', edge:'#C4B9AC',
+    edgeLbl:'rgba(50,40,30,0.5)', arr:'#A09080',
+    ph:{f:'rgba(0,0,0,0.018)',s:'rgba(0,0,0,0.07)',t:'rgba(0,0,0,0.32)'},
+    tp:{user:{f:'rgba(248,104,43,0.07)',s:'rgba(248,104,43,0.42)'},
+        app: {f:'rgba(93,177,138,0.07)',s:'rgba(93,177,138,0.48)'},
+        be:  {f:'rgba(80,110,200,0.07)',s:'rgba(80,110,200,0.42)'},
+        data:{f:'rgba(0,0,0,0.03)',    s:'#C4B9AC'},
+        ok:  {f:'rgba(93,177,138,0.13)',s:'#5DB18A'},
+        warn:{f:'rgba(196,125,42,0.12)',s:'#C47D2A'},
+        pri: {f:'rgba(248,104,43,0.11)',s:'#F8682B'},
+        bad: {f:'rgba(170,30,30,0.09)',s:'#B02020'}}
+  };
+
+  // SVG background
+  mk('rect',{x:0,y:0,width:930,height:1360,fill:P.bg},svg);
+
+  // Arrow marker
+  var defs = mk('defs',{},svg);
+  var mkr = mk('marker',{id:'arr',markerWidth:8,markerHeight:6,refX:7,refY:3,orient:'auto'},defs);
+  mk('polygon',{points:'0 0, 8 3, 0 6',fill:P.arr},mkr);
+  var mkrFb = mk('marker',{id:'arrfb',markerWidth:8,markerHeight:6,refX:7,refY:3,orient:'auto'},defs);
+  mk('polygon',{points:'0 0, 8 3, 0 6',fill:'#6478C8'},mkrFb);
+
+  // Phase bands (background)
+  var bands = [
+    {label:'A · Data Seeding',         y1:22, y2:112},
+    {label:'B · User Onboarding',      y1:125,y2:215},
+    {label:'C · Discovery',            y1:228,y2:435},
+    {label:'D · Report Submission',    y1:448,y2:548},
+    {label:'E · Validation + Scoring', y1:561,y2:775},
+    {label:'F · Wait Calculation',     y1:788,y2:870},
+    {label:'G · Delivery',             y1:883,y2:1075},
+    {label:'H · Gamification',         y1:788,y2:1055, x1:620, x2:910},
+    {label:'I · Historical + B2B',     y1:1088,y2:1340},
+  ];
+  bands.forEach(function(b){
+    var bx = b.x1||8, bw = b.x2 ? (b.x2-bx) : 914;
+    mk('rect',{x:bx,y:b.y1,width:bw,height:b.y2-b.y1,rx:8,fill:P.ph.f,stroke:P.ph.s,'stroke-width':1},svg);
+    mk('text',{x:bx+10,y:b.y1+14,'font-family':"'Space Grotesk',sans-serif",'font-size':9,'font-weight':700,
+      'text-transform':'uppercase','letter-spacing':1,fill:P.ph.t,'user-select':'none'},svg).textContent=b.label;
+  });
+
+  // Node definitions [id, label, sub, cx, cy, w, h, type, planned?]
+  var N = [
+    ['places','Google Places API',         'Grid import · ~3,500 venues',              110,67, 178,52,'be',0],
+    ['venuedb','Venue Database',            '41 Supabase tables · RLS enabled',         370,67, 174,52,'data',0],
+    ['bizreg','Business Self-Reg',          'Claim listing → SMB subscriber',           590,67, 168,52,'user',0],
+    ['usersub','User-Submitted Venue',      'Review queue → approved → live',           790,67, 166,52,'user',0],
+
+    ['auth','Authentication',              'Email · Apple OAuth · Google OAuth',        590,170,168,52,'user',0],
+    ['userprof','User Profile + Trust Score','trust_score:100 · report_count · push_token',790,170,168,52,'data',0],
+
+    ['browse','Home / Map Browse',          'Color pins · filter · search · paginate',  110,290,178,52,'app',0],
+    ['eventtag','Event Tagging',            'crowd_multiplier_estimate · badge on pin', 380,290,170,52,'be',0],
+    ['detail','Venue Detail',               'Sparkline · reports · reviews · photos',   110,400,178,52,'app',0],
+
+    ['nudge','Arrival Nudge',              'GPS 80m + dwell >3min + intent signals',    110,502,178,52,'user',1],
+    ['voice','Voice AI Agent',             'Vapi · Claude Sonnet · ElevenLabs',         360,502,174,52,'be',1],
+    ['report','Report Submission',          'type · wait_mins · GPS · timestamp',        620,502,178,52,'user',0],
+
+    ['trustfb','Trust Score Updated',       'Degrades with flags · recovers clean',      800,502,162,52,'data',0],
+    ['anomaly','Anomaly Detection',         '6 signals · anomaly_score 0–100',          600,618,182,52,'be',0],
+
+    ['tier0','Tier 0 · Clean',             'Full weight · full pts',                    290,726,126,48,'ok',0],
+    ['tier1','Tier 1 · Soft Flag',         'Reduced weight',                            434,726,126,48,'warn',0],
+    ['tier2','Tier 2 · Hard Flag',         'Excluded · zero pts',                       578,726,126,48,'pri',0],
+    ['tier3','Tier 3 · Ban',               'Suspended · manual review',                 722,726,126,48,'bad',0],
+
+    ['decay','Time-Decay Engine',          '100%→70%→40%→15%→expired',                370,830,186,52,'be',0],
+
+    ['rtdisp','Real-time Display',          'Supabase Realtime · 10 ev/s',              110,938,178,52,'app',0],
+    ['wdrop','Wait Drop Event',             '>30% drop or threshold crossed',            380,938,178,52,'be',0],
+    ['walert','Wait Drop Alert',            '3-condition push notification',             380,1042,178,52,'user',0],
+    ['pvnudge','Post-Visit Nudge',          '8–12 min after leaving venue',              110,1042,178,52,'user',0],
+
+    ['skippts','SkipPoints',                'Only Tier 0/1 · quality-gated reward',     690,830,162,52,'user',0],
+    ['badges','Badges (17 types)',          'Edge Fn · criteria after each report',      810,928,148,48,'app',0],
+    ['quests','Quests (9 types)',           'Multi-step · progress bar',                 660,928,148,48,'app',0],
+    ['lboard','Leaderboard',               'Weekly snapshot · XP ranking',              740,1018,148,48,'app',0],
+
+    ['archive','Report Archive',            'Permanent · full metadata + anomaly_score', 380,1155,184,52,'data',0],
+    ['beacon','BLE Beacon (B2B)',           'Bluetooth · no Always location needed',     730,1155,164,52,'user',1],
+    ['typwait','Typical Wait Display',      'Historical avg by time of day / day',       110,1268,182,52,'app',0],
+    ['b2bdash','B2B Analytics Dashboard',  'SMB subscribers · peak times · conversion', 400,1268,200,52,'be',0],
+  ];
+
+  // Build lookup
+  var NM = {};
+  N.forEach(function(n){NM[n[0]]={id:n[0],label:n[1],sub:n[2],cx:n[3],cy:n[4],w:n[5],h:n[6],type:n[7],planned:n[8]};});
+
+  // Edges [from, to, label, curved(bool), cpx_offset, cpy_offset, markerRef]
+  var E = [
+    // A — Data seeding
+    ['places','venuedb','imports',0],
+    ['bizreg','venuedb','claims',0],
+    ['usersub','venuedb','adds to',0],
+    // B — User
+    ['auth','userprof','creates',0],
+    // C — Discovery
+    ['venuedb','browse','populates',0],
+    ['browse','detail','tap venue',0],
+    ['detail','report','Report Wait →',0],
+    // D — Reporting
+    ['nudge','report','one-tap report',0],
+    ['voice','report','reportWait()',0],
+    // E — Validation
+    ['userprof','anomaly','pre-weights (dashed)',0,0,0,'arr',true],
+    ['report','anomaly','triggers Edge Fn',0],
+    ['anomaly','trustfb','updates trust_score',0],
+    ['trustfb','userprof','persisted ↑',1,60,-60],      // curves up
+    ['anomaly','tier0','',0],
+    ['anomaly','tier1','',0],
+    ['anomaly','tier2','',0],
+    ['anomaly','tier3','',0],
+    // F — Calculation
+    ['tier0','decay','full weight',0],
+    ['tier1','decay','reduced wt',0],
+    ['eventtag','decay','crowd_multiplier',0],
+    ['decay','rtdisp','current_wait_minutes',0],
+    ['decay','wdrop','if drop >30%',0],
+    // G — Delivery
+    ['rtdisp','detail','realtime push ↑',1,-60,-60,'arrfb'],  // curves left
+    ['wdrop','walert','3-condition check',0],
+    ['walert','detail','user taps → opens ↑',1,-80,-100,'arrfb'],
+    ['pvnudge','report','historical report →',1,0,-140,'arrfb'],
+    // Gamification
+    ['tier0','skippts','awards pts',0],
+    ['tier1','skippts','partial pts',0],
+    ['skippts','badges','criteria check',0],
+    ['skippts','quests','quest progress',0],
+    ['skippts','lboard','weekly XP',0],
+    // I — Historical
+    ['report','archive','stored permanently',0],
+    ['archive','typwait','historical avg',0],
+    ['archive','b2bdash','B2B analytics',0],
+    // Beacon
+    ['beacon','nudge','confirmed presence ↑',1,-80,-200,'arrfb'],
+    // Return visits drive more reports
+    ['walert','browse','drives return visit ↑',1,-110,-160,'arrfb'],
+  ];
+
+  // Edge endpoint clipping to rect boundary
+  function clip(cx,cy,w,h,tx,ty){
+    var dx=tx-cx, dy=ty-cy;
+    var hw=w/2, hh=h/2;
+    if(dx===0&&dy===0) return {x:cx,y:cy};
+    var sx,sy;
+    if(Math.abs(dx)*hh > Math.abs(dy)*hw){
+      sx=cx+(dx>0?hw:-hw); sy=cy+(dx>0?hw:-hw)*(dy/dx);
+    } else {
+      sy=cy+(dy>0?hh:-hh); sx=cx+(dy>0?hh:-hh)*(dx/dy);
+    }
+    return {x:sx,y:sy};
+  }
+
+  // Draw edges first (so nodes paint on top)
+  var edgeG = mk('g',{},svg);
+  E.forEach(function(e){
+    var s=NM[e[0]], t=NM[e[1]];
+    if(!s||!t) return;
+    var lb=e[2]||'', curved=e[3], cpxOff=e[4]||0, cpyOff=e[5]||0;
+    var marker=e[6]||'arr', dashed=e[7]||false;
+    var p1=clip(s.cx,s.cy,s.w,s.h,t.cx,t.cy);
+    var p2=clip(t.cx,t.cy,t.w,t.h,s.cx,s.cy);
+    var mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+    var d;
+    if(curved){
+      var cpx=mx+cpxOff, cpy=my+cpyOff;
+      d='M'+p1.x+' '+p1.y+' Q'+cpx+' '+cpy+' '+p2.x+' '+p2.y;
+    } else {
+      d='M'+p1.x+' '+p1.y+' L'+p2.x+' '+p2.y;
+    }
+    var strokeW = curved ? 1.5 : 1.3;
+    var strokeClr = (marker==='arrfb') ? 'rgba(100,120,220,0.45)' : P.edge;
+    mk('path',{d:d,fill:'none',stroke:strokeClr,'stroke-width':strokeW,
+      'stroke-dasharray':dashed?'4 3':'none','marker-end':'url(#'+marker+')'},edgeG);
+    if(lb){
+      var lx,ly;
+      if(curved){lx=mx+cpxOff*0.5; ly=my+cpyOff*0.5;}
+      else{lx=mx;ly=my;}
+      var bg=mk('text',{x:lx,y:ly,'font-family':"'Space Grotesk',sans-serif",'font-size':8.5,
+        'font-weight':600,fill:P.edgeLbl,'text-anchor':'middle','dominant-baseline':'middle',
+        'paint-order':'stroke','stroke':P.bg,'stroke-width':3,'stroke-linejoin':'round'},edgeG);
+      bg.textContent=lb;
+    }
+  });
+
+  // Draw nodes
+  var nodeG = mk('g',{},svg);
+  N.forEach(function(nd){
+    var n=NM[nd[0]];
+    var tp=P.tp[n.type]||P.tp.data;
+    var x=n.cx-n.w/2, y=n.cy-n.h/2;
+    var g=mk('g',{},nodeG);
+    // Node rect
+    var r=mk('rect',{x:x,y:y,width:n.w,height:n.h,rx:8,
+      fill:tp.f,stroke:tp.s,'stroke-width':n.planned?0:1.5},g);
+    if(n.planned){
+      r.setAttribute('stroke',tp.s);
+      r.setAttribute('stroke-width',1.5);
+      r.setAttribute('stroke-dasharray','5 3');
+    }
+    // Label
+    var lbl=mk('text',{x:n.cx,y:n.cy-(n.h>50?10:7),
+      'font-family':"'Plus Jakarta Sans',sans-serif",'font-size':11,'font-weight':700,
+      fill:P.fg,'text-anchor':'middle','dominant-baseline':'middle'},g);
+    lbl.textContent=n.label;
+    // Sub-label
+    var sub=mk('text',{x:n.cx,y:n.cy+(n.h>50?10:8),
+      'font-family':"'Inter',sans-serif",'font-size':9,'font-weight':400,
+      fill:P.sub,'text-anchor':'middle','dominant-baseline':'middle'},g);
+    // Truncate sub if needed
+    var stxt=n.sub.length>44?n.sub.slice(0,43)+'…':n.sub;
+    sub.textContent=stxt;
+  });
+
+  // Phase letter badges on left edge
+  var phLetters=[
+    {l:'A',y:67},{l:'B',y:170},{l:'C',y:345},{l:'D',y:502},
+    {l:'E',y:672},{l:'F',y:830},{l:'G',y:990},{l:'I',y:1212}
+  ];
+  phLetters.forEach(function(p){
+    mk('circle',{cx:20,cy:p.y,r:9,fill:P.ph.s},svg);
+    var t=mk('text',{x:20,y:p.y,'font-family':"'Space Grotesk',sans-serif",'font-size':9,'font-weight':700,
+      fill:P.ph.t,'text-anchor':'middle','dominant-baseline':'middle'},svg);
+    t.textContent=p.l;
+  });
+
+})();
+</script>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.doc-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+
+</body></html>

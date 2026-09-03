@@ -55,7 +55,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
         ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[prem.card, { width: CARD_WIDTH, borderColor: c.border }]}
+        style={[prem.card, { borderColor: c.border }]}
       >
         {/* Glow blob — top-right, blur-2xl, primary 35% opacity 0.6 */}
         <View style={prem.glowBlob} pointerEvents="none" />
@@ -128,7 +128,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 
 const prem = StyleSheet.create({
   wrap: {
-    marginHorizontal: spacing.md,
+    marginHorizontal: 20,
     marginTop: 12,
     marginBottom: 4,
   },
