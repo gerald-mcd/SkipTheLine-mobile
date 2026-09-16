@@ -84,7 +84,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
             </Text>
             {/* Subtitle */}
             <Text style={[prem.sub, { color: c.mutedForeground }]}>
-              The full analytics suite, built from live SkipTheLine signals.
+              The full analytics suite, built from live Inue signals.
             </Text>
           </View>
 

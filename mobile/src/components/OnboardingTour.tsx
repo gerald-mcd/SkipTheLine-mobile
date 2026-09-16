@@ -35,7 +35,7 @@ interface TourStep {
 
 const STEPS: TourStep[] = [
   {
-    title: 'Welcome to SkipTheLine',
+    title: 'Welcome to Inue',
     body: 'Live, crowd-powered wait times for restaurants, clubs, barbers, and more. Tap any venue to see the full story.',
     iconComponent: <MapPin size={22} color="#FFFFFF" strokeWidth={2} />,
     anchor: null,

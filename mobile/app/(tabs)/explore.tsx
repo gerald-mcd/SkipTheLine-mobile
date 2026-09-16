@@ -18,7 +18,7 @@ const exploreFeed: FeedItem[] = [
   { id: 'fd1', kind: 'drop', ago: 'now', venueId: 'v5', from: 40, to: 25 },
   { id: 'fd2', kind: 'report', ago: '1m', venueId: 'v1', user: 'Sofía', initial: 'S', minutes: 42, quote: 'Seated in 38 — bar moves faster.' },
   { id: 'fd3', kind: 'venue', ago: '2m', venueId: 'v2' },
-  { id: 'fd4', kind: 'system', ago: '3m', title: '+25 SkipPoints', body: 'Your report at Coyo Taco was confirmed by 4 people.', emoji: '✨' },
+  { id: 'fd4', kind: 'system', ago: '3m', title: '+25 Inue Points', body: 'Your report at Coyo Taco was confirmed by 4 people.', emoji: '✨' },
   { id: 'fd5', kind: 'report', ago: '4m', venueId: 'v3', user: 'Marcus', initial: 'M', minutes: 8, quote: 'Walked right in. Chair open.' },
   { id: 'fd6', kind: 'system', ago: '12m', title: 'Badge earned: Night Owl', body: 'Reported 5 venues after 11pm this week.', emoji: '🦉' },
 ]

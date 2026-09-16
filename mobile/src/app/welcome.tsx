@@ -79,7 +79,7 @@ export default function WelcomeScreen() {
       setLoading('apple')
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
-        options: { redirectTo: 'skiptheline://auth/callback' },
+        options: { redirectTo: 'inue://auth/callback' },
       })
       if (error) throw error
     } catch (e: any) {
@@ -92,7 +92,7 @@ export default function WelcomeScreen() {
       setLoading('google')
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: 'skiptheline://auth/callback' },
+        options: { redirectTo: 'inue://auth/callback' },
       })
       if (error) throw error
     } catch (e: any) {
@@ -136,7 +136,7 @@ export default function WelcomeScreen() {
         <View style={s.logoTile}>
           <MapPin size={16} color="#fff" fill="#fff" />
         </View>
-        <Text style={s.wordmark}>SkipTheLine</Text>
+        <Text style={s.wordmark}>Inue</Text>
       </View>
 
       {/* Bottom content */}

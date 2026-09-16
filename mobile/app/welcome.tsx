@@ -17,7 +17,7 @@ export default function Welcome() {
         {/* Logo area */}
         <View style={styles.logoRow}>
           <Text style={styles.logoIcon}>⚡</Text>
-          <Text style={styles.logoText}>SkipTheLine</Text>
+          <Text style={styles.logoText}>Inue</Text>
         </View>
 
         {/* Hero headline */}

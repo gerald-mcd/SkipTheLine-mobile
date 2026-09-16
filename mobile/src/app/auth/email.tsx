@@ -84,7 +84,7 @@ export default function EmailAuthScreen() {
 
         <View style={s.content}>
           <Text style={s.title}>
-            {mode === 'signin' ? 'Welcome back' : 'Join SkipTheLine'}
+            {mode === 'signin' ? 'Welcome back' : 'Join Inue'}
           </Text>
           <Text style={s.subtitle}>
             {mode === 'signin'

@@ -1,5 +1,5 @@
 /**
- * SkipTheLine — Premium Pass / Business Suite screen
+ * Inue — Premium Pass / Business Suite screen
  * Spec: /business page from design system doc
  */
 
@@ -112,7 +112,7 @@ export default function PremiumScreen() {
 
               {/* Subhead — mt-3, text-[13px], muted; price semibold foreground */}
               <Text style={[s.heroSub, { color: c.mutedForeground }]}>
-                Live wait intel, foot-traffic patterns, competitor pulse and event lift — built from the same crowd signal powering SkipTheLine.{' '}
+                Live wait intel, foot-traffic patterns, competitor pulse and event lift — built from the same crowd signal powering Inue.{' '}
                 <Text style={{ fontWeight: '600', color: c.foreground }}>From $29–$199/mo.</Text>
               </Text>
 

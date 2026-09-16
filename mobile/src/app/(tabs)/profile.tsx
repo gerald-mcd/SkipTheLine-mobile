@@ -124,7 +124,7 @@ export default function ProfileScreen() {
 
           <View style={styles.pointsRow}>
             <Text style={styles.pointsNumber}>{points.toLocaleString()}</Text>
-            <Text style={styles.pointsLabel}>SkipPoints</Text>
+            <Text style={styles.pointsLabel}>Inue Points</Text>
           </View>
 
           <View style={styles.progressSection}>

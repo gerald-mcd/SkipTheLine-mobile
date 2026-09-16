@@ -1,21 +1,21 @@
-// SkipTheLine design tokens — mirrors the Lovable web app
+// Inue design tokens
 export const colors = {
-  background:   '#0a0a0f',
-  surface:      '#13131a',
-  card:         '#1a1a24',
-  border:       '#2a2a3a',
-  primary:      '#6c47ff',
-  primaryGlow:  '#8b6fff',
-  accent:       '#2a2a3a',
-  text:         '#f0f0f5',
-  textMuted:    '#8888aa',
-  waitShort:    '#34C759',
-  waitModerate: '#FF9500',
-  waitLong:     '#FF3B30',
-  waitCritical: '#8B0000',
-  waitNone:     '#8E8E93',
-  success:      '#34C759',
-  white:        '#ffffff',
+  background:   '#11141c',
+  surface:      '#181c27',
+  card:         '#232939',
+  border:       'rgba(243,241,236,0.12)',
+  primary:      '#ff8a3d',
+  primaryGlow:  '#ffaa6e',
+  accent:       '#232939',
+  text:         '#f3f1ec',
+  textMuted:    '#8b93a6',
+  waitShort:    '#35d07f',
+  waitModerate: '#ff8a3d',
+  waitLong:     '#ff5a1f',
+  waitCritical: '#c0392b',
+  waitNone:     '#8b93a6',
+  success:      '#35d07f',
+  white:        '#f3f1ec',
 }
 
 export const spacing = {

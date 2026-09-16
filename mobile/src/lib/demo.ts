@@ -1,5 +1,5 @@
 /**
- * SkipTheLine — Demo Mode Layer
+ * Inue — Demo Mode Layer
  *
  * DEMO_MODE = true  → overlay mock activity on real venue data (no DB writes)
  * DEMO_MODE = false → read everything live from Supabase (production)
@@ -181,7 +181,7 @@ export function getDemoFeedItems(venues: Venue[]) {
     id:    'demo-sys-1',
     kind:  'system',
     ago:   '4m',
-    title: '+25 SkipPoints',
+    title: '+25 Inue Points',
     body:  'Your report at Komodo was confirmed by 4 people.',
     emoji: '✨',
   })

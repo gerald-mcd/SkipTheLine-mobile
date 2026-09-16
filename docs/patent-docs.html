@@ -1,5 +1,5 @@
 <!doctype html><html><head><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"capabilities":{"artifact":"artifact.0kpk9vgi.js","assets":"assets.8Gk803W0.js","comments":"comments.vw5vQdGA.js","db":"db.h-3sndFg.js","downloads":"downloads.C3GSvEDP.js","embed":"embed.CxGAyc-v.js","mcp":"mcp.Bvma3qD7.js","network":"network.B5UA9Su4.js","notifications":"notifications.ssU4jy7G.js","permissions":"permissions.BNySkLV5.js","room":"room.VSdFwTE9.js","sample":"sample.BW2Uysoh.js","self":"artifact.0kpk9vgi.js","user":"user.BpKav-Rf.js"},"transforms":"_transforms.DSB5x63f.js","comments":"_comments.C6E0cR5g.js","translate":"_translate.5HCW4BJh.js"}</script><script>(function(){"use strict";var te=["light","dark","system"],re=/^[A-Za-z0-9_-]{1,64}$/,$=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ne=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function oe(e){const t=e.toLowerCase();return t.startsWith("data-")||t.startsWith("aria-")||ne.has(t)}var Be="http://www.w3.org/1999/xhtml",se="http://www.w3.org/2000/svg",ae=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),ie=new Set(["script","style"]);function ce(e){const t=e.localName.toLowerCase();return e.namespaceURI==="http://www.w3.org/1999/xhtml"?!ae.has(t):e.namespaceURI===se?!ie.has(t):!1}function M(e,t){return e===t||(e===160||e===32)&&(t===160||t===32)}function le(e,t){const r=e.length,n=t.length;let s=0;for(;s<r&&s<n&&M(e.charCodeAt(s),t.charCodeAt(s));)s++;let o=0;for(;o<r-s&&o<n-s&&M(e.charCodeAt(r-1-o),t.charCodeAt(n-1-o));)o++;return{p:s,s:o}}function ue(e,t){const r=e.firstChild;if(e.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){e.textContent=t;return}const n=r.data,s=n.length,o=t.length,{p:i,s:c}=le(n,t);i===s&&c===0&&s===o||r.replaceData(i,s-i-c,t.slice(i,o-c));const h=r.data,p=e.ownerDocument.getSelection?.()??null,w=p!==null&&p.rangeCount>0&&(p.anchorNode===r||p.focusNode===r)?{anchor:p.anchorNode,anchorOffset:p.anchorOffset,focus:p.focusNode,focusOffset:p.focusOffset}:null;let m=-1,g=-1;for(let f=0;f<h.length&&f<t.length;f++){const v=h.charCodeAt(f),b=t.charCodeAt(f);v!==b&&M(v,b)&&(m<0&&(m=f),g=f)}const a=m>=0;if(a&&r.replaceData(m,g-m+1,t.slice(m,g+1)),a&&w!==null&&w.anchor!==null&&w.focus!==null)try{p.setBaseAndExtent(w.anchor,w.anchorOffset,w.focus,w.focusOffset)}catch{}}var fe=new Set(["html","head","body","frameset"]);function de(e){return e.namespaceURI==="http://www.w3.org/1999/xhtml"&&fe.has(e.localName)}function pe(e){if(e===null||typeof e!="object")return!1;const t=e;if(typeof t.target!="string"||!re.test(t.target)||t.text!==void 0&&typeof t.text!="string")return!1;if(t.attrsSet!==void 0){if(t.attrsSet===null||typeof t.attrsSet!="object")return!1;for(const[r,n]of Object.entries(t.attrsSet))if(!$.test(r)||typeof n!="string")return!1}if(t.attrsRemoved!==void 0){if(!Array.isArray(t.attrsRemoved))return!1;for(const r of t.attrsRemoved)if(typeof r!="string"||!$.test(r))return!1}return!0}function me(e,t){if(e===null||typeof e!="object")return!1;const{seq:r,elements:n}=e;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let s=0;s<n.length;s++)if(!t(n[s]))return!1;return!0}function he(e){return e===null||typeof e!="object"?!1:me(e.__frame_patch,pe)}function _e(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function ve(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function ye(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const r=t.theme;return typeof r=="string"&&te.includes(r)}var A=/^[\w.-]+\.js$/;function we(e,t,r){return r?"inert":typeof t=="string"&&A.test(t)?e?[t]:"inert":e?"inert":"framed"}function ge(){return{post(e,t){parent.postMessage(e,t)},on(e){const t=r=>{r.source===parent&&e(r.data,r.origin,r.isTrusted)};return addEventListener("message",t),()=>removeEventListener("message",t)}}}function be(){return{post:()=>{},on:()=>()=>{}}}var j="__frame_scroll",Ee=150,Ae=310,Se=160,Te=3e4;function ke(){let e=0,t=!1,r=!1,n=!1,s=0,o=null;const i=l=>{try{sessionStorage.setItem(j,JSON.stringify({y:l}))}catch{}},c=()=>{if(clearTimeout(e),o===null)return;const l=o;o=null,i(l)},h=()=>{if(t){t=!1;return}r=!0,o=scrollY,clearTimeout(e),e=setTimeout(c,Ee)};try{addEventListener("scroll",h,{passive:!0}),addEventListener("pagehide",c)}catch{}const p=()=>{let l;try{l=sessionStorage.getItem(j)}catch{return null}if(l===null)return null;let _;try{_=JSON.parse(l)}catch{_=null}const d=_?.y;if(!(typeof d=="number"&&Number.isFinite(d)&&d>=0)){try{sessionStorage.removeItem(j)}catch{}return null}return d};let w=!1;const m=l=>{try{const _=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),s=l,n=!0,clearTimeout(e),o=null,i(l);const d=scrollY;d!==_&&(t=!0),d!==l&&!w&&(w=!0,addEventListener("load",()=>{try{if(scrollY===d){const T=p();m(T!==null?T:s)}}catch{}},{once:!0}))}catch{}},g=()=>{try{return!!location.hash}catch{return!0}};let a=!1;const f=()=>{try{if(a||innerWidth>Ae||innerHeight>Se)return;a=!0;const l=Date.now(),_=()=>{try{removeEventListener("resize",_)}catch{}if(Date.now()-l>Te||r||g())return;const d=p();m(d!==null?d:s)};addEventListener("resize",_)}catch{}};let v=!1,b=!1;return{restore(){if(v||(v=!0,g()))return;const l=p();l!==null&&(m(l),f())},promoted(){if(b||(b=!0,g()))return;const l=p();l!==null?(m(l),f()):n&&m(s)}}}function Re(e,t,r,n){let s=null;try{s=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:h=>h})??null}catch{}const o=window.Worker,i=o?.prototype,c=Object.freeze({Worker:o,workerOn:i?.addEventListener,workerPost:i?.postMessage,workerTerminate:i?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,policy:s,origins:t});r(e).then(h=>h?.bootTopLevel?h.bootTopLevel(c,n):n.settle()).catch(()=>n.settle())}var De="modulepreload",Ie=function(e){return"/"+e},Ue={},Le=function(t,r,n){let s=Promise.resolve();function o(i){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=i,window.dispatchEvent(c),!c.defaultPrevented)throw i}return s.then(i=>{for(const c of i||[])c.status==="rejected"&&o(c.reason);return t().catch(o)})},Oe=window===top,q=Object.getOwnPropertyDescriptor(window,"claude"),k=we(Oe,window.__FRAME_PREAMBLE?.topLevel,q?.writable===!1),N=typeof k=="object"&&k[0],y=N?be():ge();(function(){const e=Object.defineProperty,t=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let s=0;s<r.length;s++){const o=r[s];try{e(t,o,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[o]}catch{}try{e(t,o,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[o]=="function"&&n++}if(n&&k==="framed")try{y.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Pe=1e4,Y=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function X(e){for(const t of Y)if(t.endsWith(":*"))try{const r=new URL(e);if(`${r.protocol}//${r.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var R=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),B=window.__FRAME_PREAMBLE?.transforms,D=window.__FRAME_PREAMBLE?.comments,I=window.__FRAME_PREAMBLE?.translate;function S(e){return Le(()=>import("/_runtime/"+e),void 0)}function G(e,t){return{contract:e.contract,changes:new Set(e.changes??[]),flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:new Map,shellOrigin:t,mount:x,hooks:O,pipe:()=>({wrap:(r,n)=>(...s)=>{try{return n(...s)}catch(o){return Promise.reject(o)}}})}}var L=null,E=null;function V(e,t,r){try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var U=!1,O={editBefore:null,edit:null};function Ce(e,t,r=!1){const n=[];let s;if(r)try{O.editBefore?.(e)}catch{}for(const o of e.elements){const i=document.querySelector(`[data-id="${o.target}"]`);if(!i){s=o.target;break}if([...Object.keys(o.attrsSet??{}),...o.attrsRemoved??[]].some(c=>!oe(c))){s=o.target;break}if(o.text!==void 0&&(!ce(i)||de(i))){s=o.target;break}for(const[c,h]of Object.entries(o.attrsSet??{}))if(!J(i,c)){try{i.setAttribute(c,h)}catch{}Z(i,c,h)}for(const c of o.attrsRemoved??[])J(i,c)||(i.removeAttribute(c),Z(i,c,null));typeof o.text=="string"&&ue(i,o.text),n.push(o.target)}if(r)try{O.edit?.(e.seq,n,s)}catch{}if(s!==void 0){y.post({__frame_patch_miss:{seq:e.seq}},t);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:e.seq,targets:n}}))}catch{}}function Z(e,t,r){if(!(e instanceof HTMLInputElement))return;const n=t.toLowerCase();n==="checked"?e.checked=r!==null:n==="value"&&e.type!=="file"&&(e.value=r??"")}function J(e,t){const r=t.toLowerCase(),n=e;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${e.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,U=!0):U&&(delete t.dataset.theme,t.style.colorScheme="",U=!1)}var P=new Map;function Me(){let e;const t={u:new Promise(r=>{e=r}),r:r=>{t.done=!0,e(r)},done:!1,nulled:!1};return t}function F(){for(const e of P.values())e.done||(e.nulled=!0,e.r(null))}var je=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),x=(e,t)=>{const r=P.get(e);if(!r||r.done){r?.nulled&&E&&y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:e}},E);return}const n=typeof t=="function"?Object.setPrototypeOf(t,je):Object.assign(Object.create(null),t);typeof n.then=="function"&&delete n.then,r.r(Object.freeze(n))};function ee(){const e=q?.value??{};V(window,"claude",e);for(const t of Object.keys(R)){if(e[t]!==void 0){V(e,t,e[t]);continue}P.set(t,Me())}if(e.use===void 0){const t=r=>{if(typeof r!="string"||!Object.hasOwn(R,r))return Promise.resolve(null);const n=P.get(r);return n?n.u:Promise.resolve(e[r]??null)};try{Object.defineProperty(e,"use",{value:t,writable:!0,configurable:!0,enumerable:!1})}catch{}}}if(k==="framed"){const e=B&&A.test(B)?S(B).catch(()=>{}):Promise.resolve(void 0),t=a=>{if(a.type==="auxclick"&&a.button!==1)return;const f=a.target,v=f&&f.closest?f.closest("a[href],area[href]"):null;if(!v)return;const b=v.getAttribute("href");if(!b)return;let l;try{l=new URL(b,document.baseURI)}catch{return}if((l.protocol==="http:"||l.protocol==="https:")&&l.origin!==location.origin){a.preventDefault();const _=(v.getAttribute("target")??"").toLowerCase(),d=a.type==="auxclick"||a.metaKey||a.ctrlKey||a.shiftKey||a.altKey||!["","_self","_top","_parent"].includes(_);y.post({__frame_nav:!0,url:l.href,newTab:d},"*")}};addEventListener("click",t,!0),addEventListener("auxclick",t,!0);const r={},n=a=>{a.isTrusted&&(r.pointer=!0)},s=a=>{a.isTrusted&&(r.click=!0)};addEventListener("pointermove",n,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0}),e.then(a=>{a?.wireNav&&(a.wireNav(),removeEventListener("click",t,!0),removeEventListener("auxclick",t,!0),removeEventListener("pointermove",n,!0),removeEventListener("click",s,!0),a.wireEngagement?.(r))});let o=null;try{o=ke()}catch{}ee();let i=null,c=null,h=0;const p=y.on((a,f)=>{X(f)&&_e(a)&&(i=a.__frame_init,E=f,p(),clearTimeout(h),c?.())});y.post({__frame_connect:!0},"*");const w=new Promise(a=>{c=a,h=setTimeout(()=>{p(),a()},Pe)}),m=document.readyState==="loading"?new Promise(a=>document.addEventListener("DOMContentLoaded",()=>a(),{once:!0})):Promise.resolve();m.then(()=>{try{o?.restore()}catch{}});const g={cb:null};y.on((a,f)=>{if(X(f)&&ve(a)){try{o?.promoted()}catch{}g.cb?.()}}),w.then(async()=>{if(!i||!E){F();return}Q(i.theme);const a=E;let f=!1,v=!1;y.on((u,z,C)=>{if(z!==a)return;ye(u)&&Q(u.__frame_theme.theme),he(u)&&Ce(u.__frame_patch,a,C);const H=u?.__fc_mode;H&&typeof H=="object"&&!f&&D&&A.test(D)&&(f=!0,S(D).then(K=>K.install?.(a,H.on===!0)).catch(()=>{}));const W=u?.__ft_cmd;W&&typeof W=="object"&&!v&&I&&A.test(I)&&(v=!0,S(I).then(K=>K.install?.(a,W)).catch(()=>{}))});const b=Object.keys(i.capabilities??{}).filter(u=>Object.hasOwn(R,u)).map(u=>[u,R[u]]).filter(u=>typeof u[1]=="string"&&A.test(u[1])),l=await Promise.allSettled(b.map(([,u])=>S(u))),_=await e,d=E;if(_?.buildBoot||y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),_?.buildBoot)try{L=_.buildBoot(i,_.TRANSFORMS??{},{shellOrigin:d,mount:x,hooks:O},u=>y.post({__frame_cap_telemetry:u},d))}catch{y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),L=G(i,d)}else L=G(i,d);const T=u=>y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:u}},d),Ne=L;l.forEach((u,z)=>{const C=b[z][0];if(u.status!=="fulfilled"){T(C);return}try{u.value?.install?.(Ne)}catch{T(C)}}),F(),await m,y.post({__frame_ready:!0},E),e.then(u=>u?.installSizeReporter?.(d,g))})}else N&&(ee(),Re(N,Y,S,{settle:F,mount:x}))})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
-<title>SkipTheLine Patent Docs</title>
+<title>Inue Patent Docs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
 <style>
   :root {
@@ -477,7 +477,7 @@
       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
     </svg>
   </div>
-  <div class="header-title">SkipTheLine — Patent Documentation</div>
+  <div class="header-title">Inue — Patent Documentation</div>
   <div class="header-sub">Attorney Package · August 2026</div>
 </header>
 
@@ -496,14 +496,14 @@
 <div class="doc-wrap">
 
   <div class="doc-kicker">Step 1 of 3 · Define the Invention</div>
-  <h1 class="doc-title">This Is Exactly How SkipTheLine Works</h1>
-  <p class="doc-desc">A complete end-to-end description of the SkipTheLine system — from the moment a venue enters the database to the moment a user receives a real-time wait time alert. This document describes the entire process, including how data enters the system, how it is validated and processed, how results are delivered, and how the system generates ongoing analytical value. The attorney — not us — will determine which elements are novel and potentially protectable.</p>
+  <h1 class="doc-title">This Is Exactly How Inue Works</h1>
+  <p class="doc-desc">A complete end-to-end description of the Inue system — from the moment a venue enters the database to the moment a user receives a real-time wait time alert. This document describes the entire process, including how data enters the system, how it is validated and processed, how results are delivered, and how the system generates ongoing analytical value. The attorney — not us — will determine which elements are novel and potentially protectable.</p>
 
   <!-- PHASE A -->
   <div class="section">
     <div class="section-label">Phase A</div>
     <h2 class="section-title">System Population — Before Users Arrive</h2>
-    <p class="section-body">Before any user opens the app, the system must already contain venues. SkipTheLine uses a three-source pipeline to populate and maintain the venue database.</p>
+    <p class="section-body">Before any user opens the app, the system must already contain venues. Inue uses a three-source pipeline to populate and maintain the venue database.</p>
 
     <div class="steps" style="margin-top: 24px;">
 
@@ -677,7 +677,7 @@
         <div class="step-content">
           <div class="step-title">Wait Time Entry</div>
           <div class="step-body">
-            <p>User selects from preset options (No wait, 5 min, 15 min, 30 min, 45 min, 60 min) or enters an exact number (0–180 minutes). An optional note can be added (140 character maximum with counter). A points preview card shows the expected SkipPoints reward for a valid submission.</p>
+            <p>User selects from preset options (No wait, 5 min, 15 min, 30 min, 45 min, 60 min) or enters an exact number (0–180 minutes). An optional note can be added (140 character maximum with counter). A points preview card shows the expected Inue Points reward for a valid submission.</p>
           </div>
         </div>
       </div>
@@ -765,12 +765,12 @@
                 <tr>
                   <td><span class="tier-label tier-1">Tier 1 · Soft Flag</span></td>
                   <td>Mildly elevated anomaly score</td>
-                  <td>Report included in calculation at reduced weight. SkipPoints awarded at reduced rate.</td>
+                  <td>Report included in calculation at reduced weight. Inue Points awarded at reduced rate.</td>
                 </tr>
                 <tr>
                   <td><span class="tier-label tier-2">Tier 2 · Hard Flag</span></td>
                   <td>High anomaly score</td>
-                  <td>Report excluded from calculation entirely. <code>flagged = true</code> on report row. SkipPoints award frozen for this submission.</td>
+                  <td>Report excluded from calculation entirely. <code>flagged = true</code> on report row. Inue Points award frozen for this submission.</td>
                 </tr>
                 <tr>
                   <td><span class="tier-label tier-3">Tier 3 · Ban</span></td>
@@ -788,7 +788,7 @@
         <div class="step-content">
           <div class="step-title">Trust Score Updated</div>
           <div class="step-body">
-            <p>If the report is clean (Tier 0): SkipPoints awarded, report_count incremented, trust_score maintained. If flagged: flagged_count incremented, trust_score degraded proportionally. A user's trust_score degrades over time with bad reports, meaning their future reports are pre-weighted down before the anomaly check even runs — a compounding quality signal.</p>
+            <p>If the report is clean (Tier 0): Inue Points awarded, report_count incremented, trust_score maintained. If flagged: flagged_count incremented, trust_score degraded proportionally. A user's trust_score degrades over time with bad reports, meaning their future reports are pre-weighted down before the anomaly check even runs — a compounding quality signal.</p>
           </div>
         </div>
       </div>
@@ -946,9 +946,9 @@
       <div class="step">
         <div class="step-rail"><div class="step-num">1</div></div>
         <div class="step-content">
-          <div class="step-title">SkipPoints Award</div>
+          <div class="step-title">Inue Points Award</div>
           <div class="step-body">
-            <p>Every valid, non-flagged report earns the submitting user SkipPoints. Flagged reports earn zero points. This structurally ties the reward system to data quality — bad actors are not only excluded from the calculation but also receive no reward benefit. Points accumulate on the user record.</p>
+            <p>Every valid, non-flagged report earns the submitting user Inue Points. Flagged reports earn zero points. This structurally ties the reward system to data quality — bad actors are not only excluded from the calculation but also receive no reward benefit. Points accumulate on the user record.</p>
           </div>
         </div>
       </div>
@@ -958,7 +958,7 @@
         <div class="step-content">
           <div class="step-title">Tier Progression & Leaderboard</div>
           <div class="step-body">
-            <p>Users progress through named tiers as SkipPoints accumulate. Weekly XP is tracked separately from lifetime points. A weekly leaderboard snapshot job ranks users by weekly activity. Top reporters in a geographic area are surfaced to venues — a B2B differentiator where paying venues can offer perks to their top local reporters.</p>
+            <p>Users progress through named tiers as Inue Points accumulate. Weekly XP is tracked separately from lifetime points. A weekly leaderboard snapshot job ranks users by weekly activity. Top reporters in a geographic area are surfaced to venues — a B2B differentiator where paying venues can offer perks to their top local reporters.</p>
           </div>
         </div>
       </div>
@@ -978,7 +978,7 @@
         <div class="step-content">
           <div class="step-title">Rewards Redemption</div>
           <div class="step-body">
-            <p>Accumulated SkipPoints can be redeemed for partner rewards (discounts, offers). Points are deducted from the user record and a unique reward code is generated upon redemption.</p>
+            <p>Accumulated Inue Points can be redeemed for partner rewards (discounts, offers). Points are deducted from the user record and a unique reward code is generated upon redemption.</p>
           </div>
         </div>
       </div>
@@ -1046,7 +1046,7 @@
         <div class="step-content">
           <div class="step-title">Conversational Interface</div>
           <div class="step-body">
-            <p>A user taps a microphone button and speaks naturally. The voice layer is a full back-and-forth conversation — not a one-shot command. The stack: Vapi (orchestration, turn-taking, interruption handling) → Whisper (speech-to-text) → Claude Sonnet (LLM reasoning over live SkipTheLine data) → ElevenLabs (text-to-speech response).</p>
+            <p>A user taps a microphone button and speaks naturally. The voice layer is a full back-and-forth conversation — not a one-shot command. The stack: Vapi (orchestration, turn-taking, interruption handling) → Whisper (speech-to-text) → Claude Sonnet (LLM reasoning over live Inue data) → ElevenLabs (text-to-speech response).</p>
           </div>
         </div>
       </div>
@@ -1056,10 +1056,10 @@
         <div class="step-content">
           <div class="step-title">Function Calls Against Live Data</div>
           <div class="step-body">
-            <p>The LLM layer can call structured functions against the SkipTheLine database in real time:</p>
+            <p>The LLM layer can call structured functions against the Inue database in real time:</p>
             <ul>
               <li><strong>getWaitTime(venueId)</strong> — retrieves current wait for a named venue</li>
-              <li><strong>reportWait(venueId, minutes, reportType)</strong> — submits a wait report by voice, awards SkipPoints automatically</li>
+              <li><strong>reportWait(venueId, minutes, reportType)</strong> — submits a wait report by voice, awards Inue Points automatically</li>
               <li><strong>setWaitDropAlert(venueId, threshold)</strong> — sets a personalized wait drop alert ("tell me when LIV drops under 20 minutes")</li>
               <li><strong>addToCalendar(venueId, time)</strong> — adds a venue visit to the user's device calendar via the Expo Calendar API</li>
             </ul>
@@ -1087,7 +1087,7 @@
 <div class="doc-wrap">
 
   <div class="doc-kicker">Step 2 of 3 · Identify Differentiators</div>
-  <h1 class="doc-title">What SkipTheLine Does That Others Don't</h1>
+  <h1 class="doc-title">What Inue Does That Others Don't</h1>
   <p class="doc-desc">For each item below: what it is, how it works, why it is different from existing approaches, and whether it is part of a larger process. These are factual descriptions — not legal conclusions. The attorney will determine which elements are novel and potentially protectable.</p>
 
   <div class="diff-list">
@@ -1153,8 +1153,8 @@
       </div>
       <div class="diff-body">
         <p><strong>What it is:</strong> A points, tier, badge, and quest system where rewards are structurally withheld from fraudulent or low-quality reports — not just manually moderated after the fact.</p>
-        <p><strong>How it works:</strong> SkipPoints are only awarded when the anomaly detection system clears a report (Tier 0 or 1). A Tier 2 (hard-flagged) report earns zero points — the SkipPoints award is frozen at the Edge Function level before it is issued. A user who submits bad reports not only fails to influence the wait time, they also fail to earn rewards.</p>
-        <p><strong>Why it's different:</strong> Waze awards points for reporting but has no structural linkage between report quality and reward. A bad actor on Waze can earn driving points while submitting false hazard reports. SkipTheLine's architecture makes the reward system and the data quality system the same system — one Edge Function output determines both.</p>
+        <p><strong>How it works:</strong> Inue Points are only awarded when the anomaly detection system clears a report (Tier 0 or 1). A Tier 2 (hard-flagged) report earns zero points — the Inue Points award is frozen at the Edge Function level before it is issued. A user who submits bad reports not only fails to influence the wait time, they also fail to earn rewards.</p>
+        <p><strong>Why it's different:</strong> Waze awards points for reporting but has no structural linkage between report quality and reward. A bad actor on Waze can earn driving points while submitting false hazard reports. Inue's architecture makes the reward system and the data quality system the same system — one Edge Function output determines both.</p>
         <p><strong>Part of a larger process:</strong> Yes — this spans Phases E and H. The anomaly detection output directly gates the gamification output.</p>
         <div class="diff-questions">
           <span class="diff-q">Is this unique?</span>
@@ -1208,7 +1208,7 @@
       <div class="diff-body">
         <p><strong>What it is:</strong> A system architecture where consumer-submitted wait time data is simultaneously the product (displayed to consumers) and the input (sold as analytics to businesses). The two markets reinforce each other rather than operating as separate systems.</p>
         <p><strong>How it works:</strong> Every consumer report that passes validation is stored permanently. The same record that contributes to the displayed wait time also contributes to the venue's analytics dashboard in the B2B product. A venue with more consumer reporters generates more accurate analytics for the business subscriber. The B2B subscriber's claimed venue also gains enhanced accuracy because the business can add their own data (hours, event schedule, entry types) that improves the context of consumer reports.</p>
-        <p><strong>Why it's different:</strong> Yelp has reviews (B2C) and business tools (B2B) but they are largely separate systems. Google Maps has user reviews and Google Business Profile but wait times are algorithmic, not the same crowdsourced loop. SkipTheLine's architecture makes B2C data quality improvements directly improve B2B analytics, and B2B subscriber data improvements directly improve B2C displayed accuracy.</p>
+        <p><strong>Why it's different:</strong> Yelp has reviews (B2C) and business tools (B2B) but they are largely separate systems. Google Maps has user reviews and Google Business Profile but wait times are algorithmic, not the same crowdsourced loop. Inue's architecture makes B2C data quality improvements directly improve B2B analytics, and B2B subscriber data improvements directly improve B2C displayed accuracy.</p>
         <div class="diff-questions">
           <span class="diff-q">Is this unique?</span>
           <span class="diff-q">How does it work?</span>
@@ -1242,7 +1242,7 @@
       <div class="diff-body">
         <p><strong>What it is:</strong> A display standard where every wait time shown to users includes: how many people reported it, how long ago, and whether it is a live or post-visit report. Post-visit reports are explicitly labeled and have time-decay applied before display.</p>
         <p><strong>How it works:</strong> Live reports (user physically present, confirmed by dwell + GPS) display with a green LIVE badge. Post-visit reports (submitted after leaving) display with an honest elapsed time label ("Reported 28 min ago — may not reflect right now") and never display as the current wait time without decay applied. The distinction between live and historical is surface-level in the UI, not hidden in the algorithm.</p>
-        <p><strong>Why it's different:</strong> Google Popular Times shows a historical average with no individual report transparency. Most crowd-sourced systems aggregate and display without revealing the age or confidence level of the underlying data. SkipTheLine's display standard makes data provenance visible to the end user.</p>
+        <p><strong>Why it's different:</strong> Google Popular Times shows a historical average with no individual report transparency. Most crowd-sourced systems aggregate and display without revealing the age or confidence level of the underlying data. Inue's display standard makes data provenance visible to the end user.</p>
         <div class="diff-questions">
           <span class="diff-q">Is this unique?</span>
           <span class="diff-q">Why is it different?</span>
@@ -1279,7 +1279,7 @@
 
   <div class="doc-kicker">Step 3 of 3 · Document All Features</div>
   <h1 class="doc-title">Complete Feature & Functionality Inventory</h1>
-  <p class="doc-desc">A comprehensive inventory of every feature, system, and planned functionality in the SkipTheLine product. Organized by the categories the attorney requested: how users interact, how information enters and is processed, how it is presented, how businesses interact, analytics functionality, and planned features sufficiently developed to describe. Features marked <span class="status-tag status-built">Built</span> are implemented in the current codebase. Features marked <span class="status-tag status-designed">Designed</span> are architecturally specified and planned for near-term implementation.</p>
+  <p class="doc-desc">A comprehensive inventory of every feature, system, and planned functionality in the Inue product. Organized by the categories the attorney requested: how users interact, how information enters and is processed, how it is presented, how businesses interact, analytics functionality, and planned features sufficiently developed to describe. Features marked <span class="status-tag status-built">Built</span> are implemented in the current codebase. Features marked <span class="status-tag status-designed">Designed</span> are architecturally specified and planned for near-term implementation.</p>
 
   <!-- HOW USERS INTERACT -->
   <div class="inv-section">
@@ -1294,16 +1294,16 @@
       <div class="inv-item"><div class="inv-name">Wait Time Reporting<span class="status-tag status-built">Built</span></div><div class="inv-desc">Preset options (No wait / 5m / 15m / 30m / 45m / 60m) or exact entry (0–180m). Report type selection (walk-in / reservation / VIP / guest list). Optional note (140 char). Points preview.</div></div>
       <div class="inv-item"><div class="inv-name">Venue Picker<span class="status-tag status-built">Built</span></div><div class="inv-desc">Searchable modal for selecting a venue when reporting. Search by name or category. Pre-selection via route parameter when arriving from Venue Detail.</div></div>
       <div class="inv-item"><div class="inv-name">Live Activity Feed<span class="status-tag status-built">Built</span></div><div class="inv-desc">Real-time feed of wait drop events, user reports, venue cards, system events. Filter by type. Links to venue detail. Pulsing live indicator.</div></div>
-      <div class="inv-item"><div class="inv-name">Profile & Stats<span class="status-tag status-built">Built</span></div><div class="inv-desc">SkipPoints total, tier progression, weekly XP, reporting streak, rank, trend direction, people helped count.</div></div>
+      <div class="inv-item"><div class="inv-name">Profile & Stats<span class="status-tag status-built">Built</span></div><div class="inv-desc">Inue Points total, tier progression, weekly XP, reporting streak, rank, trend direction, people helped count.</div></div>
       <div class="inv-item"><div class="inv-name">Quests<span class="status-tag status-built">Built</span></div><div class="inv-desc">Multi-step reporting challenges with progress bars, emoji, titles, reward point values. 9 quests defined.</div></div>
       <div class="inv-item"><div class="inv-name">Badges<span class="status-tag status-built">Built</span></div><div class="inv-desc">Achievement badges with unlock criteria. 17 badges defined. Displayed in grid with locked/unlocked state.</div></div>
-      <div class="inv-item"><div class="inv-name">Rewards Redemption<span class="status-tag status-built">Built</span></div><div class="inv-desc">SkipPoints redeemable for partner rewards. Locked state shown when points insufficient. Redemption deducts points, generates reward code.</div></div>
+      <div class="inv-item"><div class="inv-name">Rewards Redemption<span class="status-tag status-built">Built</span></div><div class="inv-desc">Inue Points redeemable for partner rewards. Locked state shown when points insufficient. Redemption deducts points, generates reward code.</div></div>
       <div class="inv-item"><div class="inv-name">Friend System<span class="status-tag status-built">Built</span></div><div class="inv-desc">Search by name or @handle. Add → Sent (1.2s delay) → Friends state machine. Friend list with avatars. Friends' reports visible in explore feed (Phase 2 full wiring).</div></div>
       <div class="inv-item"><div class="inv-name">Write Review<span class="status-tag status-built">Built</span></div><div class="inv-desc">Star rating (1–5 tap) + text input modal from Venue Detail. Photo upload via expo-image-picker. Source badge distinguishes Google vs. community reviews.</div></div>
       <div class="inv-item"><div class="inv-name">Directions Handoff<span class="status-tag status-built">Built</span></div><div class="inv-desc">Deep-links to OS default maps app. maps: URI on iOS (Apple Maps), geo: URI on Android (Google Maps). No in-app navigation built.</div></div>
       <div class="inv-item"><div class="inv-name">Settings<span class="status-tag status-built">Built</span></div><div class="inv-desc">Notifications toggle, Location toggle, Privacy toggle, Units toggle, App version display, Sign out (clears session, routes to Welcome).</div></div>
       <div class="inv-item"><div class="inv-name">Favorites<span class="status-tag status-built">Built</span></div><div class="inv-desc">Heart toggle on venue cards. Persisted via toggleFavorite() to Supabase user_venue_favorites table.</div></div>
-      <div class="inv-item"><div class="inv-name">Voice Reporting<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Tap microphone → speak naturally → conversational AI processes request → function calls against live DB → SkipPoints awarded automatically. Vapi + Claude Sonnet + ElevenLabs stack.</div></div>
+      <div class="inv-item"><div class="inv-name">Voice Reporting<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Tap microphone → speak naturally → conversational AI processes request → function calls against live DB → Inue Points awarded automatically. Vapi + Claude Sonnet + ElevenLabs stack.</div></div>
     </div>
   </div>
 
@@ -1316,7 +1316,7 @@
       <div class="inv-item"><div class="inv-name">Business Self-Registration<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Venue owner claims existing listing, verifies ownership, adds business-side data (hours, event schedule, entry type specifics). Gains SMB subscriber access.</div></div>
       <div class="inv-item"><div class="inv-name">User-Submitted Venues<span class="status-tag status-built">Built</span></div><div class="inv-desc">Users can add venues not in database (name, category, address). Enters review queue. Approved before going live.</div></div>
       <div class="inv-item"><div class="inv-name">Event Data<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Events enter via three paths: system-generated (public events API), business-submitted (SMB dashboard), user-confirmed (threshold of user tags). Stored with venue_id, event_name, event_type, start/end time, crowd_multiplier_estimate.</div></div>
-      <div class="inv-item"><div class="inv-name">Voice-Submitted Reports<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">reportWait() function call from the voice AI agent submits a structured report record identical to a tap-submitted report. SkipPoints awarded automatically.</div></div>
+      <div class="inv-item"><div class="inv-name">Voice-Submitted Reports<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">reportWait() function call from the voice AI agent submits a structured report record identical to a tap-submitted report. Inue Points awarded automatically.</div></div>
       <div class="inv-item"><div class="inv-name">Beacon Visit Signals<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">BLE beacon at subscribing venue triggers confirmed visit detection via Bluetooth. Stored as verified visit event linked to venue_id and user_id.</div></div>
     </div>
   </div>
@@ -1329,7 +1329,7 @@
       <div class="inv-item"><div class="inv-name">Trust Score System<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Per-user trust_score (0–100, starts at 100). Pre-weights report before anomaly signals evaluated. Degrades with flagged reports. Maintained/recovered with clean reports. Stored on user record.</div></div>
       <div class="inv-item"><div class="inv-name">Time-Decay Wait Engine<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Aggregates non-flagged reports per venue. Applies decay weights by age (100%/70%/40%/15%/expired). Computes weighted average. Writes to current_wait_minutes on venue record.</div></div>
       <div class="inv-item"><div class="inv-name">Event Context Application<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">If active event attached to venue, crowd_multiplier_estimate applied to wait time prediction during calculation phase.</div></div>
-      <div class="inv-item"><div class="inv-name">SkipPoints Award Logic<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Edge Function awards points only after anomaly check clears report. Tier 2 (hard flag) freezes award. Points added to user record. Points award is a direct output of the anomaly decision.</div></div>
+      <div class="inv-item"><div class="inv-name">Inue Points Award Logic<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Edge Function awards points only after anomaly check clears report. Tier 2 (hard flag) freezes award. Points added to user record. Points award is a direct output of the anomaly decision.</div></div>
       <div class="inv-item"><div class="inv-name">Badge Criteria Check<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Edge Function evaluates badge unlock criteria after every valid report. If criteria met, badge record created for user. 17 badge types defined.</div></div>
       <div class="inv-item"><div class="inv-name">Historical Pattern Computation<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">typical_wait_minutes computed from historical report archive per venue, segmented by time of day and day of week. Used for "Average wait" display and B2B analytics baseline.</div></div>
       <div class="inv-item"><div class="inv-name">Leaderboard Snapshot Job<span class="status-tag status-designed">Designed</span></div><div class="inv-desc">Weekly batch job ranks users by weekly report activity. Snapshot stored for leaderboard display. Resets weekly XP counter.</div></div>
@@ -1426,7 +1426,7 @@
 
   <div class="doc-kicker">Visual Reference · System Architecture</div>
   <h1 class="doc-title">End-to-End System Flow</h1>
-  <p class="doc-desc">A complete visual map of the SkipTheLine system — three swimlanes showing how data moves between the User, the App, and the Backend at every stage. Read top to bottom. Branching paths at anomaly detection and the feedback loop from trust score are the core of the invention.</p>
+  <p class="doc-desc">A complete visual map of the Inue system — three swimlanes showing how data moves between the User, the App, and the Backend at every stage. Read top to bottom. Branching paths at anomaly detection and the feedback loop from trust score are the core of the invention.</p>
 
   <!-- LEGEND -->
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;align-items:center;">
@@ -1602,15 +1602,15 @@
       <div class="fl-branch-row fl-tier-row">
         <div class="fl-tier-col">
           <div class="fl-tier fl-tier-0">Tier 0 — Clean</div>
-          <div class="fl-tier-action">✅ Full weight<br>SkipPoints awarded<br>trust_score maintained</div>
+          <div class="fl-tier-action">✅ Full weight<br>Inue Points awarded<br>trust_score maintained</div>
         </div>
         <div class="fl-tier-col">
           <div class="fl-tier fl-tier-1">Tier 1 — Soft Flag</div>
-          <div class="fl-tier-action">⚠️ Reduced weight<br>Partial SkipPoints<br>Included in avg</div>
+          <div class="fl-tier-action">⚠️ Reduced weight<br>Partial Inue Points<br>Included in avg</div>
         </div>
         <div class="fl-tier-col">
           <div class="fl-tier fl-tier-2">Tier 2 — Hard Flag</div>
-          <div class="fl-tier-action">🚫 Excluded from calc<br>Zero SkipPoints<br>flagged = true</div>
+          <div class="fl-tier-action">🚫 Excluded from calc<br>Zero Inue Points<br>flagged = true</div>
         </div>
         <div class="fl-tier-col">
           <div class="fl-tier fl-tier-3">Tier 3 — Ban</div>
@@ -1697,7 +1697,7 @@
   <div class="fl-phase-banner">Phase H — Gamification &amp; Engagement Loop</div>
   <div class="fl-row">
     <div class="fl-cell fl-cell-user">
-      <div class="fl-node fl-user">Earns SkipPoints<br><span class="fl-sub">Only if Tier 0 / 1 (valid report)</span></div>
+      <div class="fl-node fl-user">Earns Inue Points<br><span class="fl-sub">Only if Tier 0 / 1 (valid report)</span></div>
       <div class="fl-arrow-down"></div>
       <div class="fl-node fl-user">Tier Progression<br><span class="fl-sub">Lifetime points → tier unlock</span></div>
       <div class="fl-arrow-down"></div>
@@ -1711,7 +1711,7 @@
       <div class="fl-note fl-note-app" style="margin-top:0;">Gamification loop is structurally gated by anomaly detection: bad reports = zero points. Reward system and data quality system are the same system.</div>
     </div>
     <div class="fl-cell fl-cell-be">
-      <div class="fl-node fl-be">SkipPoints Edge Fn<br><span class="fl-sub">Award only after anomaly check clears report</span></div>
+      <div class="fl-node fl-be">Inue Points Edge Fn<br><span class="fl-sub">Award only after anomaly check clears report</span></div>
       <div class="fl-vsplit"></div>
       <div class="fl-node fl-be">Badge Edge Fn<br><span class="fl-sub">Evaluates criteria after every valid report</span></div>
       <div class="fl-vsplit"></div>
@@ -2043,7 +2043,7 @@
     ['walert','Wait Drop Alert',            '3-condition push notification',             380,1042,178,52,'user',0],
     ['pvnudge','Post-Visit Nudge',          '8–12 min after leaving venue',              110,1042,178,52,'user',0],
 
-    ['skippts','SkipPoints',                'Only Tier 0/1 · quality-gated reward',     690,830,162,52,'user',0],
+    ['skippts','Inue Points',                'Only Tier 0/1 · quality-gated reward',     690,830,162,52,'user',0],
     ['badges','Badges (17 types)',          'Edge Fn · criteria after each report',      810,928,148,48,'app',0],
     ['quests','Quests (9 types)',           'Multi-step · progress bar',                 660,928,148,48,'app',0],
     ['lboard','Leaderboard',               'Weekly snapshot · XP ranking',              740,1018,148,48,'app',0],
