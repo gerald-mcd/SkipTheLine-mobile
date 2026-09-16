@@ -19,13 +19,13 @@ import { getLaunchedVenues, type Venue } from '@/lib/queries'
 import { fontFamily } from '@/constants/theme'
 
 const COLORS = {
-  background: '#FCFBF9',
-  primary: '#F8682B',
-  primaryGlow: '#F2934D',
+  background: '#11141c',
+  primary: '#ff8a3d',
+  primaryGlow: '#ffaa6e',
   card: '#FFFFFF',
-  border: '#EDE6DD',
-  foreground: '#33384A',
-  mutedForeground: '#857565',
+  border: 'rgba(243,241,236,0.12)',
+  foreground: '#f3f1ec',
+  mutedForeground: '#8b93a6',
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
   submitGradient: {
     height: 54,
     borderRadius: 16,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 110,
     alignSelf: 'center',
-    backgroundColor: '#33384A',
+    backgroundColor: '#f3f1ec',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 9999,

@@ -512,7 +512,7 @@ export const profile = {
   reportsCount: 134,
   reportsThisWeek: 23,
   avatar: 'A',
-  avatarGradient: ['#F8682B', '#F2934D'] as [string, string],
+  avatarGradient: ['#ff8a3d', '#ffaa6e'] as [string, string],
   nextTierPoints: 3000,
   badges: [
     { id: 'b1', name: 'First Drop',   icon: '🎯', emoji: '🎯', unlocked: true,  earned: true,  description: 'Submit your first report' },
@@ -564,7 +564,7 @@ export function getSeverity(minutes: number): Severity {
 }
 
 export function getWaitColor(severity: Severity | null): string {
-  if (!severity) return '#857565'
+  if (!severity) return '#8b93a6'
   if (severity === 'short')    return '#5DB18A'
   if (severity === 'moderate') return '#D69A3F'
   return '#D9462E'

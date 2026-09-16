@@ -13,12 +13,12 @@ import { fontFamily } from '@/constants/theme'
 import WaitBadge from '@/components/WaitBadge'
 
 const COLORS = {
-  background: '#FCFBF9',
-  foreground: '#33384A',
-  mutedForeground: '#857565',
+  background: '#11141c',
+  foreground: '#f3f1ec',
+  mutedForeground: '#8b93a6',
   card: '#FFFFFF',
-  border: '#EDE6DD',
-  primary: '#F8682B',
+  border: 'rgba(243,241,236,0.12)',
+  primary: '#ff8a3d',
   success: '#5DB18A',
   destructive: '#D9462E',
 }

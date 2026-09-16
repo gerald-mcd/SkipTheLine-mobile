@@ -9,7 +9,7 @@ import { ChevronLeft } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
 import { supabase } from '@/lib/supabase'
 
-const PRIMARY = '#F8682B'
+const PRIMARY = '#ff8a3d'
 
 export default function EmailAuthScreen() {
   const router = useRouter()
@@ -74,7 +74,7 @@ export default function EmailAuthScreen() {
         {/* Header */}
         <View style={s.header}>
           <Pressable style={s.backBtn} onPress={() => router.back()}>
-            <ChevronLeft size={22} color="#33384A" strokeWidth={2.5} />
+            <ChevronLeft size={22} color="#f3f1ec" strokeWidth={2.5} />
           </Pressable>
           <Text style={s.headerTitle}>
             {mode === 'signin' ? 'Sign in' : 'Create account'}
@@ -99,7 +99,7 @@ export default function EmailAuthScreen() {
               <TextInput
                 style={s.input}
                 placeholder="Alex Rivera"
-                placeholderTextColor="#857565"
+                placeholderTextColor="#8b93a6"
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -114,7 +114,7 @@ export default function EmailAuthScreen() {
             <TextInput
               style={s.input}
               placeholder="you@example.com"
-              placeholderTextColor="#857565"
+              placeholderTextColor="#8b93a6"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -129,7 +129,7 @@ export default function EmailAuthScreen() {
             <TextInput
               style={s.input}
               placeholder="••••••••"
-              placeholderTextColor="#857565"
+              placeholderTextColor="#8b93a6"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -165,19 +165,19 @@ export default function EmailAuthScreen() {
 }
 
 const s = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: '#FCFBF9' },
+  safe:    { flex: 1, backgroundColor: '#11141c' },
   header:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12 },
   backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#F0EBE5', alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 16, fontWeight: '600', color: '#33384A', fontFamily: fontFamily.display },
+  headerTitle: { fontSize: 16, fontWeight: '600', color: '#f3f1ec', fontFamily: fontFamily.display },
   content: { flex: 1, paddingHorizontal: 24, paddingTop: 8 },
-  title:   { fontSize: 28, fontWeight: '800', color: '#33384A', letterSpacing: -0.5, fontFamily: fontFamily.displayBold, marginBottom: 6 },
-  subtitle:{ fontSize: 14, color: '#857565', fontFamily: fontFamily.body, marginBottom: 28 },
+  title:   { fontSize: 28, fontWeight: '800', color: '#f3f1ec', letterSpacing: -0.5, fontFamily: fontFamily.displayBold, marginBottom: 6 },
+  subtitle:{ fontSize: 14, color: '#8b93a6', fontFamily: fontFamily.body, marginBottom: 28 },
   fieldGroup: { marginBottom: 16 },
-  label:   { fontSize: 13, fontWeight: '600', color: '#33384A', fontFamily: fontFamily.bodySemiBold, marginBottom: 6 },
+  label:   { fontSize: 13, fontWeight: '600', color: '#f3f1ec', fontFamily: fontFamily.bodySemiBold, marginBottom: 6 },
   input:   {
-    height: 50, borderRadius: 12, borderWidth: 1, borderColor: '#EDE6DD',
+    height: 50, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(243,241,236,0.12)',
     backgroundColor: '#FFFFFF', paddingHorizontal: 14, fontSize: 15,
-    color: '#33384A', fontFamily: fontFamily.body,
+    color: '#f3f1ec', fontFamily: fontFamily.body,
   },
   btnPrimary: {
     height: 52, borderRadius: 999, backgroundColor: PRIMARY,
@@ -187,6 +187,6 @@ const s = StyleSheet.create({
   },
   btnPrimaryText: { color: '#fff', fontSize: 15, fontWeight: '700', fontFamily: fontFamily.display },
   toggleRow: { alignItems: 'center', marginTop: 20 },
-  toggleText: { fontSize: 14, color: '#857565', fontFamily: fontFamily.body },
+  toggleText: { fontSize: 14, color: '#8b93a6', fontFamily: fontFamily.body },
   toggleLink: { color: PRIMARY, fontWeight: '700', fontFamily: fontFamily.bodySemiBold },
 })

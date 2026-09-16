@@ -165,7 +165,7 @@ export const MIAMI_REGION = {
 export const WAIT_COLORS = {
   none: '#C5BDB4',      // gray — no data
   short: '#5DB18A',     // green — 0-10 min
-  moderate: '#F8682B',  // orange — 11-25 min
+  moderate: '#ff8a3d',  // orange — 11-25 min
   long: '#D9462E',      // red — 26-45 min
   very_long: '#A63220', // dark red — 45+ min
 }

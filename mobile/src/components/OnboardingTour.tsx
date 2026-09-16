@@ -18,10 +18,10 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CARD_BG = '#FFFFFF'
-const BORDER = '#EDE6DD'
-const PRIMARY = '#F8682B'
-const FG = '#33384A'
-const MUTED = '#857565'
+const BORDER = 'rgba(243,241,236,0.12)'
+const PRIMARY = '#ff8a3d'
+const FG = '#f3f1ec'
+const MUTED = '#8b93a6'
 const TAB_BAR_HEIGHT = 84
 
 // ─── Step type ────────────────────────────────────────────────────────────────
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
   },
   dotInactive: {
     width: 6,
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   btnNext: {
     flex: 2,
     borderRadius: 999,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
     paddingVertical: 12,
     alignItems: 'center',
     shadowColor: 'rgba(99,102,241,1)',

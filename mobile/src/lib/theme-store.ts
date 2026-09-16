@@ -25,26 +25,26 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
 }))
 
 export const LIGHT = {
-  background: '#FAFAF8',
-  foreground: '#33384A',
-  mutedForeground: '#857565',
-  card: '#FFFFFF',
-  border: '#EDE6DD',
-  primary: '#F8682B',
-  primaryForeground: '#FFFCF7',
-  success: '#5DB18A',
+  background: '#11141c',
+  foreground: '#f3f1ec',
+  mutedForeground: '#8b93a6',
+  card: '#181c27',
+  border: 'rgba(243,241,236,0.12)',
+  primary: '#ff8a3d',
+  primaryForeground: '#11141c',
+  success: '#35d07f',
   destructive: '#D9462E',
 } as const
 
 export const DARK = {
-  background: '#12141A',
-  foreground: '#F0EDE8',
-  mutedForeground: '#9A9284',
-  card: '#1C1F28',
-  border: '#2A2D38',
-  primary: '#F8682B',
-  primaryForeground: '#FFFCF7',
-  success: '#5DB18A',
+  background: '#11141c',
+  foreground: '#f3f1ec',
+  mutedForeground: '#8b93a6',
+  card: '#181c27',
+  border: 'rgba(243,241,236,0.12)',
+  primary: '#ff8a3d',
+  primaryForeground: '#11141c',
+  success: '#35d07f',
   destructive: '#D9462E',
 } as const
 
