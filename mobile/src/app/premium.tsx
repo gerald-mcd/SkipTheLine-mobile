@@ -1,5 +1,5 @@
 /**
- * SkipTheLine — Premium Pass / Business Suite screen
+ * Inue — Premium Pass / Business Suite screen
  * Spec: /business page from design system doc
  */
 
@@ -16,8 +16,8 @@ import { fontFamily } from '@/constants/theme'
 import { useColors } from '@/lib/theme-store'
 
 const { width } = Dimensions.get('window')
-const PRIMARY = '#F8682B'
-const PRIMARY_GLOW = '#F2934D'
+const PRIMARY = '#ff8a3d'
+const PRIMARY_GLOW = '#ffaa6e'
 
 // ─── Suite feature cards ──────────────────────────────────────────────────────
 
@@ -112,7 +112,7 @@ export default function PremiumScreen() {
 
               {/* Subhead — mt-3, text-[13px], muted; price semibold foreground */}
               <Text style={[s.heroSub, { color: c.mutedForeground }]}>
-                Live wait intel, foot-traffic patterns, competitor pulse and event lift — built from the same crowd signal powering SkipTheLine.{' '}
+                Live wait intel, foot-traffic patterns, competitor pulse and event lift — built from the same crowd signal powering Inue.{' '}
                 <Text style={{ fontWeight: '600', color: c.foreground }}>From $29–$199/mo.</Text>
               </Text>
 
@@ -403,6 +403,6 @@ const s = StyleSheet.create({
   planFeatureRow: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
   planCheck: { fontSize: 13, fontWeight: '700', marginTop: 1 },
   planFeatureText: { fontSize: 13, fontFamily: fontFamily.body, flex: 1 },
-  planBtn: { height: 44, borderRadius: 999, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginTop: 6, borderColor: '#EDE6DD' },
+  planBtn: { height: 44, borderRadius: 999, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginTop: 6, borderColor: 'rgba(243,241,236,0.12)' },
   planBtnText: { fontSize: 14, fontWeight: '700', fontFamily: fontFamily.display },
 })

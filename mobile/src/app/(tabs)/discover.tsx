@@ -28,11 +28,11 @@ const { height: SCREEN_H } = Dimensions.get('window')
 const C = {
   bg: '#FAFAF8',
   card: '#FFFFFF',
-  border: '#EDE6DD',
-  fg: '#33384A',
-  muted: '#857565',
-  primary: '#F8682B',
-  primaryGlow: '#F2934D',
+  border: 'rgba(243,241,236,0.12)',
+  fg: '#f3f1ec',
+  muted: '#8b93a6',
+  primary: '#ff8a3d',
+  primaryGlow: '#ffaa6e',
 }
 
 // Sheet snap points (from bottom)
@@ -44,7 +44,7 @@ const SNAP_FULL = SCREEN_H * 0.92
 const MAP_PINS = [
   { top: '22%', left: '18%', wait: 8, color: '#5DB18A', label: 'Whole Foods' },
   { top: '42%', left: '58%', wait: 55, color: '#D9462E', label: 'Sugar Rooftop' },
-  { top: '30%', left: '72%', wait: 42, color: '#F8682B', label: 'Komodo' },
+  { top: '30%', left: '72%', wait: 42, color: '#ff8a3d', label: 'Komodo' },
   { top: '60%', left: '25%', wait: 12, color: '#5DB18A', label: 'Zuma' },
   { top: '50%', left: '45%', wait: 28, color: '#D69A3F', label: 'Truluck\'s' },
   { top: '35%', left: '38%', wait: 65, color: '#D9462E', label: 'LIV' },
@@ -181,7 +181,7 @@ export default function DiscoverScreen() {
             onChangeText={setSearch}
           />
         </View>
-        <Pressable style={[styles.filterBtn, { backgroundColor: '#F8682B' }]}>
+        <Pressable style={[styles.filterBtn, { backgroundColor: '#ff8a3d' }]}>
           <SlidersHorizontal size={17} color="#fff" strokeWidth={2.5} />
         </Pressable>
       </View>
@@ -243,7 +243,7 @@ function SheetVenueRow({ venue, onPress }: { venue: Venue; onPress: () => void }
   const waitColor = getWaitColor(getSeverity(venue.current_wait_minutes))
   return (
     <Pressable style={styles.venueRow} onPress={onPress} testID={`map-venue-${venue.id}`}>
-      {venue.primary_image_url ? <Image source={{ uri: venue.primary_image_url }} style={styles.venueThumb} resizeMode="cover" /> : <View style={[styles.venueThumb, { backgroundColor: '#EDE6DD' }]} />}
+      {venue.primary_image_url ? <Image source={{ uri: venue.primary_image_url }} style={styles.venueThumb} resizeMode="cover" /> : <View style={[styles.venueThumb, { backgroundColor: 'rgba(243,241,236,0.12)' }]} />}
       <View style={{ flex: 1 }}>
         <Text style={styles.venueName} numberOfLines={1}>{venue.name}</Text>
         <View style={styles.venueMeta}>
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     marginTop: 10, marginBottom: 12, position: 'relative',
   },
-  handle: { width: 36, height: 4, borderRadius: 2, backgroundColor: '#F8682B', opacity: 0.85 },
+  handle: { width: 36, height: 4, borderRadius: 2, backgroundColor: '#ff8a3d', opacity: 0.85 },
   closeBtn: {
     position: 'absolute', right: 16,
     width: 32, height: 32, borderRadius: 16,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   sheetCount: { fontSize: 13, color: C.muted, fontFamily: fontFamily.body },
   sheetCountNum: { fontSize: 13, fontWeight: '700', color: C.fg, fontFamily: fontFamily.display },
   sheetFilters: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  sheetFilterActive: { fontSize: 12, fontWeight: '600', color: '#F8682B', fontFamily: fontFamily.bodySemiBold },
+  sheetFilterActive: { fontSize: 12, fontWeight: '600', color: '#ff8a3d', fontFamily: fontFamily.bodySemiBold },
   sheetFilterDot: { fontSize: 12, color: C.muted },
 
   listContent: { paddingHorizontal: 12, paddingTop: 8 },

@@ -438,7 +438,7 @@ export const exploreFeed: FeedItem[] = [
   { id: 'fd1', kind: 'drop', ago: 'now', venueId: 'v5', from: 40, to: 25 },
   { id: 'fd2', kind: 'report', ago: '1m', venueId: 'v1', user: 'Sofía', initial: 'S', minutes: 42, quote: 'Seated in 38 — bar moves faster.' },
   { id: 'fd3', kind: 'venue', ago: '2m', venueId: 'v2' },
-  { id: 'fd4', kind: 'system', ago: '3m', title: '+25 SkipPoints', body: 'Your report at Coyo Taco was confirmed by 4 people.', emoji: '✨' },
+  { id: 'fd4', kind: 'system', ago: '3m', title: '+25 Inue Points', body: 'Your report at Coyo Taco was confirmed by 4 people.', emoji: '✨' },
   { id: 'fd5', kind: 'report', ago: '4m', venueId: 'v3', user: 'Marcus', initial: 'M', minutes: 8, quote: 'Walked right in. Chair open.' },
   { id: 'fd6', kind: 'drop', ago: '6m', venueId: 'v7', from: 50, to: 35 },
   { id: 'fd7', kind: 'venue', ago: '8m', venueId: 'v6' },
@@ -512,7 +512,7 @@ export const profile = {
   reportsCount: 134,
   reportsThisWeek: 23,
   avatar: 'A',
-  avatarGradient: ['#F8682B', '#F2934D'] as [string, string],
+  avatarGradient: ['#ff8a3d', '#ffaa6e'] as [string, string],
   nextTierPoints: 3000,
   badges: [
     { id: 'b1', name: 'First Drop',   icon: '🎯', emoji: '🎯', unlocked: true,  earned: true,  description: 'Submit your first report' },
@@ -533,7 +533,7 @@ export const profile = {
   ],
   rankTrend: 'up' as 'up' | 'down' | 'flat',
   rankDelta: 5,
-  email: 'alex@skiptheline.app',
+  email: 'alex@inue.app',
   phone: '+1 (305) 555-0142',
   joined: 'Mar 2024',
   friends: [
@@ -564,7 +564,7 @@ export function getSeverity(minutes: number): Severity {
 }
 
 export function getWaitColor(severity: Severity | null): string {
-  if (!severity) return '#857565'
+  if (!severity) return '#8b93a6'
   if (severity === 'short')    return '#5DB18A'
   if (severity === 'moderate') return '#D69A3F'
   return '#D9462E'

@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "SkipTheLine",
-    "slug": "skiptheline",
-    "scheme": "skiptheline",
+    "name": "Inue",
+    "slug": "inue",
+    "scheme": "inue",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.skiptheline.app",
+      "bundleIdentifier": "com.inue.app",
       "config": {
         "googleMapsApiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
       },
@@ -19,7 +19,7 @@
     },
     "android": {
       "edgeToEdgeEnabled": true,
-      "package": "com.skiptheline.app",
+      "package": "com.inue.app",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"

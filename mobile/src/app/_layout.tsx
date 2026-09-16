@@ -62,7 +62,7 @@ function RootLayoutNav() {
         <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
         <Stack.Screen name="venue/[id]" options={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#FCFBF9' },
+          contentStyle: { backgroundColor: '#11141c' },
         }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
