@@ -1,9 +1,10 @@
-# SkipTheLine — CTO Assessment Project
+# Inue — CTO Assessment Project
 
 ## What This Is
-I am evaluating a potential CTO role at SkipTheLine, a pre-seed startup building a real-time, crowd-powered wait time app (think "Waze for lines"). I was brought in by a friend/co-founder and have signed an NDA. My job is to assess the existing Bolt prototype, ask the right questions, and determine how to build this properly.
+I am evaluating a potential CTO role at Inue, a pre-seed startup building a real-time, crowd-powered wait time app (think "Waze for lines"). I was brought in by a friend/co-founder and have signed an NDA. My job is to assess the existing Bolt prototype, ask the right questions, and determine how to build this properly.
 
 ## The Company
+- **Brand:** **Inue** (rebranded from SkipTheLine, Sept 2026). App name `Inue`, bundle ID / package `com.inue.app`, deep link scheme `inue://`. Legacy names kept on purpose: EAS project slug `skiptheline` (matches the linked EAS project ID), the GitHub repos, the `skiptheline.site` domain/email, and Supabase project. "SkipPoints" not yet renamed.
 - **Product:** Real-time crowdsourced wait times for restaurants, barbershops, DMVs, attractions, nightclubs, dayclubs, etc.
 - **Founder:** Jason Mizrachi — iHeartMedia executive, 30+ years in media/partnerships
 - **Stage:** Pre-seed, raising $1MM (SAFE or convertible note)
@@ -189,7 +190,7 @@ Event context should be a first-class field on every business, not an afterthoug
 **The gap Google Maps leaves wide open:**
 > Real-time, human-verified, crowd-powered conditions at the destination — not just how to get there, but whether it's worth going right now.
 
-Google Maps tells you a restaurant has a 4.2 rating and is open until 10pm. It cannot tell you there's currently a 45-minute wait because a Heat game just let out. That's SkipTheLine's entire value proposition — a gap Google has the infrastructure to fill but has consciously not prioritized.
+Google Maps tells you a restaurant has a 4.2 rating and is open until 10pm. It cannot tell you there's currently a 45-minute wait because a Heat game just let out. That's Inue's entire value proposition — a gap Google has the infrastructure to fill but has consciously not prioritized.
 
 ---
 
@@ -208,15 +209,15 @@ Google Maps tells you a restaurant has a 4.2 rating and is open until 10pm. It c
 - 7-year user still frustrated with UX friction at edge cases — users can't leave because nothing else does what Waze does, but not fully satisfied.
 
 **The three gaps Waze leaves open:**
-1. **Waze stops at the car door** — zero awareness of what happens after you arrive. Is it packed? Is there a line? That handoff moment — car to destination — is exactly where SkipTheLine picks up.
-2. **Crowd intelligence without a community** — reports disappear into an algorithm. No reputation, no leaderboard, no identity. Users love what they receive, not what they give. Contribution loop is purely transactional. SkipTheLine's gamification (SkipPoints, leaderboards, reporter reputation) is the thing Waze never built.
+1. **Waze stops at the car door** — zero awareness of what happens after you arrive. Is it packed? Is there a line? That handoff moment — car to destination — is exactly where Inue picks up.
+2. **Crowd intelligence without a community** — reports disappear into an algorithm. No reputation, no leaderboard, no identity. Users love what they receive, not what they give. Contribution loop is purely transactional. Inue's gamification (SkipPoints, leaderboards, reporter reputation) is the thing Waze never built.
 3. **No pre-trip intelligence** — activates when you're in the car with a destination. Doesn't help you decide whether to go, when to go, or where to go instead.
 
 ---
 
 ### The Master Insight — How Both Analyses Connect
 
-| | Google Maps | Waze | SkipTheLine |
+| | Google Maps | Waze | Inue |
 |--|-------------|------|-------------|
 | **Domain** | Where + how to get there | What's on the road | What's waiting at the destination |
 | **Intelligence** | Reactive search | Ambient (driving only) | Ambient (pre-trip + arrival) |
@@ -234,18 +235,18 @@ Google Maps tells you a restaurant has a 4.2 rating and is open until 10pm. It c
 **Google Maps = the road layer**
 Infrastructure. Tiles, routing, Places data, business seeding. Rented the same way Uber rents it — a utility, not the product.
 
-**SkipTheLine = the destination intelligence layer on top**
+**Inue = the destination intelligence layer on top**
 The live pulse of the city. What's happening at every pin on that map right now.
 
-- A pin Google Maps shows as "open" → SkipTheLine shows as "45 min wait, spiking"
-- A pin Google Maps shows with a 4.2 rating → SkipTheLine shows as "unusually quiet right now, go now"
-- A pin Google Maps has no real-time data for → SkipTheLine shows "Art Basel crowd, reported 8 min ago"
+- A pin Google Maps shows as "open" → Inue shows as "45 min wait, spiking"
+- A pin Google Maps shows with a 4.2 rating → Inue shows as "unusually quiet right now, go now"
+- A pin Google Maps has no real-time data for → Inue shows "Art Basel crowd, reported 8 min ago"
 
-Google Maps made the map. SkipTheLine makes it breathe.
+Google Maps made the map. Inue makes it breathe.
 
 **The Waze parallel:**
 
-| Layer | Waze | SkipTheLine |
+| Layer | Waze | Inue |
 |-------|------|-------------|
 | Base map | Google Maps tiles | Google Maps tiles |
 | Crowd intelligence | Roads and traffic | Destinations and wait times |
@@ -256,7 +257,7 @@ Google Maps made the map. SkipTheLine makes it breathe.
 Waze didn't replace Google Maps. It layered crowd intelligence on top and became indispensable to a high-loyalty user base. That's the exact playbook.
 
 **The one-line pitch:**
-> "Google Maps shows you what's there. Waze shows you what's on the road. SkipTheLine shows you what's waiting when you arrive — powered by the same crowd intelligence model that made Waze the most loyal navigation app ever built."
+> "Google Maps shows you what's there. Waze shows you what's on the road. Inue shows you what's waiting when you arrive — powered by the same crowd intelligence model that made Waze the most loyal navigation app ever built."
 
 ---
 
@@ -278,7 +279,7 @@ Waze didn't replace Google Maps. It layered crowd intelligence on top and became
 - Changes the data flywheel — ambient creates reporting moments not tied to user intent. A user walking past a packed restaurant gets a nudge: "Looks busy near you — quick report?" Reactive apps never get this moment.
 - Defensible moat — Google Maps could add wait times tomorrow. What they can't add is the behavioral layer — gamification, reporter reputation, community. Ambient intelligence only works if the underlying data is alive. That requires motivated contributors. That's the moat.
 
-> Google Maps tells you how to get somewhere. SkipTheLine tells you whether it's worth leaving your couch.
+> Google Maps tells you how to get somewhere. Inue tells you whether it's worth leaving your couch.
 
 ## Maps Strategy
 
@@ -553,7 +554,7 @@ A **Voice AI Agent** (also called Conversational Voice Interface) — the same e
 ### The Stack (Three Layers)
 
 ```
-Your App (SkipTheLine)
+Your App (Inue)
     ↓
 Voice AI Platform  ← "the orchestration layer"
 (Vapi, Bland, ElevenLabs)
