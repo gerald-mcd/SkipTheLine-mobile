@@ -18,17 +18,17 @@ import { ReviewModal } from '@/components/ReviewModal'
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const C = {
-  bg: '#FCFBF9',
-  primary: '#F8682B',
-  foreground: '#33384A',
-  muted: '#857565',
-  border: '#EDE6DD',
+  bg: '#11141c',
+  primary: '#ff8a3d',
+  foreground: '#f3f1ec',
+  muted: '#8b93a6',
+  border: 'rgba(243,241,236,0.12)',
   card: '#FFFFFF',
   peach: '#FFF0E8',
-  peachText: '#F8682B',
+  peachText: '#ff8a3d',
 }
 
-const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#F8682B', '#857565', '#33384A']
+const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#ff8a3d', '#8b93a6', '#f3f1ec']
 
 const SPARK_DATA = [22, 35, 55, 70, 78, 60, 42, 28]
 const SPARK_W = 80
@@ -115,7 +115,7 @@ function ReportCard({ report, index }: { report: VenueReport; index: number }) {
           <Text style={styles.reportAvatarText}>{report.initial}</Text>
         </View>
       ) : (
-        <View style={[styles.reportAvatar, { backgroundColor: '#EDE6DD' }]}>
+        <View style={[styles.reportAvatar, { backgroundColor: 'rgba(243,241,236,0.12)' }]}>
           <User size={14} color={C.muted} strokeWidth={2} />
         </View>
       )}

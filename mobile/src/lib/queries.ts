@@ -1,5 +1,5 @@
 /**
- * SkipTheLine — Supabase query functions
+ * Inue — Supabase query functions
  * Single source of truth for all DB reads.
  * Every screen imports from here, not directly from supabase client.
  */

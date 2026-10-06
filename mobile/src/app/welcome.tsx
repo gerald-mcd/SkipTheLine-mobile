@@ -5,15 +5,15 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
-import { MapPin } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { signInAsTestUser } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
+import InueLogo, { InueEyebrow, INUE_AMBER, INUE_INK, INUE_WHITE, INUE_SLATE } from '@/components/InueLogo'
 
 const { width, height } = Dimensions.get('window')
-const PRIMARY      = '#F8682B'
-const PRIMARY_GLOW = '#FFB37A'
+const PRIMARY      = INUE_AMBER        // #ff8a3d
+const PRIMARY_GLOW = '#ffaa6e'
 
 const SLIDES = [
   { label: 'Restaurants · 42m wait now',   image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80&auto=format&fit=crop' },
@@ -79,7 +79,7 @@ export default function WelcomeScreen() {
       setLoading('apple')
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
-        options: { redirectTo: 'skiptheline://auth/callback' },
+        options: { redirectTo: 'inue://auth/callback' },
       })
       if (error) throw error
     } catch (e: any) {
@@ -92,7 +92,7 @@ export default function WelcomeScreen() {
       setLoading('google')
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: 'skiptheline://auth/callback' },
+        options: { redirectTo: 'inue://auth/callback' },
       })
       if (error) throw error
     } catch (e: any) {
@@ -133,10 +133,7 @@ export default function WelcomeScreen() {
 
       {/* Brand — top */}
       <View style={[s.brandRow, { top: insets.top + 20 }]}>
-        <View style={s.logoTile}>
-          <MapPin size={16} color="#fff" fill="#fff" />
-        </View>
-        <Text style={s.wordmark}>SkipTheLine</Text>
+        <InueLogo size={28} color={INUE_WHITE} ringColor={INUE_AMBER} />
       </View>
 
       {/* Bottom content */}
@@ -263,7 +260,7 @@ export default function WelcomeScreen() {
 }
 
 const s = StyleSheet.create({
-  root:    { flex: 1, backgroundColor: '#000' },
+  root:    { flex: 1, backgroundColor: INUE_INK },
   bgImage: { position: 'absolute', width, height },
 
   // Brand top-left
@@ -274,17 +271,6 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     zIndex: 10,
-  },
-  logoTile: {
-    width: 36, height: 36, borderRadius: 10,
-    backgroundColor: PRIMARY,
-    alignItems: 'center', justifyContent: 'center',
-    shadowColor: PRIMARY, shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4, shadowRadius: 12, elevation: 6,
-  },
-  wordmark: {
-    fontSize: 16, fontWeight: '800', color: '#fff',
-    letterSpacing: -0.4, fontFamily: fontFamily.displayBold,
   },
 
   // Bottom content block

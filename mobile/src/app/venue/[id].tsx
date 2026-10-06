@@ -28,17 +28,17 @@ import { getVenueById, getVenueReports, getVenueReviews, getVenuePhotos, getVenu
 import { supabase } from '@/lib/supabase'
 
 const COLORS = {
-  background: '#FCFBF9',
-  primary: '#F8682B',
+  background: '#11141c',
+  primary: '#ff8a3d',
   card: '#FFFFFF',
-  border: '#EDE6DD',
-  foreground: '#33384A',
-  mutedForeground: '#857565',
+  border: 'rgba(243,241,236,0.12)',
+  foreground: '#f3f1ec',
+  mutedForeground: '#8b93a6',
   peachBadgeBg: '#FFF0E8',
   peachBadgeText: '#E07A3B',
 }
 
-const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#E07A3B', '#857565', '#33384A']
+const AVATAR_COLORS = ['#5DB18A', '#D69A3F', '#E07A3B', '#8b93a6', '#f3f1ec']
 
 function StarRow({ count }: { count: number }) {
   return (
@@ -47,7 +47,7 @@ function StarRow({ count }: { count: number }) {
         <Star
           key={i}
           size={11}
-          color={i <= count ? '#F59E0B' : '#EDE6DD'}
+          color={i <= count ? '#F59E0B' : 'rgba(243,241,236,0.12)'}
           fill={i <= count ? '#F59E0B' : 'transparent'}
           strokeWidth={1.5}
         />
@@ -451,7 +451,7 @@ export default function VenueDetailScreen() {
                       <Text style={styles.reportAvatarText}>{initial}</Text>
                     </View>
                   ) : (
-                    <View style={[styles.reportAvatar, { backgroundColor: '#EDE6DD' }]}>
+                    <View style={[styles.reportAvatar, { backgroundColor: 'rgba(243,241,236,0.12)' }]}>
                       <User size={14} color={COLORS.mutedForeground} strokeWidth={2} />
                     </View>
                   )}
@@ -647,7 +647,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 52,
     borderRadius: 9999,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

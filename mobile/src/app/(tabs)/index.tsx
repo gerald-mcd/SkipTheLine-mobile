@@ -9,6 +9,7 @@ import { Moon, Sun, Settings, Search, Heart, SlidersHorizontal, X, Clock, Users,
 import { spacing, fontFamily } from '@/constants/theme'
 import { categories, type Category, getSeverity, getWaitColor } from '@/lib/mock-data'
 import { OnboardingTour } from '@/components/OnboardingTour'
+import InueLogo from '@/components/InueLogo'
 import { useThemeStore, useColors } from '@/lib/theme-store'
 import { getLaunchedVenues, toggleFavorite, getFavoriteIds, type Venue } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
@@ -21,12 +22,12 @@ const PAGE_SIZE = 20
 // ─── Premium Pass teaser ──────────────────────────────────────────────────────
 
 const P_FEATURES = [
-  { icon: <Clock size={12} color="#F8682B" strokeWidth={2} />,      label: 'Wait intel'       },
-  { icon: <Users size={12} color="#F8682B" strokeWidth={2} />,      label: 'Foot traffic'     },
-  { icon: <BarChart2 size={12} color="#F8682B" strokeWidth={2} />,  label: 'Competitor pulse' },
-  { icon: <Calendar size={12} color="#F8682B" strokeWidth={2} />,   label: 'Event lift'       },
-  { icon: <Shield size={12} color="#F8682B" strokeWidth={2} />,     label: 'Reporter quality' },
-  { icon: <Download size={12} color="#F8682B" strokeWidth={2} />,   label: 'CSV exports'      },
+  { icon: <Clock size={12} color="#ff8a3d" strokeWidth={2} />,      label: 'Wait intel'       },
+  { icon: <Users size={12} color="#ff8a3d" strokeWidth={2} />,      label: 'Foot traffic'     },
+  { icon: <BarChart2 size={12} color="#ff8a3d" strokeWidth={2} />,  label: 'Competitor pulse' },
+  { icon: <Calendar size={12} color="#ff8a3d" strokeWidth={2} />,   label: 'Event lift'       },
+  { icon: <Shield size={12} color="#ff8a3d" strokeWidth={2} />,     label: 'Reporter quality' },
+  { icon: <Download size={12} color="#ff8a3d" strokeWidth={2} />,   label: 'CSV exports'      },
 ]
 
 function PremiumTeaser({ onPress }: { onPress: () => void }) {
@@ -55,7 +56,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
         ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[prem.card, { width: CARD_WIDTH, borderColor: c.border }]}
+        style={[prem.card, { borderColor: c.border }]}
       >
         {/* Glow blob — top-right, blur-2xl, primary 35% opacity 0.6 */}
         <View style={prem.glowBlob} pointerEvents="none" />
@@ -65,7 +66,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 
           {/* Icon tile — h-11 w-11 (44), rounded-2xl (22), gradient-aurora, shadow-glow */}
           <LinearGradient
-            colors={['#F8682B', '#F2934D']}
+            colors={['#ff8a3d', '#ffaa6e']}
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
             style={prem.iconTile}
           >
@@ -84,7 +85,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
             </Text>
             {/* Subtitle */}
             <Text style={[prem.sub, { color: c.mutedForeground }]}>
-              The full analytics suite, built from live SkipTheLine signals.
+              The full analytics suite, built from live Inue signals.
             </Text>
           </View>
 
@@ -128,7 +129,7 @@ function PremiumTeaser({ onPress }: { onPress: () => void }) {
 
 const prem = StyleSheet.create({
   wrap: {
-    marginHorizontal: spacing.md,
+    marginHorizontal: 20,
     marginTop: 12,
     marginBottom: 4,
   },
@@ -163,7 +164,7 @@ const prem = StyleSheet.create({
     width: 44, height: 44, borderRadius: 22,
     alignItems: 'center', justifyContent: 'center',
     flexShrink: 0, marginTop: 2,
-    shadowColor: '#F8682B',
+    shadowColor: '#ff8a3d',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.40,
     shadowRadius: 8,
@@ -179,7 +180,7 @@ const prem = StyleSheet.create({
     marginBottom: 4,
   },
   badgeText: {
-    fontSize: 9, fontWeight: '700', color: '#F8682B',
+    fontSize: 9, fontWeight: '700', color: '#ff8a3d',
     letterSpacing: 1.4, textTransform: 'uppercase',
     fontFamily: fontFamily.accent,
   },
@@ -223,8 +224,8 @@ const prem = StyleSheet.create({
   ctaBtn: {
     borderRadius: 9999,
     paddingHorizontal: 12, paddingVertical: 6,
-    backgroundColor: '#F8682B',
-    shadowColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
+    shadowColor: '#ff8a3d',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.40,
     shadowRadius: 8,
@@ -390,17 +391,17 @@ const featStyles = StyleSheet.create({
   title: { fontSize: 16, fontWeight: '700', fontFamily: fontFamily.display },
   subtitle: { fontSize: 12, marginTop: 2, fontFamily: fontFamily.body },
   viewBtn: {
-    borderWidth: 1.5, borderColor: '#F8682B',
+    borderWidth: 1.5, borderColor: '#ff8a3d',
     paddingHorizontal: 16, paddingVertical: 8, borderRadius: 999,
     backgroundColor: 'rgba(224,122,59,0.08)',
   },
-  viewBtnText: { color: '#F8682B', fontSize: 13, fontWeight: '600', fontFamily: fontFamily.bodySemiBold },
+  viewBtnText: { color: '#ff8a3d', fontSize: 13, fontWeight: '600', fontFamily: fontFamily.bodySemiBold },
   dots: {
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
     gap: 6, marginTop: 12,
   },
   dot: { height: 6, borderRadius: 3 },
-  dotActive: { width: 18, backgroundColor: '#F8682B' },
+  dotActive: { width: 18, backgroundColor: '#ff8a3d' },
   dotInactive: { width: 6, backgroundColor: '#C5BDB4' },
 })
 
@@ -426,10 +427,10 @@ function CategoryChips({
           <Pressable
             key={cat.id}
             onPress={() => onChange(cat.id)}
-            style={[chipStyles.chip, { backgroundColor: on ? '#F8682B' : c.card, borderColor: '#F8682B' }]}
+            style={[chipStyles.chip, { backgroundColor: on ? '#ff8a3d' : c.card, borderColor: '#ff8a3d' }]}
           >
             <View style={chipStyles.chipInner}>
-              <Text style={[chipStyles.label, { color: on ? '#fff' : '#F8682B' }]}>{cat.label}</Text>
+              <Text style={[chipStyles.label, { color: on ? '#fff' : '#ff8a3d' }]}>{cat.label}</Text>
             </View>
           </Pressable>
         )
@@ -547,7 +548,7 @@ const cardStyles = StyleSheet.create({
   },
   firstReportBanner: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
     paddingVertical: 5, paddingHorizontal: 8, alignItems: 'center',
   },
   firstReportText: { color: '#fff', fontSize: 9, fontWeight: '700', letterSpacing: 0.2 },
@@ -563,9 +564,9 @@ const cardStyles = StyleSheet.create({
   meta: { fontSize: 11, flex: 1, fontFamily: fontFamily.body },
   noWaitPill: {
     borderRadius: 9999, paddingHorizontal: 9, paddingVertical: 4,
-    backgroundColor: '#EDE6DD',
+    backgroundColor: 'rgba(243,241,236,0.12)',
   },
-  noWaitText: { fontSize: 10, fontWeight: '700', color: '#857565' },
+  noWaitText: { fontSize: 10, fontWeight: '700', color: '#8b93a6' },
 })
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
@@ -639,10 +640,8 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <View style={[styles.avatarWrap, styles.avatar]}>
-              <Text style={styles.avatarText}>S</Text>
-            </View>
-            <Text style={[styles.greeting, { color: c.foreground }]}>Hi there!</Text>
+            <InueLogo size={22} />
+            <Text style={[styles.greeting, { color: c.mutedForeground }]}>Hi there!</Text>
             <View style={[styles.rankBadge, { backgroundColor: `${rankColor}22` }]}>
               <Text style={[styles.rankText, { color: rankColor }]}>#–</Text>
             </View>
@@ -693,7 +692,7 @@ export default function HomeScreen() {
             ) : null}
           </View>
           <Pressable
-            style={[styles.filterBtn, { backgroundColor: showShortWaitsOnly ? c.foreground : '#F8682B' }]}
+            style={[styles.filterBtn, { backgroundColor: showShortWaitsOnly ? c.foreground : '#ff8a3d' }]}
             onPress={() => setShowShortWaitsOnly(prev => !prev)}
           >
             <SlidersHorizontal size={16} color="#fff" />
@@ -769,7 +768,7 @@ const styles = StyleSheet.create({
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   avatarWrap: {
     width: 40, height: 40, borderRadius: 20,
-    backgroundColor: '#F8682B',
+    backgroundColor: '#ff8a3d',
     alignItems: 'center', justifyContent: 'center',
   },
   avatar: {},
@@ -829,12 +828,12 @@ const styles = StyleSheet.create({
   showMoreBtn: {
     marginHorizontal: spacing.md, marginTop: 16, marginBottom: 4,
     paddingVertical: 14, borderRadius: 12,
-    borderWidth: 1, borderColor: '#EDE6DD',
+    borderWidth: 1, borderColor: 'rgba(243,241,236,0.12)',
     alignItems: 'center', justifyContent: 'center',
     backgroundColor: '#FFFFFF',
   },
   showMoreText: {
-    fontSize: 13, fontWeight: '600', color: '#F8682B',
+    fontSize: 13, fontWeight: '600', color: '#ff8a3d',
     fontFamily: 'Inter_600SemiBold',
   },
 })

@@ -6,12 +6,12 @@ import { X, Star, Send } from 'lucide-react-native'
 import { fontFamily } from '@/constants/theme'
 
 const C = {
-  bg: '#FCFBF9',
+  bg: '#11141c',
   card: '#FFFFFF',
-  border: '#EDE6DD',
-  foreground: '#33384A',
-  muted: '#857565',
-  primary: '#F8682B',
+  border: 'rgba(243,241,236,0.12)',
+  foreground: '#f3f1ec',
+  muted: '#8b93a6',
+  primary: '#ff8a3d',
   star: '#F59E0B',
 }
 
@@ -182,7 +182,7 @@ const s = StyleSheet.create({
   },
   toast: {
     position: 'absolute', bottom: 100, alignSelf: 'center',
-    backgroundColor: '#33384A',
+    backgroundColor: '#f3f1ec',
     paddingHorizontal: 20, paddingVertical: 12,
     borderRadius: 9999,
   },

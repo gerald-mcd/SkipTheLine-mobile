@@ -15,18 +15,19 @@ import {
 import { signOut } from '@/lib/auth'
 import { useRouter } from 'expo-router'
 import { fontFamily } from '@/constants/theme'
+import InueLogo from '@/components/InueLogo'
 import { getUserProfile, type UserProfile } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
 import { DEMO_MODE, DEMO_PROFILE, DEMO_FRIENDS } from '@/lib/demo'
 
 const COLORS = {
-  background: '#FCFBF9',
-  foreground: '#33384A',
-  mutedForeground: '#857565',
+  background: '#11141c',
+  foreground: '#f3f1ec',
+  mutedForeground: '#8b93a6',
   card: '#FFFFFF',
-  border: '#EDE6DD',
-  primary: '#F8682B',
-  primaryGlow: '#F2934D',
+  border: 'rgba(243,241,236,0.12)',
+  primary: '#ff8a3d',
+  primaryGlow: '#ffaa6e',
   primaryForeground: '#FFFCF7',
   success: '#5DB18A',
   destructive: '#D9462E',
@@ -80,6 +81,11 @@ export default function ProfileScreen() {
     <SafeAreaView edges={['top']} style={styles.safe} testID="profile-screen">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
 
+        {/* Wordmark */}
+        <View style={{ paddingHorizontal: 16, paddingTop: 4, paddingBottom: 8 }}>
+          <InueLogo size={20} />
+        </View>
+
         {/* Header */}
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
@@ -101,7 +107,7 @@ export default function ProfileScreen() {
 
         {/* Hero gamification card */}
         <LinearGradient
-          colors={['#F8682B', '#F2934D', '#F0A870']}
+          colors={['#ff8a3d', '#ffaa6e', '#ffaa6e']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.heroCard}
@@ -124,7 +130,7 @@ export default function ProfileScreen() {
 
           <View style={styles.pointsRow}>
             <Text style={styles.pointsNumber}>{points.toLocaleString()}</Text>
-            <Text style={styles.pointsLabel}>SkipPoints</Text>
+            <Text style={styles.pointsLabel}>Inue Points</Text>
           </View>
 
           <View style={styles.progressSection}>
@@ -510,7 +516,7 @@ const modalStyles = StyleSheet.create({
   personName: { fontSize: 13, fontWeight: '600', color: COLORS.foreground },
   personHandle: { fontWeight: '400', color: COLORS.mutedForeground },
   personMeta: { fontSize: 10, color: COLORS.mutedForeground, marginTop: 1 },
-  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#F8682B' },
+  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#ff8a3d' },
   addBtnText: { fontSize: 11, fontWeight: '600', color: '#fff' },
   friendsBadge: { flexDirection: 'row', alignItems: 'center', gap: 3, backgroundColor: COLORS.accent, borderRadius: 9999, paddingHorizontal: 8, paddingVertical: 4 },
   friendsBadgeText: { fontSize: 10, fontWeight: '700', color: COLORS.primary, textTransform: 'uppercase', letterSpacing: 0.3 },
@@ -570,6 +576,6 @@ const styles = StyleSheet.create({
   friendHandle: { fontSize: 11, color: COLORS.mutedForeground, marginTop: 1 },
   friendTag: { fontSize: 11, fontWeight: '600', color: COLORS.mutedForeground },
   friendsNote: { fontSize: 11, color: COLORS.mutedForeground, marginBottom: 10 },
-  findFriendsBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#F8682B' },
+  findFriendsBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#ff8a3d' },
   findFriendsBtnText: { fontSize: 12, fontWeight: '600', color: '#fff' },
 })

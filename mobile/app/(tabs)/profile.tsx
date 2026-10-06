@@ -86,7 +86,7 @@ export default function ProfileScreen() {
 
         <View style={styles.heroPoints}>
           <Text style={styles.heroPointsNum}>{profile.points.toLocaleString()}</Text>
-          <Text style={styles.heroPointsLabel}>SkipPoints</Text>
+          <Text style={styles.heroPointsLabel}>Inue Points</Text>
         </View>
 
         <View style={styles.progressSection}>
