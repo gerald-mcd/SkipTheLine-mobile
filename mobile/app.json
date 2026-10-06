@@ -10,33 +10,19 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.inue.app",
-      "config": {
-        "googleMapsApiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
-      },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "edgeToEdgeEnabled": true,
-      "package": "com.inue.app",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
-        }
-      }
+      "package": "com.inue.app"
     },
     "plugins": [
       [
         "expo-router",
         {
           "root": "./src/app"
-        }
-      ],
-      [
-        "react-native-maps",
-        {
-          "googleMapsApiKey": "AIzaSyAVb76ltP0OYJTnEybnfDV4tUK-vNhVjgI"
         }
       ]
     ],
