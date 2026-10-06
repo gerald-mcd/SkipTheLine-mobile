@@ -4,7 +4,7 @@
 I am evaluating a potential CTO role at Inue, a pre-seed startup building a real-time, crowd-powered wait time app (think "Waze for lines"). I was brought in by a friend/co-founder and have signed an NDA. My job is to assess the existing Bolt prototype, ask the right questions, and determine how to build this properly.
 
 ## The Company
-- **Brand:** **Inue** (rebranded from SkipTheLine, Sept 2026). App name `Inue`, bundle ID / package `com.inue.app`, deep link scheme `inue://`. Legacy names kept on purpose: EAS project slug `skiptheline` (matches the linked EAS project ID), the GitHub repos, the `skiptheline.site` domain/email, and Supabase project. "SkipPoints" not yet renamed.
+- **Brand:** **Inue** (rebranded from SkipTheLine, Sept 2026). App name `Inue`, bundle ID / package `com.inue.app`, deep link scheme `inue://`. Legacy names kept on purpose: EAS project slug `skiptheline` (matches the linked EAS project ID), the GitHub repos, the `skiptheline.site` domain/email, and Supabase project. Reward currency is **Inue Points** (formerly SkipPoints), matching the patent docs.
 - **Product:** Real-time crowdsourced wait times for restaurants, barbershops, DMVs, attractions, nightclubs, dayclubs, etc.
 - **Founder:** Jason Mizrachi — iHeartMedia executive, 30+ years in media/partnerships
 - **Stage:** Pre-seed, raising $1MM (SAFE or convertible note)
@@ -35,7 +35,7 @@ Built in Bolt.new. Tech stack:
 5. Native mobile app — React Native / Expo (built, running in Expo Go — EAS dev build next)
 6. SMB business dashboard (B2B product = 80% of early revenue)
 7. Payment processing — Stripe integration (B2C $3.99/mo + B2B $29-199/mo)
-8. Gamification system — SkipPoints, leaderboards, badges (critical for cold-start)
+8. Gamification system — Inue Points, leaderboards, badges (critical for cold-start)
 9. Cold-start data strategy — seed Miami via Google Places API before launch
 10. Push notifications — Expo Notifications (arrival nudge, wait drop alerts)
 
@@ -54,7 +54,7 @@ The entire product's credibility rests on wait time accuracy. A single bad actor
 
 ### Response Tiers
 - **Tier 1 (soft flag):** Down-weight the report in the wait time calculation — don't display it at full weight, don't remove it
-- **Tier 2 (hard flag):** Exclude report entirely from calculation, freeze SkipPoints award for that submission
+- **Tier 2 (hard flag):** Exclude report entirely from calculation, freeze Inue Points award for that submission
 - **Tier 3 (ban):** Suspend account from reporting, flag for manual review
 
 ### Implementation Approach
@@ -140,7 +140,7 @@ The first deliverable is an assessment email to Jason's team. Final draft saved 
 - **UI/UX:** One sentence only — tease that you have thoughts that could elevate the experience, save it for the call. Don't detail it.
 - **Google Maps:** Treat as a product decision point, not just a cost line — Places API for business seeding, Popular Times as cold-start fallback
 - **Cold-start / Day one data:** Frame as "how do we make Miami feel alive before users are reporting" — not a cold technical term
-- **Gamification:** Keep high level — product only works if users are motivated to report, want to understand priority before scoping. Don't mention SkipPoints by name.
+- **Gamification:** Keep high level — product only works if users are motivated to report, want to understand priority before scoping. Don't mention Inue Points by name.
 - **Auth:** High level only — authentication approach is accounted for, worth aligning on early as it touches onboarding and B2B
 - **Wait time definition:** Frame as a user perspective question — is it what the hostess told them, what they personally experienced, door to door? Foundational to trust in the data.
 - **Wait time engine:** Explain clearly that current wait times are simulated — real engine needs to weigh reports intelligently, filter bad data, surface trustworthy numbers
@@ -153,7 +153,7 @@ The first deliverable is an assessment email to Jason's team. Final draft saved 
 
 ## Innovation / Product Vision Notes
 - The deck's Waze comparison is apt — Waze succeeded because of gamification + real-time data loop
-- SkipPoints / leaderboards / reporter reputation are the flywheel — must be prioritized
+- Inue Points / leaderboards / reporter reputation are the flywheel — must be prioritized
 - Map-first experience creates a sense of live activity (consider making this the default)
 - "Trending Now" banner (already in prototype) is good — lean into this
 - Live activity feed ("Sarah just reported 8min wait at Chipotle") would drive engagement
@@ -210,7 +210,7 @@ Google Maps tells you a restaurant has a 4.2 rating and is open until 10pm. It c
 
 **The three gaps Waze leaves open:**
 1. **Waze stops at the car door** — zero awareness of what happens after you arrive. Is it packed? Is there a line? That handoff moment — car to destination — is exactly where Inue picks up.
-2. **Crowd intelligence without a community** — reports disappear into an algorithm. No reputation, no leaderboard, no identity. Users love what they receive, not what they give. Contribution loop is purely transactional. Inue's gamification (SkipPoints, leaderboards, reporter reputation) is the thing Waze never built.
+2. **Crowd intelligence without a community** — reports disappear into an algorithm. No reputation, no leaderboard, no identity. Users love what they receive, not what they give. Contribution loop is purely transactional. Inue's gamification (Inue Points, leaderboards, reporter reputation) is the thing Waze never built.
 3. **No pre-trip intelligence** — activates when you're in the car with a destination. Doesn't help you decide whether to go, when to go, or where to go instead.
 
 ---
@@ -251,7 +251,7 @@ Google Maps made the map. Inue makes it breathe.
 | Base map | Google Maps tiles | Google Maps tiles |
 | Crowd intelligence | Roads and traffic | Destinations and wait times |
 | Ambient awareness | What's ahead on your drive | What's waiting when you arrive |
-| Community flywheel | Hazard reporters | Wait time reporters + SkipPoints |
+| Community flywheel | Hazard reporters | Wait time reporters + Inue Points |
 | Monetization | Ads | B2C freemium + B2B SMB dashboard |
 
 Waze didn't replace Google Maps. It layered crowd intelligence on top and became indispensable to a high-loyalty user base. That's the exact playbook.
@@ -382,7 +382,7 @@ User opens app near venue (While Using active)
   → User views venue, taps Get Directions → hands off to Google Maps
   → App detects dwell > 3 min near venue
   → Arrival nudge fires: "At Komodo? How's the wait?"
-  → User taps [~15m] → live report published → SkipPoints awarded
+  → User taps [~15m] → live report published → Inue Points awarded
   → At 15–20 min dwell → follow-up nudge if "don't know yet" was tapped
   → User closes app → local notification scheduled for post-visit
   → Post-visit nudge fires → historical data collected with decay applied
@@ -580,7 +580,7 @@ Voice AI Platform  ← "the orchestration layer"
 
 ### What It Can Do at Launch
 - Check wait times hands-free
-- Log a wait report by voice (+SkipPoints awarded automatically)
+- Log a wait report by voice (+Inue Points awarded automatically)
 - Set wait drop alerts ("tell me when LIV drops under 20 minutes")
 - Add venue visit to calendar (Expo Calendar API — iOS + Android)
 - Recommend venues based on live wait data + user history
@@ -645,7 +645,7 @@ Supabase handles the entire backend at pre-seed — no separate server needed:
 - **Auth:** Supabase Auth — email + Google + Apple Sign-In
 - **Real-time:** Supabase Realtime subscriptions (live wait time updates)
 - **Storage:** Supabase Storage (venue photos, user avatars)
-- **Edge Functions:** wait time engine, anomaly detection, SkipPoints awards
+- **Edge Functions:** wait time engine, anomaly detection, Inue Points awards
 
 ### Google Maps Strategy
 - **SDK:** `react-native-maps` — renders interactive map in app (requires EAS build)
